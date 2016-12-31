@@ -113,7 +113,7 @@ class User extends BaseController
                 $roleId = $this->input->post('role');
                 $mobile = $this->input->post('mobile');
                 
-                $userInfo = array('email'=>$email, 'password'=>getHashedPassword($password), 'roleId'=>$roleId, 'name'=> $name,
+                $userInfo = array('email'=>$email, 'userPassword'=>getHashedPassword($password), 'roleId'=>$roleId, 'userName'=> $name,
                                     'mobile'=>$mobile, 'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));
                 
                 $this->load->model('user_model');
@@ -199,13 +199,13 @@ class User extends BaseController
                 
                 if(empty($password))
                 {
-                    $userInfo = array('email'=>$email, 'roleId'=>$roleId, 'name'=>$name,
+                    $userInfo = array('email'=>$email, 'roleId'=>$roleId, 'userName'=>$name,
                                     'mobile'=>$mobile, 'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:sa'));
                 }
                 else
                 {
-                    $userInfo = array('email'=>$email, 'password'=>getHashedPassword($password), 'roleId'=>$roleId,
-                        'name'=>ucwords($name), 'mobile'=>$mobile, 'updatedBy'=>$this->vendorId, 
+                    $userInfo = array('email'=>$email, 'userPassword'=>getHashedPassword($password), 'roleId'=>$roleId,
+                        'userName'=>ucwords($name), 'mobile'=>$mobile, 'updatedBy'=>$this->vendorId, 
                         'updatedDtm'=>date('Y-m-d H:i:sa'));
                 }
                 
@@ -288,7 +288,7 @@ class User extends BaseController
             }
             else
             {
-                $usersData = array('password'=>getHashedPassword($newPassword), 'updatedBy'=>$this->vendorId,
+                $usersData = array('userPassword'=>getHashedPassword($newPassword), 'updatedBy'=>$this->vendorId,
                                 'updatedDtm'=>date('Y-m-d H:i:sa'));
                 
                 $result = $this->user_model->changePassword($this->vendorId, $usersData);

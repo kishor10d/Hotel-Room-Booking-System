@@ -47,10 +47,10 @@ $route['404_override'] = 'error';
 $route['loginMe'] = 'login/loginMe';
 $route['dashboard'] = 'user';
 $route['logout'] = 'user/logout';
+
 $route['userListing'] = 'user/userListing';
 $route['userListing/(:num)'] = "user/userListing/$1";
 $route['addNew'] = "user/addNew";
-
 $route['addNewUser'] = "user/addNewUser";
 $route['editOld'] = "user/editOld";
 $route['editOld/(:num)'] = "user/editOld/$1";
@@ -61,7 +61,16 @@ $route['changePassword'] = "user/changePassword";
 $route['pageNotFound'] = "user/pageNotFound";
 
 
-$route['forgotPassword'] = "login/forgotPassword";
+$route['floorsListing'] = 'floors/floorsListing';
+$route['floorsListing/(:num)'] = "floors/floorsListing/$1";
+$route['addNewFloor'] = "floors/addNewFloor";
+$route['addedNewFloor'] = "floors/addedNewFloor";
+$route['editOldFloor'] = "floors/editOldFloor";
+$route['editOldFloor/(:num)'] = "floors/editOldFloor/$1";
+$route['updateOldFloor'] = "floors/updateOldFloor";
+$route['deleteFloor'] = "floors/deleteFloor";
+
+
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

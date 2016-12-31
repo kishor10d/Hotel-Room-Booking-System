@@ -41,9 +41,9 @@
         <!-- Logo -->
         <a href="<?php echo base_url(); ?>" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
-          <span class="logo-mini"><b>CI</b>AS</span>
+          <span class="logo-mini"><b>DLS</b></span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><b>CodeInsect</b>AS</span>
+          <span class="logo-lg"><b>DigiLodge</b></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
@@ -96,15 +96,15 @@
               </a>
             </li>
             <li class="treeview">
-              <a href="#" >
+              <a href="<?php echo base_url(); ?>floorsListing" >
                 <i class="fa fa-plane"></i>
-                <span>New Task</span>
+                <span>Floors</span>
               </a>
             </li>
             <li class="treeview">
-              <a href="#" >
+              <a href="<?php echo base_url(); ?>roomSizesListing" >
                 <i class="fa fa-ticket"></i>
-                <span>My Tasks</span>
+                <span>Room Sizes</span>
               </a>
             </li>
             <?php
@@ -112,9 +112,9 @@
             {
             ?>
             <li class="treeview">
-              <a href="#" >
+              <a href="<?php echo base_url(); ?>roomsListing" >
                 <i class="fa fa-thumb-tack"></i>
-                <span>Task Status</span>
+                <span>Rooms</span>
               </a>
             </li>
             <li class="treeview">

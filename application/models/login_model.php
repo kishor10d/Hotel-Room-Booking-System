@@ -10,17 +10,17 @@ class Login_model extends CI_Model
      */
     function loginMe($email, $password)
     {
-        $this->db->select('BaseTbl.userId, BaseTbl.password, BaseTbl.name, BaseTbl.roleId, Roles.role');
-        $this->db->from('tbl_users as BaseTbl');
-        $this->db->join('tbl_roles as Roles','Roles.roleId = BaseTbl.roleId');
-        $this->db->where('BaseTbl.email', $email);
+        $this->db->select('BaseTbl.userId, BaseTbl.userEmail, BaseTbl.userPassword, BaseTbl.userName, BaseTbl.roleId, Roles.role');
+        $this->db->from('ldg_users as BaseTbl');
+        $this->db->join('ldg_roles as Roles','Roles.roleId = BaseTbl.roleId');
+        $this->db->where('BaseTbl.userEmail', $email);
         $this->db->where('BaseTbl.isDeleted', 0);
         $query = $this->db->get();
         
         $user = $query->result();
         
         if(!empty($user)){
-            if(verifyHashedPassword($password, $user[0]->password)){
+            if(verifyHashedPassword($password, $user[0]->userPassword)){
                 return $user;
             } else {
                 return array();
