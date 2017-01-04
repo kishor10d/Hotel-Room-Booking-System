@@ -89,7 +89,7 @@ class RoomSizes extends BaseController
             }
             else
             {
-                $roomSizeTitle = ucwords(strtolower($this->input->post('sizeTitle')));
+                $roomSizeTitle = $this->input->post('sizeTitle');
                 $roomSizeDescription = $this->input->post('sizeDescription');
                 
                 $roomSizeInfo = array('sizeTitle'=>$roomSizeTitle, 'sizeDescription'=>$roomSizeDescription,
@@ -163,7 +163,7 @@ class RoomSizes extends BaseController
             }
             else
             {
-                $roomSizeTitle = ucwords(strtolower($this->input->post('sizeTitle')));
+                $roomSizeTitle = $this->input->post('sizeTitle');
                 $roomSizeDescription = $this->input->post('sizeDescription');
                 
                 $roomSizeInfo = array();

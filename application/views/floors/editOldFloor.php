@@ -43,20 +43,19 @@ if(!empty($floorInfo))
                     <form role="form" id="addNewFloors" action="<?php echo base_url() ?>updateOldFloor" method="post" role="form">
                         <div class="box-body">
                             <div class="row">
-                                <div class="col-md-6">                                
-                                    <div class="form-group">
-                                        <label for="floorName">Floor Name</label>
-                                        <input type="text" value="<?php echo $floorName; ?>" class="form-control" id="floorName" name="floorName" maxlength="50">
-                                        <input type="hidden" value="<?php echo $floorId; ?>" name="floorId" />
-                                    </div>
-                                    
-                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="floorCode">Floor Code</label>
                                         <input type="text" value="<?php echo $floorCode; ?>" class="form-control" id="floorCode" name="floorCode" maxlength="10">
                                     </div>
                                 </div>
+                                <div class="col-md-6">                                
+                                    <div class="form-group">
+                                        <label for="floorName">Floor Name</label>
+                                        <input type="text" value="<?php echo $floorName; ?>" class="form-control" id="floorName" name="floorName" maxlength="50">
+                                        <input type="hidden" value="<?php echo $floorId; ?>" name="floorId" />
+                                    </div>                                    
+                                </div>                                
                             </div>
                             <div class="row">
                                 <div class="col-md-12">

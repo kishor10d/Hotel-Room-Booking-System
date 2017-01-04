@@ -23,19 +23,18 @@
                     <form role="form" id="addNewFloors" action="<?php echo base_url() ?>addedNewFloor" method="post" role="form">
                         <div class="box-body">
                             <div class="row">
-                                <div class="col-md-6">                                
-                                    <div class="form-group">
-                                        <label for="floorName">Floor Name</label>
-                                        <input type="text" class="form-control" id="floorName" name="floorName" maxlength="50">
-                                    </div>
-                                    
-                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="floorCode">Floor Code</label>
-                                        <input type="text" class="form-control" id="floorCode" name="floorCode" maxlength="10">
+                                        <input type="text" class="form-control" id="floorCode" name="floorCode" maxlength="10" placeholder="E.g. GROUND, FIRST etc">
                                     </div>
                                 </div>
+                                <div class="col-md-6">                                
+                                    <div class="form-group">
+                                        <label for="floorName">Floor Name</label>
+                                        <input type="text" class="form-control" id="floorName" name="floorName" maxlength="50" placeholder="E.g. Ground Floor, First Floor etc">
+                                    </div>
+                                </div>                                
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
