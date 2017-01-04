@@ -174,8 +174,6 @@ class Floors extends BaseController
                 $floorInfo = array('floorName'=>$floorName, 'floorCode'=>$floorCode, 'floorDescription'=>$floorDescription,
                 	'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:sa'));
 
-                pre($floorInfo);
-                
                 $result = $this->floors_model->updateOldFloor($floorInfo, $floorId);
                 
                 if($result == true)
@@ -189,6 +187,28 @@ class Floors extends BaseController
                 
                 redirect('floorsListing');
             }
+        }
+    }
+
+    /**
+     * This function is used to delete the user using userId
+     * @return boolean $result : TRUE / FALSE
+     */
+    function deleteFloors()
+    {
+        if($this->isAdmin() == TRUE)
+        {
+            echo(json_encode(array('status'=>'access')));
+        }
+        else
+        {
+            $floorsId = $this->input->post('floorsId');
+            $floorsInfo = array('isDeleted'=>1,'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:sa'));
+            
+            $result = $this->floors_model->deleteFloors($floorsId, $floorsInfo);
+            
+            if ($result > 0) { echo(json_encode(array('status'=>TRUE))); }
+            else { echo(json_encode(array('status'=>FALSE))); }
         }
     }
 

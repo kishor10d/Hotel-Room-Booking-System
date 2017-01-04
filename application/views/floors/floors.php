@@ -52,7 +52,7 @@
                       <td><?php echo $record->floorDescription ?></td>
                       <td>
                           <a href="<?php echo base_url().'editOldFloor/'.$record->floorId; ?>"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</a>
-                          <a href="#" data-floorsid="<?php echo $record->floorId; ?>" class="deleteUser"><i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;</a>
+                          <a href="#" data-floorsid="<?php echo $record->floorId; ?>" class="deleteFloors"><i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;</a>
                       </td>
                     </tr>
                     <?php

@@ -92,4 +92,17 @@ class Floors_model extends CI_Model
         
         return TRUE;
     }
+
+    /**
+     * This function is used to delete the user information
+     * @param number $userId : This is user id
+     * @return boolean $result : TRUE / FALSE
+     */
+    function deleteFloors($floorsId, $floorsInfo)
+    {
+        $this->db->where('floorId', $floorsId);
+        $this->db->update('ldg_floor', $floorsInfo);
+        
+        return $this->db->affected_rows();
+    }
 }

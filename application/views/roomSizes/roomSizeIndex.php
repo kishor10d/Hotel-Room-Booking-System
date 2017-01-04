@@ -2,7 +2,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        User Management
+        Room Size Management
         <small>Add, Edit, Delete</small>
       </h1>
     </section>
@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-xs-12 text-right">
                 <div class="form-group">
-                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNew">Add New</a>
+                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewRoomSize">Add New Room Size</a>
                 </div>
             </div>
         </div>
@@ -18,9 +18,9 @@
             <div class="col-xs-12">
               <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">Users List</h3>
+                    <h3 class="box-title">Room Size</h3>
                     <div class="box-tools">
-                        <form action="<?php echo base_url() ?>userListing" method="POST" id="searchList">
+                        <form action="<?php echo base_url() ?>roomSizeListing" method="POST" id="searchList">
                             <div class="input-group">
                               <input type="text" name="searchText" value="<?php echo $searchText; ?>" class="form-control input-sm pull-right" style="width: 150px;" placeholder="Search"/>
                               <div class="input-group-btn">
@@ -34,27 +34,23 @@
                   <table class="table table-hover">
                     <tr>
                       <th>Id</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Mobile</th>
-                      <th>Role</th>
+                      <th>Size Title</th>
+                      <th>Size Description</th>
                       <th>Actions</th>
                     </tr>
                     <?php
-                    if(!empty($userRecords))
+                    if(!empty($roomSizesRecords))
                     {
-                        foreach($userRecords as $record)
+                        foreach($roomSizesRecords as $record)
                         {
                     ?>
                     <tr>
-                      <td><?php echo $record->userId ?></td>
-                      <td><?php echo $record->name ?></td>
-                      <td><?php echo $record->email ?></td>
-                      <td><?php echo $record->mobile ?></td>
-                      <td><?php echo $record->role ?></td>
+                      <td><?php echo $record->sizeId ?></td>
+                      <td><?php echo $record->sizeTitle ?></td>
+                      <td><?php echo $record->sizeDescription ?></td>
                       <td>
-                          <a href="<?php echo base_url().'editOld/'.$record->userId; ?>"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</a>
-                          <a href="#" data-userid="<?php echo $record->userId; ?>" class="deleteUser"><i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;</a>
+                          <a href="<?php echo base_url().'editOldRoomSize/'.$record->sizeId; ?>"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</a>
+                          <a href="" data-roomsizeid="<?php echo $record->sizeId; ?>" class="deleteRoomSize"><i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;</a>
                       </td>
                     </tr>
                     <?php
@@ -79,7 +75,7 @@
             e.preventDefault();            
             var link = jQuery(this).get(0).href;            
             var value = link.substring(link.lastIndexOf('/') + 1);
-            jQuery("#searchList").attr("action", baseURL + "userListing/" + value);
+            jQuery("#searchList").attr("action", baseURL + "roomSizeListing/" + value);
             jQuery("#searchList").submit();
         });
     });

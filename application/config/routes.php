@@ -68,9 +68,25 @@ $route['addedNewFloor'] = "floors/addedNewFloor";
 $route['editOldFloor'] = "floors/editOldFloor";
 $route['editOldFloor/(:num)'] = "floors/editOldFloor/$1";
 $route['updateOldFloor'] = "floors/updateOldFloor";
-$route['deleteFloor'] = "floors/deleteFloor";
+$route['deleteFloors'] = "floors/deleteFloors";
 
+$route['roomSizesListing'] = 'roomSizes/roomSizesListing';
+$route['roomSizesListing/(:num)'] = "roomSizes/roomSizesListing/$1";
+$route['addNewRoomSize'] = "roomSizes/addNewRoomSize";
+$route['addedNewRoomSize'] = "roomSizes/addedNewRoomSize";
+$route['editOldRoomSize'] = "roomSizes/editOldRoomSize";
+$route['editOldRoomSize/(:num)'] = "roomSizes/editOldRoomSize/$1";
+$route['updateOldRoomSize'] = "roomSizes/updateOldRoomSize";
+$route['deleteRoomSize'] = "roomSizes/deleteRoomSize";
 
+$route['roomListing'] = 'roomSize/roomListing';
+$route['roomListing/(:num)'] = "roomSize/roomListing/$1";
+$route['addNewRoom'] = "roomSize/addNewRoom";
+$route['addedNewRoom'] = "roomSize/addedNewRoom";
+$route['editOldRoom'] = "roomSize/editOldRoom";
+$route['editOldRoom/(:num)'] = "roomSize/editOldRoom/$1";
+$route['updateOldRoom'] = "roomSize/updateOldRoom";
+$route['deleteRoom'] = "roomSize/deleteRoom";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
