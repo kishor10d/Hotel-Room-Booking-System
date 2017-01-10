@@ -112,7 +112,7 @@
             {
             ?>
             <li class="treeview">
-              <a href="<?php echo base_url(); ?>roomsListing" >
+              <a href="<?php echo base_url(); ?>roomListing" >
                 <i class="fa fa-thumb-tack"></i>
                 <span>Rooms</span>
               </a>

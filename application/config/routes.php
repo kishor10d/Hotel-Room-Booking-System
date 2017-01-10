@@ -79,14 +79,14 @@ $route['editOldRoomSize/(:num)'] = "roomSizes/editOldRoomSize/$1";
 $route['updateOldRoomSize'] = "roomSizes/updateOldRoomSize";
 $route['deleteRoomSize'] = "roomSizes/deleteRoomSize";
 
-$route['roomListing'] = 'roomSize/roomListing';
-$route['roomListing/(:num)'] = "roomSize/roomListing/$1";
-$route['addNewRoom'] = "roomSize/addNewRoom";
-$route['addedNewRoom'] = "roomSize/addedNewRoom";
-$route['editOldRoom'] = "roomSize/editOldRoom";
-$route['editOldRoom/(:num)'] = "roomSize/editOldRoom/$1";
-$route['updateOldRoom'] = "roomSize/updateOldRoom";
-$route['deleteRoom'] = "roomSize/deleteRoom";
+$route['roomListing'] = 'rooms/roomListing';
+$route['roomListing/(:num)'] = "rooms/roomListing/$1";
+$route['addNewRoom'] = "rooms/addNewRoom";
+$route['addedNewRoom'] = "rooms/addedNewRoom";
+$route['editOldRoom'] = "rooms/editOldRoom";
+$route['editOldRoom/(:num)'] = "rooms/editOldRoom/$1";
+$route['updateOldRoom'] = "rooms/updateOldRoom";
+$route['deleteRoom'] = "rooms/deleteRoom";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
