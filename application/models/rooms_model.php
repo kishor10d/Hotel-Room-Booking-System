@@ -7,14 +7,23 @@ class Rooms_model extends CI_Model
      * @param string $searchText : This is optional search text
      * @return number $count : This is row count
      */
-    function roomListingCount()
+    function roomListingCount($searchText, $searchFloorId, $searchRoomSizeId)
     {
         $this->db->select('BaseTbl.roomId, BaseTbl.roomNumber, BaseTbl.roomSizeId, RS.sizeTitle, RS.sizeDescription,
         					BaseTbl.floorId, FR.floorName, FR.floorCode');
-        $this->db->from('ldg_rooms as BaseTbl');
+        $this->db->from('ldg_rooms AS BaseTbl');
         $this->db->join('ldg_room_sizes AS RS', 'RS.sizeId = BaseTbl.roomSizeId');
         $this->db->join('ldg_floor AS FR', 'FR.floorId = BaseTbl.floorId');
         $this->db->where('BaseTbl.isDeleted', 0);
+        if(!empty($searchText)){
+            $this->db->where('BaseTbl.roomNumber LIKE "%'.$searchText.'%" OR RS.sizeDescription LIKE "%'.$searchText.'%"');
+        }
+        if(!empty($searchFloorId)){
+            $this->db->where('BaseTbl.floorId', $searchFloorId);
+        }
+        if(!empty($searchRoomSizeId)){
+            $this->db->where('BaseTbl.roomSizeId', $searchRoomSizeId);
+        }
         $this->db->order_by('BaseTbl.roomId', "DESC");
         $query = $this->db->get();
         
@@ -28,19 +37,28 @@ class Rooms_model extends CI_Model
      * @param number $segment : This is pagination limit
      * @return array $result : This is result
      */
-    function roomListing($page, $segment)
+    function roomListing($searchText, $searchFloorId, $searchRoomSizeId, $page, $segment)
     {
         $this->db->select('BaseTbl.roomId, BaseTbl.roomNumber, BaseTbl.roomSizeId, RS.sizeTitle, RS.sizeDescription,
         					BaseTbl.floorId, FR.floorName, FR.floorCode');
-        $this->db->from('ldg_rooms as BaseTbl');
+        $this->db->from('ldg_rooms AS BaseTbl');
         $this->db->join('ldg_room_sizes AS RS', 'RS.sizeId = BaseTbl.roomSizeId');
         $this->db->join('ldg_floor AS FR', 'FR.floorId = BaseTbl.floorId');
         $this->db->where('BaseTbl.isDeleted', 0);
+        if(!empty($searchText)){
+            $this->db->where('BaseTbl.roomNumber LIKE "%'.$searchText.'%" OR RS.sizeDescription LIKE "%'.$searchText.'%"');
+        }
+        if(!empty($searchFloorId)){
+            $this->db->where('BaseTbl.floorId', $searchFloorId);
+        }
+        if(!empty($searchRoomSizeId)){
+            $this->db->where('BaseTbl.roomSizeId', $searchRoomSizeId);
+        }
         $this->db->order_by('BaseTbl.roomId', "DESC");
         $this->db->limit($page, $segment);
         $query = $this->db->get();
         
-        $result = $query->result();        
+        $result = $query->result();
         return $result;
     }
 
@@ -90,9 +108,9 @@ class Rooms_model extends CI_Model
      * @param number $roomId : This is floor id
      * @return array $result : This is floor information
      */
-    function getRoomSizeInfo($roomId)
+    function getRoomInfo($roomId)
     {
-        $this->db->select('roomId, sizeTitle, sizeDescription');
+        $this->db->select('roomId, roomNumber, roomSizeId, floorId');
         $this->db->from('ldg_rooms');
         $this->db->where('isDeleted', 0);
         $this->db->where('roomId', $roomId);
@@ -107,10 +125,10 @@ class Rooms_model extends CI_Model
      * @param array $userInfo : This is users updated information
      * @param number $userId : This is user id
      */
-    function updateOldRoomSize($roomSizeInfo, $roomId)
+    function updateOldRoom($roomInfo, $roomId)
     {
         $this->db->where('roomId', $roomId);
-        $this->db->update('ldg_rooms', $roomSizeInfo);
+        $this->db->update('ldg_rooms', $roomInfo);
         
         return TRUE;
     }

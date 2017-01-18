@@ -1,31 +1,27 @@
 <?php
 
-$userId = '';
-$name = '';
-$email = '';
-$mobile = '';
-$roleId = '';
+$roomId = 0;
+$floorId = 0;
+$roomSizeId = 0;
+$roomNumber = '';
+$selected = "selected='selected'";
 
-if(!empty($userInfo))
+if(!empty($roomInfo))
 {
-    foreach ($userInfo as $uf)
+    foreach ($roomInfo as $info)
     {
-        $userId = $uf->userId;
-        $name = $uf->name;
-        $email = $uf->email;
-        $mobile = $uf->mobile;
-        $roleId = $uf->roleId;
+        $roomId = $info->roomId;
+        $floorId = $info->floorId;
+        $roomSizeId = $info->roomSizeId;
+        $roomNumber = $info->roomNumber;
     }
 }
-
-
 ?>
-
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        User Management
+        Rooms Management
         <small>Add / Edit User</small>
       </h1>
     </section>
@@ -41,67 +37,68 @@ if(!empty($userInfo))
                 
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Enter User Details</h3>
+                        <h3 class="box-title">Enter Room Details</h3>
                     </div><!-- /.box-header -->
                     <!-- form start -->
                     
-                    <form role="form" action="<?php echo base_url() ?>editUser" method="post" id="editUser" role="form">
+                    <form role="form" id="addUser" action="<?php echo base_url() ?>updateOldRoom" method="post" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-6">                                
                                     <div class="form-group">
-                                        <label for="fname">Full Name</label>
-                                        <input type="text" class="form-control" id="fname" placeholder="Full Name" name="fname" value="<?php echo $name; ?>" maxlength="128">
-                                        <input type="hidden" value="<?php echo $userId; ?>" name="userId" />    
+                                        <label for="fname">Floor</label>
+                                        <select class="form-control" id="floorId" name="floorId">
+                                            <option value="">Select Floor</option>
+                                            <?php
+                                            if(!empty($floors))
+                                            {
+                                                foreach ($floors as $frs)
+                                                {
+                                                    ?>
+                                                    <option value="<?php echo $frs->floorId ?>" 
+                                                        <?php if($frs->floorId == $floorId) { echo $selected; } ?>>
+                                                    <?php echo $frs->floorCode." - ".$frs->floorName ?>
+                                                    </option>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
+                                        </select>                                      
                                     </div>
                                     
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="email">Email address</label>
-                                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" value="<?php echo $email; ?>" maxlength="128">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="password">Password</label>
-                                        <input type="password" class="form-control" id="password" placeholder="Password" name="password" maxlength="10">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="cpassword">Confirm Password</label>
-                                        <input type="password" class="form-control" id="cpassword" placeholder="Confirm Password" name="cpassword" maxlength="10">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="mobile">Mobile Number</label>
-                                        <input type="text" class="form-control" id="mobile" placeholder="Mobile Number" name="mobile" value="<?php echo $mobile; ?>" maxlength="10">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="role">Role</label>
-                                        <select class="form-control" id="role" name="role">
-                                            <option value="0">Select Role</option>
+                                        <label for="email">Room Size</label>
+                                        <select class="form-control" id="sizeId" name="sizeId">
+                                            <option value="">Select Room Sizes</option>
                                             <?php
-                                            if(!empty($roles))
+                                            if(!empty($roomSizes))
                                             {
-                                                foreach ($roles as $rl)
+                                                foreach ($roomSizes as $rs)
                                                 {
                                                     ?>
-                                                    <option value="<?php echo $rl->roleId; ?>" <?php if($rl->roleId == $roleId) {echo "selected=selected";} ?>><?php echo $rl->role ?></option>
+                                                    <option value="<?php echo $rs->sizeId ?>"
+                                                        <?php if($rs->sizeId == $roomSizeId) { echo $selected; } ?>>
+                                                        <?php echo $rs->sizeTitle ?></option>
                                                     <?php
                                                 }
                                             }
                                             ?>
                                         </select>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="mobile">Room Number</label>
+                                        <input type="text" class="form-control" id="roomNumber" name="roomNumber" maxlength="10"
+                                        value="<?php echo $roomNumber ?>">
+                                        <input type="hidden" value="<?php echo $roomId; ?>" name="roomId" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                 </div>    
                             </div>
                         </div><!-- /.box-body -->
@@ -144,6 +141,5 @@ if(!empty($userInfo))
             </div>
         </div>    
     </section>
+    
 </div>
-
-<script src="<?php echo base_url(); ?>assets/js/editUser.js" type="text/javascript"></script>

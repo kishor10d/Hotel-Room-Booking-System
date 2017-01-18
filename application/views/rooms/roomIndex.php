@@ -1,3 +1,6 @@
+<?php
+$selected = "selected='selected'";
+?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -21,12 +24,55 @@
                     <h3 class="box-title">Rooms List</h3>
                     <div class="box-tools">
                         <form action="<?php echo base_url() ?>roomListing" method="POST" id="searchList">
-                            <div class="input-group">
-                              <input type="text" name="searchText" value="<?php echo $searchText; ?>" class="form-control input-sm pull-right" style="width: 150px;" placeholder="Search"/>
-                              <div class="input-group-btn">
-                                <button class="btn btn-sm btn-default searchList"><i class="fa fa-search"></i></button>
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="input-group">
+                                <select class="form-control input-sm" id="floorId" name="floorId">
+                                  <option value="">Select Floor</option>
+                                  <?php
+                                    if(!empty($floors))
+                                    {
+                                        foreach ($floors as $frs)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $frs->floorId ?>"
+                                              <?php if($frs->floorId == $searchFloorId) { echo $selected; } ?>><?php echo $frs->floorCode." - ".$frs->floorName ?></option>
+                                            <?php
+                                        }
+                                    }
+                                  ?>
+                                </select>
                               </div>
                             </div>
+                            <div class="col-md-4">
+                              <div class="input-group">
+                                <select class="form-control input-sm" id="sizeId" name="sizeId">
+                                    <option value="">Select Room Sizes</option>
+                                    <?php
+                                    if(!empty($roomSizes))
+                                    {
+                                        foreach ($roomSizes as $rs)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $rs->sizeId ?>"
+                                              <?php if($rs->sizeId == $searchRoomSizeId) { echo $selected; } ?>>
+                                                <?php echo $rs->sizeTitle ?></option>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="input-group">
+                                <input type="text" name="searchText" value="<?php echo $searchText; ?>" class="form-control input-sm" placeholder="Search"/>
+                                <div class="input-group-btn">
+                                  <button class="btn btn-sm btn-default searchList"><i class="fa fa-search"></i></button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </form>
                     </div>
                 </div><!-- /.box-header -->
@@ -53,7 +99,7 @@
                       <td><?php echo $record->sizeDescription ?></td>
                       <td><?php echo $record->floorCode." - ".$record->floorName; ?></td>
                       <td>
-                          <a href="<?php echo base_url().'editOld/'.$record->roomId; ?>"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</a>
+                          <a href="<?php echo base_url().'editOldRoom/'.$record->roomId; ?>"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</a>
                           <a href="#" data-roomid="<?php echo $record->roomId; ?>" class="deleteUser"><i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;</a>
                       </td>
                     </tr>
@@ -79,7 +125,7 @@
             e.preventDefault();            
             var link = jQuery(this).get(0).href;            
             var value = link.substring(link.lastIndexOf('/') + 1);
-            jQuery("#searchList").attr("action", baseURL + "userListing/" + value);
+            jQuery("#searchList").attr("action", baseURL + "roomListing/" + value);
             jQuery("#searchList").submit();
         });
     });
