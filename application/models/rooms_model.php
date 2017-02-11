@@ -121,7 +121,7 @@ class Rooms_model extends CI_Model
     
     
     /**
-     * This function is used to update the user information
+     * This function is used to update the room information
      * @param array $userInfo : This is users updated information
      * @param number $userId : This is user id
      */
@@ -134,14 +134,14 @@ class Rooms_model extends CI_Model
     }
 
     /**
-     * This function is used to delete the user information
+     * This function is used to delete the room information
      * @param number $userId : This is user id
      * @return boolean $result : TRUE / FALSE
      */
-    function deleteRoomSize($roomId, $roomSizeInfo)
+    function deleteRoom($roomId, $roomInfo)
     {
         $this->db->where('roomId', $roomId);
-        $this->db->update('ldg_rooms', $roomSizeInfo);
+        $this->db->update('ldg_rooms', $roomInfo);
         
         return $this->db->affected_rows();
     }

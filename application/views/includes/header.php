@@ -96,35 +96,43 @@
               </a>
             </li>
             <li class="treeview">
-              <a href="<?php echo base_url(); ?>floorsListing" >
+              <a href="#">
                 <i class="fa fa-plane"></i>
-                <span>Floors</span>
-              </a>
+                <span>Management</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>              
+              <ul class="treeview-menu menu-open">
+                <li>
+                  <a href="<?php echo base_url(); ?>floorsListing" >
+                    <i class="fa fa-circle-o"></i> Floors
+                  </a>
+                </li>
+                <li>
+                  <a href="<?php echo base_url(); ?>roomSizesListing" >
+                    <i class="fa fa-circle-o"></i> Room Sizes
+                  </a>
+                </li>
+                <?php
+                if($role == ROLE_ADMIN || $role == ROLE_MANAGER)
+                {
+                ?>
+                <li>
+                  <a href="<?php echo base_url(); ?>roomListing" >
+                    <i class="fa fa-circle-o"></i> Rooms 
+                  </a>
+                </li>
+                <li>
+                  <a href="<?php echo base_url(); ?>baseFareListing" >
+                    <i class="fa fa-circle-o"></i> Base Fare 
+                  </a>
+                </li>
+                <?php
+                }
+                ?>
+              </ul>
             </li>
-            <li class="treeview">
-              <a href="<?php echo base_url(); ?>roomSizesListing" >
-                <i class="fa fa-ticket"></i>
-                <span>Room Sizes</span>
-              </a>
-            </li>
+            
             <?php
-            if($role == ROLE_ADMIN || $role == ROLE_MANAGER)
-            {
-            ?>
-            <li class="treeview">
-              <a href="<?php echo base_url(); ?>roomListing" >
-                <i class="fa fa-thumb-tack"></i>
-                <span>Rooms</span>
-              </a>
-            </li>
-            <li class="treeview">
-              <a href="#" >
-                <i class="fa fa-upload"></i>
-                <span>Task Uploads</span>
-              </a>
-            </li>
-            <?php
-            }
             if($role == ROLE_ADMIN)
             {
             ?>

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 20, 2017 at 05:05 PM
+-- Generation Time: Feb 11, 2017 at 07:48 PM
 -- Server version: 10.1.13-MariaDB
 -- PHP Version: 5.5.35
 
@@ -103,14 +103,14 @@ CREATE TABLE `ldg_rooms` (
   `createdBy` int(11) NOT NULL DEFAULT '0',
   `createdDtm` datetime NOT NULL,
   `updatedBy` int(11) DEFAULT NULL,
-  `updateDtm` datetime DEFAULT NULL
+  `updatedDtm` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Information of rooms';
 
 --
 -- Dumping data for table `ldg_rooms`
 --
 
-INSERT INTO `ldg_rooms` (`roomId`, `roomNumber`, `roomSizeId`, `floorId`, `isDeleted`, `createdBy`, `createdDtm`, `updatedBy`, `updateDtm`) VALUES
+INSERT INTO `ldg_rooms` (`roomId`, `roomNumber`, `roomSizeId`, `floorId`, `isDeleted`, `createdBy`, `createdDtm`, `updatedBy`, `updatedDtm`) VALUES
 (1, 'G101', 1, 1, 0, 1, '2017-01-10 17:26:22', NULL, NULL),
 (2, 'G102', 1, 1, 0, 1, '2017-01-10 17:29:34', NULL, NULL),
 (3, 'G103', 1, 1, 0, 1, '2017-01-10 17:29:43', NULL, NULL),
@@ -120,7 +120,39 @@ INSERT INTO `ldg_rooms` (`roomId`, `roomNumber`, `roomSizeId`, `floorId`, `isDel
 (7, 'G107', 3, 1, 0, 1, '2017-01-18 18:15:52', NULL, NULL),
 (8, 'G108', 4, 1, 0, 1, '2017-01-18 18:16:08', NULL, NULL),
 (9, 'G109', 5, 1, 0, 1, '2017-01-18 18:16:51', NULL, NULL),
-(10, 'G110', 4, 1, 0, 1, '2017-01-18 18:16:35', NULL, NULL);
+(10, 'G110', 4, 1, 0, 1, '2017-01-18 18:16:35', 1, '2017-02-11 18:46:23');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ldg_room_base_fare`
+--
+
+CREATE TABLE `ldg_room_base_fare` (
+  `bfId` bigint(20) NOT NULL,
+  `sizeId` int(11) NOT NULL,
+  `baseFareHour` double NOT NULL,
+  `baseFareDay` double NOT NULL,
+  `serviceTax` double NOT NULL,
+  `serviceCharge` double NOT NULL,
+  `fareTotal` double NOT NULL,
+  `isDeleted` tinyint(4) NOT NULL DEFAULT '0',
+  `createdBy` int(11) NOT NULL,
+  `createdDtm` datetime NOT NULL,
+  `updatedBy` int(11) DEFAULT NULL,
+  `updatedDtm` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `ldg_room_base_fare`
+--
+
+INSERT INTO `ldg_room_base_fare` (`bfId`, `sizeId`, `baseFareHour`, `baseFareDay`, `serviceTax`, `serviceCharge`, `fareTotal`, `isDeleted`, `createdBy`, `createdDtm`, `updatedBy`, `updatedDtm`) VALUES
+(1, 1, 40, 500, 15, 3.5, 592.5, 0, 1, '2017-02-11 19:14:24', 1, '2017-02-11 19:16:14'),
+(2, 2, 55, 700, 15, 3.5, 829.5, 0, 1, '2017-02-11 19:19:52', 1, '2017-02-11 19:25:38'),
+(3, 3, 60, 800, 15, 3.5, 948, 0, 1, '2017-02-11 19:20:07', NULL, NULL),
+(4, 4, 70, 900, 15, 3.5, 1066.5, 0, 1, '2017-02-11 19:20:35', NULL, NULL),
+(5, 5, 100, 1100, 15, 3.5, 1303.5, 0, 1, '2017-02-11 19:20:52', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -208,6 +240,12 @@ ALTER TABLE `ldg_rooms`
   ADD PRIMARY KEY (`roomId`);
 
 --
+-- Indexes for table `ldg_room_base_fare`
+--
+ALTER TABLE `ldg_room_base_fare`
+  ADD PRIMARY KEY (`bfId`);
+
+--
 -- Indexes for table `ldg_room_sizes`
 --
 ALTER TABLE `ldg_room_sizes`
@@ -243,6 +281,11 @@ ALTER TABLE `ldg_roles`
 --
 ALTER TABLE `ldg_rooms`
   MODIFY `roomId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT for table `ldg_room_base_fare`
+--
+ALTER TABLE `ldg_room_base_fare`
+  MODIFY `bfId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `ldg_room_sizes`
 --

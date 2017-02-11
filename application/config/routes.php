@@ -88,5 +88,14 @@ $route['editOldRoom/(:num)'] = "rooms/editOldRoom/$1";
 $route['updateOldRoom'] = "rooms/updateOldRoom";
 $route['deleteRoom'] = "rooms/deleteRoom";
 
+$route['baseFareListing'] = 'baseFare/baseFareListing';
+$route['baseFareListing/(:num)'] = "baseFare/baseFareListing/$1";
+$route['addNewBaseFare'] = "baseFare/addNewBaseFare";
+$route['addedNewBaseFare'] = "baseFare/addedNewBaseFare";
+$route['editOldBaseFare'] = "baseFare/editOldBaseFare";
+$route['editOldBaseFare/(:num)'] = "baseFare/editOldBaseFare/$1";
+$route['updateOldBaseFare'] = "baseFare/updateOldBaseFare";
+$route['deleteBaseFare'] = "baseFare/deleteBaseFare";
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

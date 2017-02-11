@@ -5,7 +5,7 @@ $selected = "selected='selected'";
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Rooms Management
+        Base Fare Management
         <small>Add, Edit, Delete</small>
       </h1>
     </section>
@@ -13,7 +13,7 @@ $selected = "selected='selected'";
         <div class="row">
             <div class="col-xs-12 text-right">
                 <div class="form-group">
-                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewRoom">Add New Room</a>
+                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewBaseFare">Add New Base Fare</a>
                 </div>
             </div>
         </div>
@@ -21,32 +21,13 @@ $selected = "selected='selected'";
             <div class="col-xs-12">
               <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">Rooms List</h3>
+                    <h3 class="box-title">Base Fare List</h3>
                     <div class="box-tools">
-                        <form action="<?php echo base_url() ?>roomListing" method="POST" id="searchList">
+                        <form action="<?php echo base_url() ?>baseFareListing" method="POST" id="searchList">
                           <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                               <div class="input-group">
-                                <select class="form-control input-sm" id="floorId" name="floorId">
-                                  <option value="">Select Floor</option>
-                                  <?php
-                                    if(!empty($floors))
-                                    {
-                                        foreach ($floors as $frs)
-                                        {
-                                            ?>
-                                            <option value="<?php echo $frs->floorId ?>"
-                                              <?php if($frs->floorId == $searchFloorId) { echo $selected; } ?>><?php echo $frs->floorCode." - ".$frs->floorName ?></option>
-                                            <?php
-                                        }
-                                    }
-                                  ?>
-                                </select>
-                              </div>
-                            </div>
-                            <div class="col-md-4">
-                              <div class="input-group">
-                                <select class="form-control input-sm" id="sizeId" name="sizeId">
+                                <select class="form-control input-sm" id="searchRoomSizeId" name="searchRoomSizeId">
                                     <option value="">Select Room Sizes</option>
                                     <?php
                                     if(!empty($roomSizes))
@@ -64,7 +45,7 @@ $selected = "selected='selected'";
                                 </select>
                               </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                               <div class="input-group">
                                 <input type="text" name="searchText" value="<?php echo $searchText; ?>" class="form-control input-sm" placeholder="Search"/>
                                 <div class="input-group-btn">
@@ -79,28 +60,32 @@ $selected = "selected='selected'";
                 <div class="box-body table-responsive no-padding">
                   <table class="table table-hover">
                     <tr>
-                      <th>Id</th>
-                      <th>Room Number</th>
                       <th>Room Size</th>
                       <th>Room Description</th>
-                      <th>Room Floor</th>
+                      <th>Hourly Fare</th>
+                      <th>Daily Fare</th>
+                      <th>Service Tax</th>
+                      <th>Service Charge</th>
+                      <th>Total</th>
                       <th>Actions</th>
                     </tr>
                     <?php
-                    if(!empty($roomRecords))
+                    if(!empty($baseFareRecords))
                     {
-                        foreach($roomRecords as $record)
+                        foreach($baseFareRecords as $record)
                         {
                     ?>
                     <tr>
-                      <td><?php echo $record->roomId ?></td>
-                      <td><?php echo $record->roomNumber ?></td>
                       <td><?php echo $record->sizeTitle ?></td>
                       <td><?php echo $record->sizeDescription ?></td>
-                      <td><?php echo $record->floorCode." - ".$record->floorName; ?></td>
+                      <td><?php echo $record->baseFareHour ?></td>
+                      <td><?php echo $record->baseFareDay ?></td>
+                      <td><?php echo $record->serviceTax."%" ?></td>
+                      <td><?php echo $record->serviceCharge."%" ?></td>
+                      <td><?php echo $record->fareTotal ?></td>
                       <td>
-                          <a href="<?php echo base_url().'editOldRoom/'.$record->roomId; ?>"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</a>
-                          <a href="#" data-roomid="<?php echo $record->roomId; ?>" class="deleteRoom"><i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;</a>
+                          <a href="<?php echo base_url().'editOldBaseFare/'.$record->bfId; ?>"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</a>
+                          <a href="" data-bfid="<?php echo $record->bfId; ?>" class="deleteBaseFare"><i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;</a>
                       </td>
                     </tr>
                     <?php
@@ -125,7 +110,7 @@ $selected = "selected='selected'";
             e.preventDefault();            
             var link = jQuery(this).get(0).href;            
             var value = link.substring(link.lastIndexOf('/') + 1);
-            jQuery("#searchList").attr("action", baseURL + "roomListing/" + value);
+            jQuery("#searchList").attr("action", baseURL + "baseFareListing/" + value);
             jQuery("#searchList").submit();
         });
     });
