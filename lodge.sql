@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 11, 2017 at 07:48 PM
+-- Generation Time: Mar 22, 2017 at 05:37 PM
 -- Server version: 10.1.13-MariaDB
 -- PHP Version: 5.5.35
 
@@ -67,6 +67,25 @@ CREATE TABLE `ldg_lodge` (
   `updatedBy` int(11) DEFAULT NULL,
   `updatedDtm` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Information of lodge';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ldg_reset_password`
+--
+
+CREATE TABLE `ldg_reset_password` (
+  `id` bigint(20) NOT NULL,
+  `email` varchar(128) NOT NULL,
+  `activation_id` varchar(32) NOT NULL,
+  `agent` varchar(512) NOT NULL,
+  `client_ip` varchar(32) NOT NULL,
+  `isDeleted` tinyint(4) NOT NULL DEFAULT '0',
+  `createdBy` bigint(20) NOT NULL DEFAULT '1',
+  `createdDtm` datetime NOT NULL,
+  `updatedBy` bigint(20) DEFAULT NULL,
+  `updatedDtm` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -208,7 +227,7 @@ CREATE TABLE `ldg_users` (
 --
 
 INSERT INTO `ldg_users` (`userId`, `userEmail`, `userPassword`, `userName`, `userPhone`, `userAddress`, `roleId`, `isDeleted`, `createdBy`, `createdDtm`, `updatedBy`, `updatedDtm`) VALUES
-(1, 'kishor10d@gmail.com', '$2y$10$qs9FyDuyx9NX72UZpsZdM.BViJkKwRe4ISPx/GIi92id7JxGQDIRa', 'Kishor Mali', '9890098900', 'Pune India', 1, 0, 1, '2017-01-01 00:00:00', NULL, NULL);
+(1, 'email@gmail.com', '$2y$10$W0JwINh/A4eadWvp1.AxkejudEgv8Wg5vUMCcX4MKtdoCimQieBdK', 'Kishor Mali', '9890098900', 'Pune India', 1, 0, 1, '2017-01-01 00:00:00', NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -226,6 +245,12 @@ ALTER TABLE `ldg_floor`
 --
 ALTER TABLE `ldg_lodge`
   ADD PRIMARY KEY (`lodgeId`);
+
+--
+-- Indexes for table `ldg_reset_password`
+--
+ALTER TABLE `ldg_reset_password`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `ldg_roles`
@@ -271,6 +296,11 @@ ALTER TABLE `ldg_floor`
 --
 ALTER TABLE `ldg_lodge`
   MODIFY `lodgeId` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ldg_reset_password`
+--
+ALTER TABLE `ldg_reset_password`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 --
 -- AUTO_INCREMENT for table `ldg_roles`
 --
