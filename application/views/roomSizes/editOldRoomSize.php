@@ -22,7 +22,7 @@ if(!empty($roomSizeInfo))
     <section class="content-header">
       <h1>
         Room Size Management
-        <small>Add / Edit User</small>
+        <small>Add / Edit Room Size</small>
       </h1>
     </section>
     
