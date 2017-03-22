@@ -26,7 +26,7 @@ class User extends BaseController
      */
     public function index()
     {
-        $this->global['pageTitle'] = 'CodeInsect : Dashboard';
+        $this->global['pageTitle'] = 'DigiLodge : Dashboard';
         
         $this->loadViews("dashboard", $this->global, NULL , NULL);
     }
@@ -55,7 +55,7 @@ class User extends BaseController
             
             $data['userRecords'] = $this->user_model->userListing($searchText, $returns["page"], $returns["segment"]);
             
-            $this->global['pageTitle'] = 'CodeInsect : User Listing';
+            $this->global['pageTitle'] = 'DigiLodge : User Listing';
             
             $this->loadViews("users", $this->global, $data, NULL);
         }
@@ -75,7 +75,7 @@ class User extends BaseController
             $this->load->model('user_model');
             $data['roles'] = $this->user_model->getUserRoles();
             
-            $this->global['pageTitle'] = 'CodeInsect : Add New User';
+            $this->global['pageTitle'] = 'DigiLodge : Add New User';
 
             $this->loadViews("addNew", $this->global, $data, NULL);
         }
@@ -154,7 +154,7 @@ class User extends BaseController
             $data['roles'] = $this->user_model->getUserRoles();
             $data['userInfo'] = $this->user_model->getUserInfo($userId);
             
-            $this->global['pageTitle'] = 'CodeInsect : Edit User';
+            $this->global['pageTitle'] = 'DigiLodge : Edit User';
             
             $this->loadViews("editOld", $this->global, $data, NULL);
         }
@@ -253,7 +253,7 @@ class User extends BaseController
      */
     function loadChangePass()
     {
-        $this->global['pageTitle'] = 'CodeInsect : Change Password';
+        $this->global['pageTitle'] = 'DigiLodge : Change Password';
         
         $this->loadViews("changePassword", $this->global, NULL, NULL);
     }
@@ -303,7 +303,7 @@ class User extends BaseController
 
     function pageNotFound()
     {
-        $this->global['pageTitle'] = 'CodeInsect : 404 - Page Not Found';
+        $this->global['pageTitle'] = 'DigiLodge : 404 - Page Not Found';
         
         $this->loadViews("404", $this->global, NULL, NULL);
     }

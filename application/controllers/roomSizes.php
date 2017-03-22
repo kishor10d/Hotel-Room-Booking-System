@@ -131,7 +131,7 @@ class RoomSizes extends BaseController
             
             $data['roomSizeInfo'] = $this->roomSizes_model->getRoomSizeInfo($roomSizeId);
             
-            $this->global['pageTitle'] = 'CodeInsect : Edit Room Size';
+            $this->global['pageTitle'] = 'DigiLodge : Edit Room Size';
             
             $this->loadViews("roomSizes/editOldRoomSize", $this->global, $data, NULL);
         }

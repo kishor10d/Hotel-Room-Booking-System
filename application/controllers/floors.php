@@ -133,7 +133,7 @@ class Floors extends BaseController
             
             $data['floorInfo'] = $this->floors_model->getFloorInfo($floorId);
             
-            $this->global['pageTitle'] = 'CodeInsect : Edit Floor';
+            $this->global['pageTitle'] = 'DigiLodge : Edit Floor';
             
             $this->loadViews("floors/editOldFloor", $this->global, $data, NULL);
         }

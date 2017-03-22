@@ -144,7 +144,7 @@ class Rooms extends BaseController
             
             $data['roomInfo'] = $this->rooms_model->getRoomInfo($roomId);
             
-            $this->global['pageTitle'] = 'CodeInsect : Edit Room';
+            $this->global['pageTitle'] = 'DigiLodge : Edit Room';
             
             $this->loadViews("rooms/editOldRoom", $this->global, $data, NULL);
         }
