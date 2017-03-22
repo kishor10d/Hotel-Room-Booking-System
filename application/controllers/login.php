@@ -117,83 +117,74 @@ class Login extends CI_Controller
         {
             $email = $this->input->post('login_email');
             
-            if($this->user_model->checkEmailExist($email))
+            if($this->login_model->checkEmailExist($email))
             {
                 $encoded_email = urlencode($email);
                 
                 $this->load->helper('string');
                 $data['email'] = $email;
                 $data['activation_id'] = random_string('alnum',15);
-                $data['created_dtm'] = date('Y-m-d H:i:s');
-                $data['agent'] = $this->getBrowserAgent();
+                $data['createdDtm'] = date('Y-m-d H:i:s');
+                $data['agent'] = getBrowserAgent();
                 $data['client_ip'] = $this->input->ip_address();
                 
-                $save = $this->user_model->resetPasswordUser($data);                
+                $save = $this->login_model->resetPasswordUser($data);                
                 
                 if($save)
                 {
-                    $config['protocol'] = 'sendmail';
-                    $config['mailpath'] = '/usr/sbin/sendmail';
-                    $config['charset'] = 'UTF-8';
-                    $config['wordwrap'] = TRUE;
-                    $config['mailtype'] = 'html';
-                    
-                    $this->load->library('email', $config);
-                    
                     $data1['reset_link'] = base_url() . "resetPasswordConfirmUser/" . $data['activation_id'] . "/" . $encoded_email;
-                    $data1['info'] = $this->user_model->getCustomerInfoByEmail($email);
-                    
-                    $this->email->from(ADMIN_EMAIL_ID, WEBSITE);
-                    $this->email->to($email);
-                    $this->email->subject(RESET_PASSWORD_EMAIL_SUBJECT);
-                    $this->email->message($this->load->view('email', $data1, TRUE));
-                    
-                    if ($this->email->send())
-                    {
-                        $status = 'send';
+                    $userInfo = $this->login_model->getCustomerInfoByEmail($email);
+
+                    if(!empty($userInfo)){
+                        $data1["name"] = $userInfo[0]->userName;
+                        $data1["email"] = $userInfo[0]->userEmail;
+                        $data1["message"] = "Reset Your Password";
                     }
-                    else
-                    {
-                        $status = 'notsend';
+
+                    $sendStatus = resetPasswordEmail($data1);
+
+                    if($sendStatus){
+                        $status = "send";
+                        setFlashData($status, "Reset password link sent successfully, please check mails.");
+                    } else {
+                        $status = "notsend";
+                        setFlashData($status, "Email has been failed, try again.");
                     }
                 }
                 else
                 {
                     $status = 'unable';
+                    setFlashData($status, "It seems an error while sending your details, try again.");
                 }
             }
             else
             {
                 $status = 'invalid';
+                setFlashData($status, "This email is not registered with us.");
             }
-            
-            echo json_encode(array('status'=>$status));
+            redirect('/forgotPassword');
         }
     }
 
     // This function used to reset the password 
-    function resetPasswordConfirmUser()
+    function resetPasswordConfirmUser($activation_id, $email)
     {
-       
         // Get email and activation code from URL values at index 3-4
-        $email = urldecode($this->uri->segment(3));
-        $activation_id = $this->uri->segment(2);
+        $email = urldecode($email);
         
         // Check activation id in database
-        $is_correct = $this->user_model->checkActivationDetails($email, $activation_id);
+        $is_correct = $this->login_model->checkActivationDetails($email, $activation_id);
         
         $data['email'] = $email;
         $data['activation_code'] = $activation_id;
         
         if ($is_correct == 1)
         {
-            $this->load->view('includes/header');
-            $this->load->view('new_password', $data);
-            $this->load->view('includes/footer');
+            $this->load->view('newPassword', $data);
         }
         else
         {
-            redirect('user');
+            redirect('/login');
         }
     }
     
@@ -202,31 +193,29 @@ class Login extends CI_Controller
     {
         $status = '';
         $message = '';
+        $email = $this->input->post("email");
+        $activation_id = $this->input->post("activation_code");
         
         $this->load->library('form_validation');
         
-        $this->form_validation->set_rules('password','New Password','required|max_length[20]');
-        $this->form_validation->set_rules('cpassword','New Re-Password','trim|required|matches[password]|max_length[20]');
+        $this->form_validation->set_rules('password','Password','required|max_length[20]');
+        $this->form_validation->set_rules('cpassword','Confirm Password','trim|required|matches[password]|max_length[20]');
         
         if($this->form_validation->run() == FALSE)
         {
-            echo json_encode(array('status' => 'validation', 'message' => 'Please validate the fields'));
+            $this->resetPasswordConfirmUser($activation_id, urlencode($email));
         }
         else
         {
             $password = $this->input->post('password');
             $cpassword = $this->input->post('cpassword');
-            $email = $this->input->post('email');
-            $activation_id = $this->input->post('activation_id');
             
             // Check activation id in database
-            $is_correct = $this->user_model->checkActivationDetails($email, $activation_id);
+            $is_correct = $this->login_model->checkActivationDetails($email, $activation_id);
             
-            if(($is_correct == 1) && ($password == $cpassword))
-            {
-                $data = array('email_id'=>$email, 'password'=>$password);
-                
-                $this->user_model->createPasswordUser($data);
+            if($is_correct == 1)
+            {                
+                $this->login_model->createPasswordUser($email, $password);
                 
                 $status = 'success';
                 $message = 'Password changed successfully';
@@ -237,11 +226,11 @@ class Login extends CI_Controller
                 $message = 'Password changed failed';
             }
             
-            echo json_encode(array('status'=>$status, 'message'=>$message));
+            setFlashData($status, $message);
+
+            redirect("/login");
         }
     }
-
-
 }
 
 ?>

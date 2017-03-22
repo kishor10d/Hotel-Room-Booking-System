@@ -97,5 +97,13 @@ $route['editOldBaseFare/(:num)'] = "baseFare/editOldBaseFare/$1";
 $route['updateOldBaseFare'] = "baseFare/updateOldBaseFare";
 $route['deleteBaseFare'] = "baseFare/deleteBaseFare";
 
+/******* Forget Password Routes ***********/
+$route['forgotPassword'] = "login/forgotPassword";
+$route['resetPasswordUser'] = "login/resetPasswordUser";
+$route['resetPasswordConfirmUser'] = "login/resetPasswordConfirmUser";
+$route['resetPasswordConfirmUser/(:any)'] = "login/resetPasswordConfirmUser/$1";
+$route['resetPasswordConfirmUser/(:any)/(:any)'] = "login/resetPasswordConfirmUser/$1/$2";
+$route['createPasswordUser'] = "login/createPasswordUser";
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
