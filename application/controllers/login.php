@@ -111,7 +111,7 @@ class Login extends CI_Controller
                 
         if($this->form_validation->run() == FALSE)
         {
-            $this->forgetPasswordUser();
+            $this->forgotPassword();
         }
         else 
         {

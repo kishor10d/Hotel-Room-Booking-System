@@ -11,9 +11,9 @@ if(!empty($userInfo))
     foreach ($userInfo as $uf)
     {
         $userId = $uf->userId;
-        $name = $uf->name;
-        $email = $uf->email;
-        $mobile = $uf->mobile;
+        $name = $uf->userName;
+        $email = $uf->userEmail;
+        $mobile = $uf->userPhone;
         $roleId = $uf->roleId;
     }
 }
@@ -25,7 +25,7 @@ if(!empty($userInfo))
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        User Management
+        <i class="fa fa-users" aria-hidden="true"></i> User Management
         <small>Add / Edit User</small>
       </h1>
     </section>

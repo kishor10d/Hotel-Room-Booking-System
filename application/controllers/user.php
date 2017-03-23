@@ -113,8 +113,8 @@ class User extends BaseController
                 $roleId = $this->input->post('role');
                 $mobile = $this->input->post('mobile');
                 
-                $userInfo = array('email'=>$email, 'userPassword'=>getHashedPassword($password), 'roleId'=>$roleId, 'userName'=> $name,
-                                    'mobile'=>$mobile, 'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));
+                $userInfo = array('userEmail'=>$email, 'userPassword'=>getHashedPassword($password), 'roleId'=>$roleId, 'userName'=> $name,
+                                    'userPhone'=>$mobile, 'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));
                 
                 $this->load->model('user_model');
                 $result = $this->user_model->addNewUser($userInfo);
@@ -199,13 +199,13 @@ class User extends BaseController
                 
                 if(empty($password))
                 {
-                    $userInfo = array('email'=>$email, 'roleId'=>$roleId, 'userName'=>$name,
-                                    'mobile'=>$mobile, 'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:sa'));
+                    $userInfo = array('userEmail'=>$email, 'roleId'=>$roleId, 'userName'=>$name,
+                                    'userPhone'=>$mobile, 'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:sa'));
                 }
                 else
                 {
-                    $userInfo = array('email'=>$email, 'userPassword'=>getHashedPassword($password), 'roleId'=>$roleId,
-                        'userName'=>ucwords($name), 'mobile'=>$mobile, 'updatedBy'=>$this->vendorId, 
+                    $userInfo = array('userEmail'=>$email, 'userPassword'=>getHashedPassword($password), 'roleId'=>$roleId,
+                        'userName'=>ucwords($name), 'userPhone'=>$mobile, 'updatedBy'=>$this->vendorId, 
                         'updatedDtm'=>date('Y-m-d H:i:sa'));
                 }
                 
