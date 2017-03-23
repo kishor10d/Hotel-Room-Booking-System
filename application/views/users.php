@@ -2,7 +2,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        User Management
+        <i class="fa fa-users" aria-hidden="true"></i> User Management
         <small>Add, Edit, Delete</small>
       </h1>
     </section>
@@ -48,9 +48,9 @@
                     ?>
                     <tr>
                       <td><?php echo $record->userId ?></td>
-                      <td><?php echo $record->name ?></td>
-                      <td><?php echo $record->email ?></td>
-                      <td><?php echo $record->mobile ?></td>
+                      <td><?php echo $record->userName ?></td>
+                      <td><?php echo $record->userEmail ?></td>
+                      <td><?php echo $record->userPhone ?></td>
                       <td><?php echo $record->role ?></td>
                       <td>
                           <a href="<?php echo base_url().'editOld/'.$record->userId; ?>"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</a>
