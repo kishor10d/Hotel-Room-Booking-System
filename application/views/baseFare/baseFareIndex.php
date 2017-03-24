@@ -13,7 +13,7 @@ $selected = "selected='selected'";
         <div class="row">
             <div class="col-xs-12 text-right">
                 <div class="form-group">
-                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewBaseFare">Add New Base Fare</a>
+                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewBaseFare"><i class="fa fa-plus" aria-hidden="true"></i> Add New Base Fare</a>
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@ $selected = "selected='selected'";
                       <th>Service Tax</th>
                       <th>Service Charge</th>
                       <th>Total</th>
-                      <th>Actions</th>
+                      <th class="text-center">Actions</th>
                     </tr>
                     <?php
                     if(!empty($baseFareRecords))
@@ -83,9 +83,9 @@ $selected = "selected='selected'";
                       <td><?php echo $record->serviceTax."%" ?></td>
                       <td><?php echo $record->serviceCharge."%" ?></td>
                       <td><?php echo $record->fareTotal ?></td>
-                      <td>
-                          <a href="<?php echo base_url().'editOldBaseFare/'.$record->bfId; ?>"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</a>
-                          <a href="" data-bfid="<?php echo $record->bfId; ?>" class="deleteBaseFare"><i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;</a>
+                      <td class="text-center">
+                          <a href="<?php echo base_url().'editOldBaseFare/'.$record->bfId; ?>" class="btn btn-sm btn-info"><i class="fa fa-pencil"></i></a>
+                          <a href="" data-bfid="<?php echo $record->bfId; ?>" class="deleteBaseFare btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                       </td>
                     </tr>
                     <?php

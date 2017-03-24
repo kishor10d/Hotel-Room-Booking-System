@@ -13,7 +13,7 @@ $selected = "selected='selected'";
         <div class="row">
             <div class="col-xs-12 text-right">
                 <div class="form-group">
-                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewRoom">Add New Room</a>
+                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewRoom"><i class="fa fa-plus" aria-hidden="true"></i> Add New Room</a>
                 </div>
             </div>
         </div>
@@ -84,7 +84,7 @@ $selected = "selected='selected'";
                       <th>Room Size</th>
                       <th>Room Description</th>
                       <th>Room Floor</th>
-                      <th>Actions</th>
+                      <th class="text-center">Actions</th>
                     </tr>
                     <?php
                     if(!empty($roomRecords))
@@ -98,9 +98,9 @@ $selected = "selected='selected'";
                       <td><?php echo $record->sizeTitle ?></td>
                       <td><?php echo $record->sizeDescription ?></td>
                       <td><?php echo $record->floorCode." - ".$record->floorName; ?></td>
-                      <td>
-                          <a href="<?php echo base_url().'editOldRoom/'.$record->roomId; ?>"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</a>
-                          <a href="#" data-roomid="<?php echo $record->roomId; ?>" class="deleteRoom"><i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;</a>
+                      <td class="text-center">
+                          <a href="<?php echo base_url().'editOldRoom/'.$record->roomId; ?>" class="btn btn-sm btn-info"><i class="fa fa-pencil"></i></a>
+                          <a href="#" data-roomid="<?php echo $record->roomId; ?>" class="deleteRoom btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                       </td>
                     </tr>
                     <?php

@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-xs-12 text-right">
                 <div class="form-group">
-                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewFloor">Add New Floor</a>
+                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewFloor"><i class="fa fa-plus" aria-hidden="true"></i> Add New Floor</a>
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
                       <th>Floor Code</th>
                       <th>Floor Name</th>
                       <th>Description</th>                      
-                      <th>Actions</th>
+                      <th class="text-center">Actions</th>
                     </tr>
                     <?php
                     if(!empty($floorsRecords))
@@ -50,9 +50,9 @@
                       <td><?php echo $record->floorCode ?></td>
                       <td><?php echo $record->floorName ?></td>
                       <td><?php echo $record->floorDescription ?></td>
-                      <td>
-                          <a href="<?php echo base_url().'editOldFloor/'.$record->floorId; ?>"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</a>
-                          <a href="#" data-floorsid="<?php echo $record->floorId; ?>" class="deleteFloors"><i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;</a>
+                      <td class="text-center">
+                          <a href="<?php echo base_url().'editOldFloor/'.$record->floorId; ?>" class="btn btn-info btn-sm"><i class="fa fa-pencil"></i></a>
+                          <a href="#" data-floorsid="<?php echo $record->floorId; ?>" class="deleteFloors btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
                       </td>
                     </tr>
                     <?php

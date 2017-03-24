@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-xs-12 text-right">
                 <div class="form-group">
-                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewRoomSize">Add New Room Size</a>
+                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewRoomSize"><i class="fa fa-plus" aria-hidden="true"></i> Add New Room Size</a>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
                       <th>Id</th>
                       <th>Size Title</th>
                       <th>Size Description</th>
-                      <th>Actions</th>
+                      <th class="text-center">Actions</th>
                     </tr>
                     <?php
                     if(!empty($roomSizesRecords))
@@ -48,9 +48,9 @@
                       <td><?php echo $record->sizeId ?></td>
                       <td><?php echo $record->sizeTitle ?></td>
                       <td><?php echo $record->sizeDescription ?></td>
-                      <td>
-                          <a href="<?php echo base_url().'editOldRoomSize/'.$record->sizeId; ?>"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</a>
-                          <a href="" data-roomsizeid="<?php echo $record->sizeId; ?>" class="deleteRoomSize"><i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;</a>
+                      <td class="text-center">
+                          <a href="<?php echo base_url().'editOldRoomSize/'.$record->sizeId; ?>" class="btn btn-info btn-sm"><i class="fa fa-pencil"></i></a>
+                          <a href="" data-roomsizeid="<?php echo $record->sizeId; ?>" class="deleteRoomSize btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
                       </td>
                     </tr>
                     <?php

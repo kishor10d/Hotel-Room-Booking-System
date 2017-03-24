@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-xs-12 text-right">
                 <div class="form-group">
-                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNew">Add New</a>
+                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNew"><i class="fa fa-plus" aria-hidden="true"></i> Add New</a>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
                       <th>Email</th>
                       <th>Mobile</th>
                       <th>Role</th>
-                      <th>Actions</th>
+                      <th class="text-center">Actions</th>
                     </tr>
                     <?php
                     if(!empty($userRecords))
@@ -52,9 +52,9 @@
                       <td><?php echo $record->userEmail ?></td>
                       <td><?php echo $record->userPhone ?></td>
                       <td><?php echo $record->role ?></td>
-                      <td>
-                          <a href="<?php echo base_url().'editOld/'.$record->userId; ?>"><i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;</a>
-                          <a href="#" data-userid="<?php echo $record->userId; ?>" class="deleteUser"><i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;</a>
+                      <td class="text-center">
+                          <a href="<?php echo base_url().'editOld/'.$record->userId; ?>" class="btn btn-sm btn-info"><i class="fa fa-pencil"></i></a>
+                          <a href="#" data-userid="<?php echo $record->userId; ?>" class="deleteUser btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                       </td>
                     </tr>
                     <?php
