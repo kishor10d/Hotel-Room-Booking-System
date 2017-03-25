@@ -1,5 +1,12 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Class : Rooms_model 
+ * Rooms model to handle database operations related to rooms
+ * @author : Kishor Mali
+ * @version : 1.1
+ * @since : 15 Feb 2017
+ */
 class Rooms_model extends CI_Model
 {
 	/**

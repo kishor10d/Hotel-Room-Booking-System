@@ -166,7 +166,11 @@ class Login extends CI_Controller
         }
     }
 
-    // This function used to reset the password 
+    /**
+     * This function used to reset the password 
+     * @param {string} $activation_id : This is activation key
+     * @param {string} $email : This is email of user
+     */
     function resetPasswordConfirmUser($activation_id, $email)
     {
         // Get email and activation code from URL values at index 3-4
@@ -188,7 +192,9 @@ class Login extends CI_Controller
         }
     }
     
-    // This function used to create new password
+    /**
+     * This function used to create new password
+     */
     function createPasswordUser()
     {
         $status = '';

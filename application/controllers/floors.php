@@ -3,11 +3,11 @@
 require APPPATH . '/libraries/BaseController.php';
 
 /**
- * Class : User (UserController)
- * User Class to control all user related operations.
+ * Class : Floors (FloorsController)
+ * Floors Class to control all floor related operations.
  * @author : Kishor Mali
  * @version : 1.1
- * @since : 15 November 2016
+ * @since : 15 Feb 2017
  */
 class Floors extends BaseController
 {

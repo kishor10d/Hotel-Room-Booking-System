@@ -1,5 +1,12 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Class : RoomSizes_model 
+ * RoomSizes model to handle database operations related to room sizes
+ * @author : Kishor Mali
+ * @version : 1.1
+ * @since : 12 Jan 2017
+ */
 class RoomSizes_model extends CI_Model
 {
 	/**
