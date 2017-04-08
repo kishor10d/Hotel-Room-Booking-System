@@ -228,7 +228,7 @@ $config['cache_path'] = '';
 | MUST set an encryption key.  See the user guide for info.
 |
 */
-$config['encryption_key'] = 'asjkrue*$djasfl134213';
+$config['encryption_key'] = 'cB39#7$54%B3R!@WERAWe';
 
 /*
 |--------------------------------------------------------------------------
@@ -248,7 +248,7 @@ $config['encryption_key'] = 'asjkrue*$djasfl134213';
 | 'sess_time_to_update'		= how many seconds between CI refreshing Session Information
 |
 */
-$config['sess_cookie_name']		= 'ci_session';
+$config['sess_cookie_name']		= 'ldg_session';
 $config['sess_expiration']		= 7200;
 $config['sess_expire_on_close']	= FALSE;
 $config['sess_encrypt_cookie']	= FALSE;
