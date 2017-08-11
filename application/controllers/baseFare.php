@@ -22,6 +22,14 @@ class BaseFare extends BaseController
     }
 
     /**
+     * This function used to load the first screen of the user
+     */
+    public function index()
+    {
+        redirect("baseFareListing");
+    }
+
+    /**
      * This function is used to load the floors list
      */
     function baseFareListing()

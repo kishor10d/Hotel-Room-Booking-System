@@ -22,6 +22,14 @@ class Rooms extends BaseController
     }
 
     /**
+     * This function used to load the first screen of the user
+     */
+    public function index()
+    {
+        redirect("roomListing");
+    }
+
+    /**
      * This function is used to load the rooms list
      */
     function roomListing()

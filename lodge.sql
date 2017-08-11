@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 22, 2017 at 05:37 PM
+-- Generation Time: Aug 11, 2017 at 06:15 PM
 -- Server version: 10.1.13-MariaDB
 -- PHP Version: 5.5.35
 
@@ -19,6 +19,33 @@ SET time_zone = "+00:00";
 --
 -- Database: `lodge`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ldg_customer`
+--
+
+CREATE TABLE `ldg_customer` (
+  `customerId` int(11) NOT NULL,
+  `customerName` varchar(50) NOT NULL,
+  `customerAddress` varchar(2048) DEFAULT NULL,
+  `customerPhone` varchar(15) DEFAULT NULL,
+  `customerEmail` varchar(128) DEFAULT NULL,
+  `isDeleted` tinyint(4) NOT NULL DEFAULT '0',
+  `createdBy` int(11) NOT NULL,
+  `createdDtm` datetime NOT NULL,
+  `updatedBy` int(11) DEFAULT NULL,
+  `updatedDtm` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `ldg_customer`
+--
+
+INSERT INTO `ldg_customer` (`customerId`, `customerName`, `customerAddress`, `customerPhone`, `customerEmail`, `isDeleted`, `createdBy`, `createdDtm`, `updatedBy`, `updatedDtm`) VALUES
+(1, 'Customer 1', 'The Big Street Address, Near Corner', '123456789', '', 0, 1, '2017-08-02 18:25:01', 1, '2017-08-11 18:14:17'),
+(2, 'Customer 2', 'The Big Street Address, Near Corner', '', 'email@outllook.com', 0, 1, '2017-08-02 18:35:04', 1, '2017-08-11 18:14:46');
 
 -- --------------------------------------------------------
 
@@ -86,6 +113,13 @@ CREATE TABLE `ldg_reset_password` (
   `updatedBy` bigint(20) DEFAULT NULL,
   `updatedDtm` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ldg_reset_password`
+--
+
+INSERT INTO `ldg_reset_password` (`id`, `email`, `activation_id`, `agent`, `client_ip`, `isDeleted`, `createdBy`, `createdDtm`, `updatedBy`, `updatedDtm`) VALUES
+(25, 'email@gmail.com', 'nxwY5JKbbNcTRju', 'Chrome 56.0.2924.87', '0.0.0.0', 0, 1, '2017-03-22 18:11:25', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -227,11 +261,19 @@ CREATE TABLE `ldg_users` (
 --
 
 INSERT INTO `ldg_users` (`userId`, `userEmail`, `userPassword`, `userName`, `userPhone`, `userAddress`, `roleId`, `isDeleted`, `createdBy`, `createdDtm`, `updatedBy`, `updatedDtm`) VALUES
-(1, 'email@gmail.com', '$2y$10$W0JwINh/A4eadWvp1.AxkejudEgv8Wg5vUMCcX4MKtdoCimQieBdK', 'Kishor Mali', '9890098900', 'Pune India', 1, 0, 1, '2017-01-01 00:00:00', NULL, NULL);
+(1, 'email@gmail.com', '$2y$10$W0JwINh/A4eadWvp1.AxkejudEgv8Wg5vUMCcX4MKtdoCimQieBdK', 'Kishor Mali', '9890098900', 'Pune India', 1, 0, 1, '2017-01-01 00:00:00', NULL, NULL),
+(2, 'subadmin@gmail.com', '$2y$10$sqyx0XUQhJxIJ6lq9adpV.ioq97zngNXeT33b/n5M2KbWdyzfALie', 'Sub Admin', '9890098900', '', 2, 0, 1, '2017-03-23 18:19:38', 1, '2017-05-15 18:32:43'),
+(3, 'admin@codeinsect.com', '$2y$10$0zdAvfmzLst8d2aoD5vi6emxmcT4idjjTl1Uz3zkKwzRGbaAk0qk.', 'Book Admin', '9890098900', '', 3, 0, 1, '2017-03-24 16:26:31', 1, '2017-05-15 18:32:39');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `ldg_customer`
+--
+ALTER TABLE `ldg_customer`
+  ADD PRIMARY KEY (`customerId`);
 
 --
 -- Indexes for table `ldg_floor`
@@ -287,6 +329,11 @@ ALTER TABLE `ldg_users`
 --
 
 --
+-- AUTO_INCREMENT for table `ldg_customer`
+--
+ALTER TABLE `ldg_customer`
+  MODIFY `customerId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
 -- AUTO_INCREMENT for table `ldg_floor`
 --
 ALTER TABLE `ldg_floor`
@@ -300,7 +347,7 @@ ALTER TABLE `ldg_lodge`
 -- AUTO_INCREMENT for table `ldg_reset_password`
 --
 ALTER TABLE `ldg_reset_password`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `ldg_roles`
 --
@@ -325,7 +372,7 @@ ALTER TABLE `ldg_room_sizes`
 -- AUTO_INCREMENT for table `ldg_users`
 --
 ALTER TABLE `ldg_users`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -1,27 +1,30 @@
 <?php
 
-$sizeId = '';
-$sizeTitle = '';
-$sizeDescription = '';
+$customerId = '';
+$customerName = '';
+$customerPhone = '';
+$customerEmail = '';
+$customerAddress = '';
 
-if(!empty($roomSizeInfo))
+if(!empty($customerInfo))
 {
-    foreach ($roomSizeInfo as $info)
+    foreach ($customerInfo as $info)
     {
-        $sizeId = $info->sizeId;
-        $sizeTitle = $info->sizeTitle;
-        $sizeDescription = $info->sizeDescription;
+        $customerId = $info->customerId;
+        $customerName = $info->customerName;
+        $customerPhone = $info->customerPhone;
+        $customerEmail = $info->customerEmail;
+        $customerAddress = $info->customerAddress;
     }
 }
 
 ?>
-
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Room Size Management
-        <small>Add / Edit Room Size</small>
+        Customer Management
+        <small>Add / Edit Customer</small>
       </h1>
     </section>
     
@@ -36,27 +39,40 @@ if(!empty($roomSizeInfo))
                 
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Enter Room Size Details</h3>
+                        <h3 class="box-title">Enter Customer Details</h3>
                     </div><!-- /.box-header -->
                     <!-- form start -->
                     
-                    <form role="form" id="editOldRoomSize" action="<?php echo base_url() ?>updateOldRoomSize" method="post" role="form">
+                    <form role="form" id="addedNewCustomer" action="<?php echo base_url() ?>updateOldCustomer" method="post" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-12">                                
                                     <div class="form-group">
-                                        <label for="sizeTitle">Room Size Title</label>
-                                        <input type="text" class="form-control required" id="sizeTitle" name="sizeTitle" maxlength="512" value="<?php echo $sizeTitle; ?>">
-                                        <input type="hidden" value="<?php echo $sizeId; ?>" name="sizeId" />
+                                        <label for="customerName">Customer Name</label>
+                                        <input type="text" class="form-control required" id="customerName" name="customerName" maxlength="512" value="<?= $customerName ?>" />
+                                        <input type="hidden" value="<?php echo $customerId; ?>" name="customerId" />
                                     </div>
-                                    
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="sizeDescription">Room Size Description</label>
-                                        <textarea name="sizeDescription" id="sizeDescription" style="width:100%"><?php echo $sizeDescription; ?></textarea>
+                                        <label for="customerAddress">Customer Address</label>
+                                        <input type="text" class="form-control" id="customerAddress" name="customerAddress" maxlength="1024" value="<?= $customerAddress ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="customerPhone">Customer Phone</label>
+                                        <input type="text" class="form-control" id="customerPhone" name="customerPhone" maxlength="15" value="<?= $customerPhone ?>" />
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <label for="customerEmail">Customer Email</label>
+                                        <input type="text" class="form-control" id="customerEmail" name="customerEmail" maxlength="128" value="<?= $customerEmail ?>" />
                                     </div>
                                 </div>
                             </div>
@@ -102,15 +118,3 @@ if(!empty($roomSizeInfo))
     </section>
     
 </div>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/tinymce/tinymce.min.js"></script>
-<script type="text/javascript">
-tinymce.init({
-    selector: "textarea",
-    plugins: [
-        "advlist autolink lists link image charmap print preview anchor",
-        "searchreplace visualblocks code fullscreen",
-        "insertdatetime media table contextmenu paste"
-    ],
-    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
-});
-</script>
