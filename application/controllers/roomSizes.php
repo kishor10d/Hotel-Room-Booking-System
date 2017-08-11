@@ -22,6 +22,14 @@ class RoomSizes extends BaseController
     }
 
     /**
+     * This function used to load the first screen of the user
+     */
+    public function index()
+    {
+        redirect("roomSizeListing");
+    }
+
+    /**
      * This function is used to load the floors list
      */
     function roomSizesListing()

@@ -96,6 +96,12 @@
               </a>
             </li>
             <li class="treeview">
+              <a href="<?php echo base_url(); ?>customer">
+                <i class="fa fa-users"></i>
+                <span>Customers</span>
+              </a>
+            </li>
+            <li class="treeview">
               <a href="#">
                 <i class="fa fa-plane"></i>
                 <span>Management</span>
@@ -131,7 +137,6 @@
                 ?>
               </ul>
             </li>
-            
             <?php
             if($role == ROLE_ADMIN)
             {

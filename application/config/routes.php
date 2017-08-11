@@ -105,5 +105,15 @@ $route['resetPasswordConfirmUser/(:any)'] = "login/resetPasswordConfirmUser/$1";
 $route['resetPasswordConfirmUser/(:any)/(:any)'] = "login/resetPasswordConfirmUser/$1/$2";
 $route['createPasswordUser'] = "login/createPasswordUser";
 
+
+$route['customerListing'] = 'customer/customerListing';
+$route['customerListing/(:num)'] = "customer/customerListing/$1";
+$route['addNewCustomer'] = "customer/addNewCustomer";
+$route['addedNewCustomer'] = "customer/addedNewCustomer";
+$route['editOldCustomer'] = "customer/editOldCustomer";
+$route['editOldCustomer/(:num)'] = "customer/editOldCustomer/$1";
+$route['updateOldCustomer'] = "customer/updateOldCustomer";
+$route['deleteCustomer'] = "customer/deleteCustomer";
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

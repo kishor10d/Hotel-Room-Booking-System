@@ -22,6 +22,14 @@ class Floors extends BaseController
     }
 
     /**
+     * This function used to load the first screen of the user
+     */
+    public function index()
+    {
+        redirect("floorsListing");
+    }
+
+    /**
      * This function is used to load the floors list
      */
     function floorsListing()

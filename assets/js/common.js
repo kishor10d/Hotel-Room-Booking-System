@@ -22,8 +22,8 @@ jQuery(document).ready(function(){
 			}).done(function(data){
 				console.log(data);
 				currentRow.parents('tr').remove();
-				if(data.status = true) { alert("User successfully deleted"); }
-				else if(data.status = false) { alert("User deletion failed"); }
+				if(data.status == true) { alert("User successfully deleted"); }
+				else if(data.status == false) { alert("User deletion failed"); }
 				else { alert("Access denied..!"); }
 			});
 		}
@@ -45,8 +45,8 @@ jQuery(document).ready(function(){
 				data : { floorsId : floorsId } 
 			}).done(function(data){
 				currentRow.parents('tr').remove();
-				if(data.status = true) { alert("Floor successfully deleted"); }
-				else if(data.status = false) { alert("Floor deletion failed"); }
+				if(data.status == true) { alert("Floor successfully deleted"); }
+				else if(data.status == false) { alert("Floor deletion failed"); }
 				else { alert("Access denied..!"); }
 			});
 		}
@@ -68,8 +68,8 @@ jQuery(document).ready(function(){
 				data : { sizeId : sizeId } 
 			}).done(function(data){
 				currentRow.parents('tr').remove();
-				if(data.status = true) { alert("Room Size successfully deleted"); }
-				else if(data.status = false) { alert("Room Size deletion failed"); }
+				if(data.status == true) { alert("Room Size successfully deleted"); }
+				else if(data.status == false) { alert("Room Size deletion failed"); }
 				else { alert("Access denied..!"); }
 			});
 		}
@@ -91,8 +91,8 @@ jQuery(document).ready(function(){
 				data : { roomId : roomId } 
 			}).done(function(data){
 				currentRow.parents('tr').remove();
-				if(data.status = true) { alert("Room successfully deleted"); }
-				else if(data.status = false) { alert("Room deletion failed"); }
+				if(data.status == true) { alert("Room successfully deleted"); }
+				else if(data.status == false) { alert("Room deletion failed"); }
 				else { alert("Access denied..!"); }
 			});
 		}
@@ -114,8 +114,31 @@ jQuery(document).ready(function(){
 				data : { bfId : bfId } 
 			}).done(function(data){
 				currentRow.parents('tr').remove();
-				if(data.status = true) { alert("Room successfully deleted"); }
-				else if(data.status = false) { alert("Room deletion failed"); }
+				if(data.status == true) { alert("Room successfully deleted"); }
+				else if(data.status == false) { alert("Room deletion failed"); }
+				else { alert("Access denied..!"); }
+			});
+		}
+	});
+
+	jQuery(document).on("click", ".deleteCustomer", function(){
+		var customerId = $(this).data("customerid"),
+			hitURL = baseURL + "deleteCustomer",
+			currentRow = $(this);
+			
+		var confirmation = confirm("Are you sure to delete this customer ?");
+		
+		if(confirmation)
+		{
+			jQuery.ajax({
+				type : "POST",
+				dataType : "json",
+				url : hitURL,
+				data : { customerId : customerId } 
+			}).done(function(data){
+				currentRow.parents('tr').remove();
+				if(data.status == true) { alert("Customer successfully deleted"); }
+				else if(data.status = false) { alert("Customer deletion failed"); }
 				else { alert("Access denied..!"); }
 			});
 		}
