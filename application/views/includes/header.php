@@ -102,6 +102,12 @@
               </a>
             </li>
             <li class="treeview">
+              <a href="<?php echo base_url(); ?>booking">
+                <i class="fa fa-users"></i>
+                <span>Bookings</span>
+              </a>
+            </li>
+            <li class="treeview">
               <a href="#">
                 <i class="fa fa-plane"></i>
                 <span>Management</span>

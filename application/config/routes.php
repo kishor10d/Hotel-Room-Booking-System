@@ -115,5 +115,8 @@ $route['editOldCustomer/(:num)'] = "customer/editOldCustomer/$1";
 $route['updateOldCustomer'] = "customer/updateOldCustomer";
 $route['deleteCustomer'] = "customer/deleteCustomer";
 
+$route['booking'] = 'booking/bookings';
+$route['booking/(:num)'] = 'booking/bookings/$1';
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

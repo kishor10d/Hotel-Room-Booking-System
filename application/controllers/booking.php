@@ -20,4 +20,31 @@ class Booking extends BaseController
         $this->load->model('Booking_model', "booking");
         $this->isLoggedIn();   
     }
+
+    /**
+     * This function used to load the first screen of the user
+     */
+    public function index()
+    {
+        redirect("bookings");
+    }
+
+    /**
+     * This function is used to load the rooms list
+     */
+    function bookings()
+    {
+        if($this->isAdmin() == TRUE)
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            $data = array();
+            
+            $this->global['pageTitle'] = 'DigiLodge : Bookings';
+            
+            $this->loadViews("bookings/bookingIndex", $this->global, $data, NULL);
+        }
+    }
 }
