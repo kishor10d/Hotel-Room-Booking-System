@@ -152,4 +152,17 @@ class Rooms_model extends CI_Model
         
         return $this->db->affected_rows();
     }
+
+    /**
+     * This function is used to get all room sizes
+     */
+    function getRooms()
+    {
+    	$this->db->select('roomId, roomNumber');
+        $this->db->from('ldg_rooms');
+        $this->db->where('isDeleted', 0);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
 }

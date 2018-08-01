@@ -18,6 +18,7 @@ class Booking extends BaseController
     {
         parent::__construct();
         $this->load->model('Booking_model', "booking");
+        $this->load->model('rooms_model');
         $this->isLoggedIn();   
     }
 
@@ -40,7 +41,25 @@ class Booking extends BaseController
         }
         else
         {
-            $data = array();
+            $searchText = $this->input->post('searchText');
+            $searchFloorId = $this->input->post('floorId');
+            $searchRoomSizeId = $this->input->post('sizeId');
+            $searchRoomId = $this->input->post('roomId');
+            $data['searchText'] = $searchText;
+            $data['searchRoomId'] = $searchRoomId;
+            $data['searchFloorId'] = $searchFloorId;
+            $data['searchRoomSizeId'] = $searchRoomSizeId;
+            $data['rooms'] = $this->rooms_model->getRooms();
+            $data['roomSizes'] = $this->rooms_model->getRoomSizes();
+            $data['floors'] = $this->rooms_model->getFloors();
+
+            $this->load->library('pagination');
+            
+            $count = $this->booking->bookingCount($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId);
+
+			$returns = $this->paginationCompress ( "booking/", $count, 10);
+            
+            $data['bookingRecords'] = $this->booking->bookingListing($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $returns["page"], $returns["segment"]);
             
             $this->global['pageTitle'] = 'DigiLodge : Bookings';
             
