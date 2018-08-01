@@ -107,7 +107,7 @@ $selected = "selected='selected'";
                         <td><?= $record->roomNumber ?><br><?= $record->floorName ?> (<?= $record->floorCode ?>)<br><?= $record->sizeTitle ?></td>
                         <td><?= $record->bookStartDate ?></td>
                         <td><?= $record->bookEndDate ?></td>
-                        <td><?= $record->customerName ?></td>
+                        <td><?= $record->customerName ?><br><?= $record->customerPhone."<br>" ?><?= $record->customerEmail ?></td>
                         <td><?= $record->bookingComments ?></td>
                         <td><?= $record->bookingDtm ?></td>
                         <td class="text-center">

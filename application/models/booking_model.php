@@ -13,7 +13,7 @@ class Booking_model extends CI_Model
     {
         $this->db->select('BaseTbl.bookingId, BaseTbl.customerId, BaseTbl.bookingDtm, BaseTbl.roomId,
                             BaseTbl.bookStartDate, BaseTbl.bookEndDate,
-                            C.customerName,
+                            C.customerName, C.customerPhone, C.customerEmail,
                             R.roomNumber, R.roomSizeId, R.floorId, RS.sizeTitle, RS.sizeDescription,
                             F.floorName, F.floorCode');
         $this->db->from('ldg_bookings AS BaseTbl');
@@ -40,7 +40,7 @@ class Booking_model extends CI_Model
     {
         $this->db->select('BaseTbl.bookingId, BaseTbl.customerId, BaseTbl.bookingDtm, BaseTbl.roomId,
                             BaseTbl.bookStartDate, BaseTbl.bookEndDate, BaseTbl.bookingComments,
-                            C.customerName,
+                            C.customerName, C.customerPhone, C.customerEmail,
                             R.roomNumber, R.roomSizeId, R.floorId, RS.sizeTitle, RS.sizeDescription,
                             F.floorName, F.floorCode');
         $this->db->from('ldg_bookings AS BaseTbl');
