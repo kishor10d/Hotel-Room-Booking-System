@@ -21,6 +21,7 @@
     		font-weight: normal;
     	}
     </style>
+    <link href="<?php echo base_url(); ?>assets/plugins/datepicker/datepicker3.css?" rel="stylesheet" type="text/css" />
     <!-- jQuery 2.1.4 -->
     <script src="<?php echo base_url(); ?>assets/js/jQuery-2.1.4.min.js"></script>
     <script type="text/javascript">
@@ -102,9 +103,15 @@
               </a>
             </li>
             <li class="treeview">
-              <a href="<?php echo base_url(); ?>booking">
-                <i class="fa fa-users"></i>
+              <a href="<?php echo base_url(); ?>book">
+                <i class="fa fa-book"></i>
                 <span>Bookings</span>
+              </a>
+            </li>
+            <li class="treeview">
+              <a href="<?= base_url(); ?>addNewBooking">
+                <i class="fa fa-book"></i>
+                <span>New Booking</span>
               </a>
             </li>
             <li class="treeview">

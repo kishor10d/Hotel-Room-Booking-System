@@ -27,7 +27,7 @@ class Booking extends BaseController
      */
     public function index()
     {
-        redirect("bookings");
+        redirect("book");
     }
 
     /**
@@ -57,13 +57,31 @@ class Booking extends BaseController
             
             $count = $this->booking->bookingCount($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId);
 
-			$returns = $this->paginationCompress ( "booking/", $count, 10);
+			$returns = $this->paginationCompress ( "book/", $count, 10);
             
             $data['bookingRecords'] = $this->booking->bookingListing($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $returns["page"], $returns["segment"]);
             
             $this->global['pageTitle'] = 'DigiLodge : Bookings';
             
             $this->loadViews("bookings/bookingIndex", $this->global, $data, NULL);
+        }
+    }
+
+    /**
+     * This function is used to load the add new form
+     */
+    function addNewBooking()
+    {
+        if($this->isAdmin() == TRUE)
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            $this->global['pageTitle'] = 'DigiLodge : Book the room';
+            $data = [];
+
+            $this->loadViews("bookings/addNewBooking", $this->global, $data, NULL);
         }
     }
 }
