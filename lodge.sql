@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
--- http://www.phpmyadmin.net
+-- version 4.8.4
+-- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 11, 2017 at 06:15 PM
--- Server version: 10.1.13-MariaDB
--- PHP Version: 5.5.35
+-- Generation Time: Dec 30, 2018 at 06:51 AM
+-- Server version: 10.1.37-MariaDB
+-- PHP Version: 7.3.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -19,6 +21,27 @@ SET time_zone = "+00:00";
 --
 -- Database: `lodge`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ldg_bookings`
+--
+
+CREATE TABLE `ldg_bookings` (
+  `bookingId` int(11) NOT NULL,
+  `customerId` int(11) NOT NULL,
+  `bookingDtm` datetime NOT NULL,
+  `roomId` int(11) NOT NULL,
+  `bookStartDate` datetime NOT NULL,
+  `bookEndDate` datetime NOT NULL,
+  `bookingComments` varchar(2048) DEFAULT NULL,
+  `isDeleted` tinyint(4) NOT NULL,
+  `createdBy` int(11) NOT NULL,
+  `createdDtm` datetime NOT NULL,
+  `updatedBy` int(11) DEFAULT NULL,
+  `updatedDtm` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -44,8 +67,8 @@ CREATE TABLE `ldg_customer` (
 --
 
 INSERT INTO `ldg_customer` (`customerId`, `customerName`, `customerAddress`, `customerPhone`, `customerEmail`, `isDeleted`, `createdBy`, `createdDtm`, `updatedBy`, `updatedDtm`) VALUES
-(1, 'Customer 1', 'The Big Street Address, Near Corner', '123456789', '', 0, 1, '2017-08-02 18:25:01', 1, '2017-08-11 18:14:17'),
-(2, 'Customer 2', 'The Big Street Address, Near Corner', '', 'email@outllook.com', 0, 1, '2017-08-02 18:35:04', 1, '2017-08-11 18:14:46');
+(1, 'John Doe', 'The Big Street Address, Near Corner', '123456789', '', 0, 1, '2017-08-02 18:25:01', 1, '2018-12-30 06:47:31'),
+(2, 'Alexander', 'The Big Street Address, Near Corner', '', 'email@outlook.com', 0, 1, '2017-08-02 18:35:04', 1, '2018-12-30 06:48:04');
 
 -- --------------------------------------------------------
 
@@ -270,6 +293,12 @@ INSERT INTO `ldg_users` (`userId`, `userEmail`, `userPassword`, `userName`, `use
 --
 
 --
+-- Indexes for table `ldg_bookings`
+--
+ALTER TABLE `ldg_bookings`
+  ADD PRIMARY KEY (`bookingId`);
+
+--
 -- Indexes for table `ldg_customer`
 --
 ALTER TABLE `ldg_customer`
@@ -329,50 +358,66 @@ ALTER TABLE `ldg_users`
 --
 
 --
+-- AUTO_INCREMENT for table `ldg_bookings`
+--
+ALTER TABLE `ldg_bookings`
+  MODIFY `bookingId` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `ldg_customer`
 --
 ALTER TABLE `ldg_customer`
   MODIFY `customerId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `ldg_floor`
 --
 ALTER TABLE `ldg_floor`
   MODIFY `floorId` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `ldg_lodge`
 --
 ALTER TABLE `ldg_lodge`
   MODIFY `lodgeId` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `ldg_reset_password`
 --
 ALTER TABLE `ldg_reset_password`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
 --
 -- AUTO_INCREMENT for table `ldg_roles`
 --
 ALTER TABLE `ldg_roles`
   MODIFY `roleId` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `ldg_rooms`
 --
 ALTER TABLE `ldg_rooms`
   MODIFY `roomId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
 --
 -- AUTO_INCREMENT for table `ldg_room_base_fare`
 --
 ALTER TABLE `ldg_room_base_fare`
   MODIFY `bfId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT for table `ldg_room_sizes`
 --
 ALTER TABLE `ldg_room_sizes`
   MODIFY `sizeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT for table `ldg_users`
 --
 ALTER TABLE `ldg_users`
   MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
