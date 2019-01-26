@@ -35,36 +35,29 @@ class Booking extends BaseController
      */
     function bookings()
     {
-        if($this->isAdmin() == TRUE)
-        {
-            $this->loadThis();
-        }
-        else
-        {
-            $searchText = $this->input->post('searchText');
-            $searchFloorId = $this->input->post('floorId');
-            $searchRoomSizeId = $this->input->post('sizeId');
-            $searchRoomId = $this->input->post('roomId');
-            $data['searchText'] = $searchText;
-            $data['searchRoomId'] = $searchRoomId;
-            $data['searchFloorId'] = $searchFloorId;
-            $data['searchRoomSizeId'] = $searchRoomSizeId;
-            $data['rooms'] = $this->rooms_model->getRooms();
-            $data['roomSizes'] = $this->rooms_model->getRoomSizes();
-            $data['floors'] = $this->rooms_model->getFloors();
+        $searchText = $this->input->post('searchText');
+        $searchFloorId = $this->input->post('floorId');
+        $searchRoomSizeId = $this->input->post('sizeId');
+        $searchRoomId = $this->input->post('roomId');
+        $data['searchText'] = $searchText;
+        $data['searchRoomId'] = $searchRoomId;
+        $data['searchFloorId'] = $searchFloorId;
+        $data['searchRoomSizeId'] = $searchRoomSizeId;
+        $data['rooms'] = $this->rooms_model->getRooms();
+        $data['roomSizes'] = $this->rooms_model->getRoomSizes();
+        $data['floors'] = $this->rooms_model->getFloors();
 
-            $this->load->library('pagination');
-            
-            $count = $this->booking->bookingCount($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId);
+        $this->load->library('pagination');
+        
+        $count = $this->booking->bookingCount($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId);
 
-			$returns = $this->paginationCompress ( "book/", $count, 10);
-            
-            $data['bookingRecords'] = $this->booking->bookingListing($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $returns["page"], $returns["segment"]);
-            
-            $this->global['pageTitle'] = 'DigiLodge : Bookings';
-            
-            $this->loadViews("bookings/bookingIndex", $this->global, $data, NULL);
-        }
+        $returns = $this->paginationCompress ( "book/", $count, 10);
+        
+        $data['bookingRecords'] = $this->booking->bookingListing($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $returns["page"], $returns["segment"]);
+        
+        $this->global['pageTitle'] = 'DigiLodge : Bookings';
+        
+        $this->loadViews("bookings/bookingIndex", $this->global, $data, NULL);
     }
 
     /**
@@ -72,16 +65,9 @@ class Booking extends BaseController
      */
     function addNewBooking()
     {
-        if($this->isAdmin() == TRUE)
-        {
-            $this->loadThis();
-        }
-        else
-        {
-            $this->global['pageTitle'] = 'DigiLodge : Book the room';
-            $data = [];
+        $this->global['pageTitle'] = 'DigiLodge : Book the room';
+        $data = [];
 
-            $this->loadViews("bookings/addNewBooking", $this->global, $data, NULL);
-        }
+        $this->loadViews("bookings/addNewBooking", $this->global, $data, NULL);
     }
 }

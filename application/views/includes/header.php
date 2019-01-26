@@ -114,6 +114,10 @@
                 <span>New Booking</span>
               </a>
             </li>
+            <?php
+            if($role == ROLE_ADMIN || $role == ROLE_MANAGER)
+            {
+            ?>
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-plane"></i>
@@ -131,10 +135,7 @@
                     <i class="fa fa-circle-o"></i> Room Sizes
                   </a>
                 </li>
-                <?php
-                if($role == ROLE_ADMIN || $role == ROLE_MANAGER)
-                {
-                ?>
+                
                 <li>
                   <a href="<?php echo base_url(); ?>roomListing" >
                     <i class="fa fa-circle-o"></i> Rooms 
@@ -145,11 +146,12 @@
                     <i class="fa fa-circle-o"></i> Base Fare 
                   </a>
                 </li>
-                <?php
-                }
-                ?>
+                
               </ul>
             </li>
+            <?php
+            }
+            ?>
             <?php
             if($role == ROLE_ADMIN)
             {
