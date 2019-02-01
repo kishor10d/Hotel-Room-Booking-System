@@ -119,5 +119,7 @@ $route['book'] = 'booking/bookings';
 $route['book/(:num)'] = 'booking/bookings/$1';
 $route['addNewBooking'] = 'booking/addNewBooking';
 
+$route['getRoomsByFT'] = 'booking/getRoomsByFT';
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

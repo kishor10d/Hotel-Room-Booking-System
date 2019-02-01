@@ -66,8 +66,25 @@ class Booking extends BaseController
     function addNewBooking()
     {
         $this->global['pageTitle'] = 'DigiLodge : Book the room';
-        $data = [];
+
+        $data['floors'] = $this->rooms_model->getFloors();
+        $data['roomSizes'] = $this->rooms_model->getRoomSizes();
 
         $this->loadViews("bookings/addNewBooking", $this->global, $data, NULL);
+    }
+
+    /**
+     * Get room list by floor and size
+     * @param {number} $floorId : This is floor id
+     * @param {number} $sizeId : This is size id
+     */
+    function getRoomsByFT()
+    {
+        $sizeId = $this->input->post('sizeId') == '' ? 0 : $this->input->post('sizeId') ;
+        $floorId = $this->input->post('floorId') == '' ? 0 : $this->input->post('floorId');
+
+        $result = $this->rooms_model->getRoomsByFT($floorId, $sizeId);
+
+        echo(json_encode(array('rooms'=>$result)));
     }
 }

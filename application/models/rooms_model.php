@@ -165,4 +165,21 @@ class Rooms_model extends CI_Model
 
         return $query->result();
     }
+
+    /**
+     * Get room list by floor and size
+     * @param {number} $floorId : This is floor id
+     * @param {number} $sizeId : This is size id
+     */
+    function getRoomsByFT($floorId = 0, $sizeId = 0)
+    {
+        $this->db->select('roomId, roomNumber');
+        $this->db->from('ldg_rooms');
+        $this->db->where('isDeleted', 0);
+        if($floorId != 0){ $this->db->where('floorId', $floorId); }
+        if($sizeId != 0){ $this->db->where('roomSizeId', $sizeId); }
+        $query = $this->db->get();
+
+        return $query->result();
+    }
 }
