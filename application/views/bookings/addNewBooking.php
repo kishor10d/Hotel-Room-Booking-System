@@ -22,6 +22,30 @@
                     <form role="form" id="" action="<?php echo base_url() ?>" method="post" role="form">
                         <div class="box-body">
                             <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="fname">From Date</label>
+                                        <div class="input-group">
+                                            <input type="text" id="startDate" name="startDate" value="" class="form-control" placeholder="dd/mm/yyyy"/>
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="fname">To Date</label>
+                                        <div class="input-group">
+                                            <input type="text" id="endDate" name="endDate" value="" class="form-control" placeholder="dd/mm/yyyy"/>
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
 								<div class="col-md-6">                                
                                     <div class="form-group">
                                         <label for="fname">Floor</label>
@@ -62,7 +86,7 @@
                                 </div>
                             </div>
                             <div class="row">
-							<div class="col-md-6">                                
+							    <div class="col-md-6">                                
                                     <div class="form-group">
                                         <label for="fname">Room</label>
                                         <select class="form-control" id="roomId" name="roomId">
@@ -74,20 +98,7 @@
                                     
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <label for="customerPhone">Customer Phone</label>
-                                        <input type="text" class="form-control" id="customerPhone" name="customerPhone" maxlength="15">
-                                    </div>
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="form-group">
-                                        <label for="customerEmail">Customer Email</label>
-                                        <input type="text" class="form-control" id="customerEmail" name="customerEmail" maxlength="128">
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div><!-- /.box-body -->
     
                         <div class="box-footer">

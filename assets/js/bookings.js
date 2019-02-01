@@ -28,4 +28,13 @@ $(document).ready(function(){
 
     $("#sizeId").on("change", getRooms);
     $("#floorId").on("change", getRooms);
+
+    var nowDate = new Date();
+    var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+    jQuery('#startDate, #endDate').datepicker({
+        autoclose: true,
+        todayHighlight : true,
+        format: 'dd/mm/yyyy',
+        // startDate : today
+    });
 });
