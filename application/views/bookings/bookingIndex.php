@@ -17,7 +17,7 @@ $selected = "selected='selected'";
                 </div>
             </div>
         </div> -->
-        <form action="<?php echo base_url() ?>booking" method="POST" id="searchList">
+        <form action="<?php echo base_url() ?>book" method="POST" id="searchList">
             <div class="row form-group">
             
                 <div class="col-md-2">
