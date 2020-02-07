@@ -64,4 +64,18 @@ class Booking_model extends CI_Model
         $result = $query->result();
         return $result;
     }
+
+
+    /**
+     * This function is used to add new customer to system
+     * @return number $insert_id : This is last inserted id
+     */
+    function addedNewRoomBooking($bookingInfo)
+    {
+        $this->db->trans_start();
+        $this->db->insert('ldg_bookings', $bookingInfo);
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        return $insert_id;
+    }
 }
