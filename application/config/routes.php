@@ -118,8 +118,10 @@ $route['deleteCustomer'] = "customer/deleteCustomer";
 $route['book'] = 'booking/bookings';
 $route['book/(:num)'] = 'booking/bookings/$1';
 $route['addNewBooking'] = 'booking/addNewBooking';
+$route['addedNewBooking'] = 'booking/addedNewBooking';
 
 $route['getRoomsByFT'] = 'booking/getRoomsByFT';
+$route['getCustomersByName'] = 'booking/getCustomersByName';
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

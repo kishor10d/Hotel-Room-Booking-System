@@ -87,4 +87,65 @@ class Booking extends BaseController
 
         echo(json_encode(array('rooms'=>$result)));
     }
+
+    /**
+     * This function is used to add new user to the system
+     */
+    function addedNewBooking()
+    {
+        $this->load->library('form_validation');
+        
+        $this->form_validation->set_rules('startDate','Start Date','trim|required|xss_clean');
+        $this->form_validation->set_rules('endDate','End Date','trim|required|xss_clean');
+        $this->form_validation->set_rules('roomId','Room Number','trim|required|numeric');
+        $this->form_validation->set_rules('comments','Comments','trim|xss_clean');
+        $this->form_validation->set_rules('customerId','Customer','trim|required|numeric|xss_clean');
+        
+        if($this->form_validation->run() == FALSE)
+        {
+            $this->addNewBooking();
+        }
+        else
+        {
+            $startDate = $this->input->post('startDate');
+            $endDate = $this->input->post('endDate');
+            $roomId = $this->input->post('roomId');
+            $customerId = $this->input->post('customerId');
+
+            $date = DateTime::createFromFormat('d/m/Y', $startDate);
+            $startDate = $date->format('Y-m-d');
+            $date = DateTime::createFromFormat('d/m/Y', $endDate);
+            $endDate = $date->format('Y-m-d');
+            
+            $bookingInfo = array('bookStartDate'=>$startDate, 'bookEndDate'=>$endDate, 'roomId'=>$roomId,
+                                'customerId'=>$customerId,'bookingDtm'=>date('Y-m-d H:i:sa'),
+                                'bookingComments'=>$comments,
+                                'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));
+            
+            $result = $this->booking->addedNewBooking($bookingInfo);
+            
+            if($result > 0)
+            {
+                $this->session->set_flashdata('success', 'New booking created successfully');
+            }
+            else
+            {
+                $this->session->set_flashdata('error', 'Booking creation failed');
+            }
+            
+            redirect('addNewBooking');
+        }
+    }
+
+    /**
+     * Get customer list by name
+     */
+    function getCustomersByName()
+    {
+        $customerName = $this->input->post('customerName') == '' ? 0 : $this->input->post('customerName');
+
+        $result = $this->booking->getCustomersByName($customerName);
+
+        echo(json_encode(array('customers'=>$result)));
+    }
 }

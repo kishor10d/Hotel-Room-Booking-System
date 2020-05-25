@@ -64,4 +64,37 @@ class Booking_model extends CI_Model
         $result = $query->result();
         return $result;
     }
+
+    /**
+     * Get customer list by name
+     * @param {string} $customerName : This is customer name
+     */
+    function getCustomersByName($customerName = '')
+    {
+        $this->db->select('customerId, customerName');
+        $this->db->from('ldg_customer');
+        $this->db->where('isDeleted', 0);
+        if(!empty($customerName)) {
+            $likeCriteria = "(customerName LIKE '%".$customerName."%')";
+            $this->db->where($likeCriteria);
+        }
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    /**
+     * This function is used to add new floor to system
+     * @param array $floorInfo : This is floor information
+     * @return number $insert_id : This is last inserted id
+     */
+    function addedNewBooking($bookingInfo)
+    {
+        $this->db->trans_start();
+        $this->db->insert('ldg_bookings', $bookingInfo);
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        
+        return $insert_id;
+    }
 }

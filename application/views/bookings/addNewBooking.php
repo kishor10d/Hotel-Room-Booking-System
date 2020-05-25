@@ -19,12 +19,12 @@
                     </div><!-- /.box-header -->
                     <!-- form start -->
                     
-                    <form role="form" id="" action="<?php echo base_url() ?>" method="post" role="form">
+                    <form role="form" id="" action="<?php echo base_url() ?>addedNewBooking" method="post" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="fname">From Date</label>
+                                        <label for="startDate">From Date</label>
                                         <div class="input-group">
                                             <input type="text" id="startDate" name="startDate" value="" class="form-control" placeholder="dd/mm/yyyy"/>
                                             <div class="input-group-addon">
@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="fname">To Date</label>
+                                        <label for="endDate">To Date</label>
                                         <div class="input-group">
                                             <input type="text" id="endDate" name="endDate" value="" class="form-control" placeholder="dd/mm/yyyy"/>
                                             <div class="input-group-addon">
@@ -48,7 +48,7 @@
                             <div class="row">
 								<div class="col-md-6">                                
                                     <div class="form-group">
-                                        <label for="fname">Floor</label>
+                                        <label for="floorId">Floor</label>
                                         <select class="form-control" id="floorId" name="floorId">
                                             <option value="">Select Floor</option>
                                             <?php
@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="email">Room Size</label>
+                                        <label for="sizeId">Room Size</label>
                                         <select class="form-control" id="sizeId" name="sizeId">
                                             <option value="">Select Room Sizes</option>
                                             <?php
@@ -88,14 +88,33 @@
                             <div class="row">
 							    <div class="col-md-6">                                
                                     <div class="form-group">
-                                        <label for="fname">Room</label>
+                                        <label for="roomId">Room Number</label>
                                         <select class="form-control" id="roomId" name="roomId">
                                             <option value="">Select Room</option>
                                         </select>                                      
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    
+                                    <div class="form-group">
+                                        <label for="customerId">Customer</label>
+                                        <div class="input-group">
+                                            <input type="text" value="" class="form-control" id="customerName" name="customerName" placeholder="Find customer by name" />
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-search" id="searchCustomer"></i>
+                                            </div>
+                                        </div>
+                                        <select class="form-control" id="customerId" name="customerId">
+                                            <option value="">Select Customer</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="comments">Comments</label>
+                                        <textarea name='comments' id="comments"></textarea>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -141,3 +160,15 @@
     </section>
 </div>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/bookings.js" charset="utf-8"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+tinymce.init({
+    selector: "textarea",
+    plugins: [
+        "advlist autolink lists link image charmap print preview anchor",
+        "searchreplace visualblocks code fullscreen",
+        "insertdatetime media table contextmenu paste"
+    ],
+    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+});
+</script>
