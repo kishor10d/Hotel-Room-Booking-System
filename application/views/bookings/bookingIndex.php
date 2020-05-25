@@ -17,7 +17,7 @@ $selected = "selected='selected'";
                 </div>
             </div>
         </div> -->
-        <form action="<?php echo base_url() ?>booking" method="POST" id="searchList">
+        <form action="<?php echo base_url() ?>book" method="POST" id="searchList">
             <div class="row form-group">
             
                 <div class="col-md-2">
@@ -161,21 +161,21 @@ $selected = "selected='selected'";
 </div>
 <script type="text/javascript" src="<?= base_url() ?>assets/js/common.js" charset="utf-8"></script>
 <script type="text/javascript">
-    jQuery(document).ready(function(){
-        var nowDate = new Date();
-        var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
-        jQuery('#startDate, #endDate').datepicker({
-            autoclose: true,
-            todayHighlight : true,
-            format: 'dd/mm/yyyy',
-            // startDate : today
-        });
-        jQuery('ul.pagination li a').click(function (e) {
-            e.preventDefault();            
-            var link = jQuery(this).get(0).href;            
-            var value = link.substring(link.lastIndexOf('/') + 1);
-            jQuery("#searchList").attr("action", baseURL + "bookings/" + value);
-            jQuery("#searchList").submit();
-        });
+jQuery(document).ready(function(){
+    var nowDate = new Date();
+    var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+    jQuery('#startDate, #endDate').datepicker({
+        autoclose: true,
+        todayHighlight : true,
+        format: 'dd/mm/yyyy',
+        // startDate : today
     });
+    jQuery('ul.pagination li a').click(function (e) {
+        e.preventDefault();            
+        var link = jQuery(this).get(0).href;            
+        var value = link.substring(link.lastIndexOf('/') + 1);
+        jQuery("#searchList").attr("action", baseURL + "bookings/" + value);
+        jQuery("#searchList").submit();
+    });
+});
 </script>
