@@ -65,7 +65,6 @@ class Booking_model extends CI_Model
         return $result;
     }
 
-<<<<<<< HEAD
     /**
      * Get customer list by name
      * @param {string} $customerName : This is customer name
@@ -90,23 +89,12 @@ class Booking_model extends CI_Model
      * @return number $insert_id : This is last inserted id
      */
     function addedNewBooking($bookingInfo)
-=======
-
-    /**
-     * This function is used to add new customer to system
-     * @return number $insert_id : This is last inserted id
-     */
-    function addedNewRoomBooking($bookingInfo)
->>>>>>> 42abea296cda9ce0bcaccc321f6ae54b938d9824
     {
         $this->db->trans_start();
         $this->db->insert('ldg_bookings', $bookingInfo);
         $insert_id = $this->db->insert_id();
         $this->db->trans_complete();
-<<<<<<< HEAD
         
-=======
->>>>>>> 42abea296cda9ce0bcaccc321f6ae54b938d9824
         return $insert_id;
     }
 }
