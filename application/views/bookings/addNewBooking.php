@@ -96,9 +96,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="customerId">Customer</label>
+                                        <label for="customerId">Customer (Click on <i class="fa fa-search"></i> for search)</label>
                                         <div class="input-group">
-                                            <input type="text" value="" class="form-control" id="customerName" name="customerName" placeholder="Find customer by name" />
+                                            <input type="text" value="" class="form-control" id="customerName" name="customerName" placeholder="Type name and click on magnifier" />
                                             <div class="input-group-addon">
                                                 <i class="fa fa-search" id="searchCustomer"></i>
                                             </div>

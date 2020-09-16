@@ -58,6 +58,7 @@ class Booking_model extends CI_Model
         if(!empty($searchFloorId)){
             $this->db->where('R.floorId', $searchFloorId);
         }
+        $this->db->order_by('BaseTbl.bookingId', "DESC");
         $this->db->limit($page, $segment);
         $query = $this->db->get();
         
