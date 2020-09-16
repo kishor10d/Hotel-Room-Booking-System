@@ -26,7 +26,7 @@
                                     <div class="form-group">
                                         <label for="startDate">From Date</label>
                                         <div class="input-group">
-                                            <input type="text" id="startDate" name="startDate" value="" class="form-control" placeholder="dd/mm/yyyy"/>
+                                            <input type="text" id="startDate" name="startDate" value="" class="form-control" placeholder="dd/mm/yyyy" autocomplete="off"/>
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
@@ -37,7 +37,7 @@
                                     <div class="form-group">
                                         <label for="endDate">To Date</label>
                                         <div class="input-group">
-                                            <input type="text" id="endDate" name="endDate" value="" class="form-control" placeholder="dd/mm/yyyy"/>
+                                            <input type="text" id="endDate" name="endDate" value="" class="form-control" placeholder="dd/mm/yyyy" autocomplete="off"/>
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>

@@ -138,11 +138,11 @@ $selected = "selected='selected'";
                         <td><?= $record->roomNumber ?><br><?= $record->floorName ?> (<?= $record->floorCode ?>)<br><?= $record->sizeTitle ?></td>
                         <td><?= $record->bookStartDate ?></td>
                         <td><?= $record->bookEndDate ?></td>
-                        <td><?= $record->customerName ?><br><?= $record->customerPhone."<br>" ?><?= $record->customerEmail ?></td>
+                        <td><?= $record->customerName ?><br><?= !empty($record->customerPhone)? $record->customerPhone."<br>" : ''; ?><?= $record->customerEmail ?></td>
                         <td><?= $record->bookingComments ?></td>
                         <td><?= $record->bookingDtm ?></td>
                         <td class="text-center">
-                          <a href="<?php echo base_url().'editOldBooking/'.$record->bookingId; ?>" class="btn btn-sm btn-info"><i class="fa fa-pencil"></i></a>
+                          <a href="<?php echo base_url().'booking/editOldBooking/'.$record->bookingId; ?>" class="btn btn-sm btn-info"><i class="fa fa-pencil"></i></a>
                           <a href="#" data-bookid="<?php echo $record->bookingId; ?>" class="deleteBooking btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                       </td>
                     </tr>

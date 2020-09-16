@@ -119,6 +119,7 @@ $route['book'] = 'booking/bookings';
 $route['book/(:num)'] = 'booking/bookings/$1';
 $route['addNewBooking'] = 'booking/addNewBooking';
 $route['addedNewBooking'] = 'booking/addedNewBooking';
+// $route['editOldBookings'] = 'booking/editOldBookings';
 
 $route['getRoomsByFT'] = 'booking/getRoomsByFT';
 $route['getCustomersByName'] = 'booking/getCustomersByName';

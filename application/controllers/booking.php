@@ -148,4 +148,23 @@ class Booking extends BaseController
 
         echo(json_encode(array('customers'=>$result)));
     }
+
+    /**
+     * This function is used load user edit information
+     * @param number $bookingId : Optional : This is bookingId id
+     */
+    function editOldBooking($bookingId = NULL)
+    {
+        if($bookingId == null)
+        {
+            redirect('customerListing');
+        }
+        
+        $data['floors'] = $this->rooms_model->getFloors();
+        $data['roomSizes'] = $this->rooms_model->getRoomSizes();
+        
+        $this->global['pageTitle'] = 'DigiLodge : Edit Booking';
+        
+        $this->loadViews("bookings/editOldBooking", $this->global, $data, NULL);
+    }
 }
