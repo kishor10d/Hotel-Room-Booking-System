@@ -167,4 +167,14 @@ class Booking extends BaseController
         
         $this->loadViews("bookings/editOldBooking", $this->global, $data, NULL);
     }
+
+    function availableRooms()
+    {
+        $startDate = '2020-09-18';
+        $endDate = '2020-09-26';
+        $floorId = 0;
+        $roomSizeId = 0;
+        $roomId = 0;
+        $this->booking->getRoomsWhichNotBooked($startDate, $endDate, $floorId, $roomSizeId, $roomId);
+    }
 }

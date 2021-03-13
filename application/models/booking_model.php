@@ -98,4 +98,51 @@ class Booking_model extends CI_Model
         
         return $insert_id;
     }
+
+    function getRoomsWhichNotBooked($startDate, $endDate, $floorId, $roomSizeId, $roomId)
+    {
+        /* open_bracket()->start_group_where(key,value)->where(key,value)->close_group_where()
+            ->start_group_where(key,value,'','OR')->close_group_where()->close_bracket() 
+            would produce AND ((a AND b) OR (d)) */
+        $this->db->select('LB.roomId');
+        $this->db->from('ldg_bookings AS LB');
+        $this->db->where('LB.isDeleted', 0);
+        // $this->db->open_bracket();
+        // $this->db->start_group_where('LB.bookStartDate >=',$startDate)->where('LB.bookEndDate <=',$endDate)->close_group_where();
+        // $this->db->start_group_where('LB.bookStartDate <=',$startDate, 'OR')->where('LB.bookEndDate >=',$endDate)->close_group_where();
+        // $this->db->start_group_where('LB.bookStartDate < ',$endDate, 'OR')->where('LB.bookEndDate >=',$endDate)->close_group_where();
+        // $this->db->close_bracket();
+
+        $this->db->group_start()
+				->group_start()
+					->where('LB.bookStartDate >=', $startDate)
+					->where('LB.bookEndDate <=', $endDate)
+				->group_end()
+                ->or_group_start()
+                        ->where('LB.bookStartDate <=', $startDate)
+                        ->where('LB.bookEndDate >=', $endDate)
+                ->group_end()
+				->or_group_start()
+                        ->where('LB.bookStartDate <', $endDate)
+                        ->where('LB.bookEndDate >=', $endDate)
+                ->group_end()
+        ->group_end();
+        
+        if($floorId > 0) {
+            $this->db->where('LB.floorId', $floorId);
+        }
+        if($floorId > 0) {
+            $this->db->where('LB.roomSizeId', $roomSizeId);
+        }
+        if($floorId > 0) {
+            $this->db->where('LB.roomId', $roomId);
+        }
+        $query = $this->db->get();
+        $bookedRooms = $query->result();
+
+        pre($this->db->last_query());
+
+        pre($bookedRooms);
+        die;
+    }
 }
