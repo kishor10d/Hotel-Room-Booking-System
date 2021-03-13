@@ -95,11 +95,11 @@ class Booking extends BaseController
     {
         $this->load->library('form_validation');
         
-        $this->form_validation->set_rules('startDate','Start Date','trim|required|xss_clean');
-        $this->form_validation->set_rules('endDate','End Date','trim|required|xss_clean');
+        $this->form_validation->set_rules('startDate','Start Date','trim|required');
+        $this->form_validation->set_rules('endDate','End Date','trim|required');
         $this->form_validation->set_rules('roomId','Room Number','trim|required|numeric');
-        $this->form_validation->set_rules('comments','Comments','trim|xss_clean');
-        $this->form_validation->set_rules('customerId','Customer','trim|required|numeric|xss_clean');
+        $this->form_validation->set_rules('comments','Comments','trim');
+        $this->form_validation->set_rules('customerId','Customer','trim|required|numeric');
         
         if($this->form_validation->run() == FALSE)
         {
@@ -107,10 +107,11 @@ class Booking extends BaseController
         }
         else
         {
-            $startDate = $this->input->post('startDate');
-            $endDate = $this->input->post('endDate');
+            $startDate = $this->security->xss_clean($this->input->post('startDate'));
+            $endDate = $this->security->xss_clean($this->input->post('endDate'));
             $roomId = $this->input->post('roomId');
-            $customerId = $this->input->post('customerId');
+            $comments = $this->security->xss_clean($this->input->post('comments'));
+            $customerId = $this->security->xss_clean($this->input->post('customerId'));
 
             $date = DateTime::createFromFormat('d/m/Y', $startDate);
             $startDate = $date->format('Y-m-d');

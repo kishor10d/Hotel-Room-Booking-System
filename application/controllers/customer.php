@@ -67,9 +67,9 @@ class Customer extends BaseController
     {
         $this->load->library('form_validation');
             
-        $this->form_validation->set_rules('customerName','Customer Name','trim|required|max_length[50]|xss_clean');
-        $this->form_validation->set_rules('customerEmail','Customer Email','trim|valid_email|xss_clean|max_length[128]');
-        $this->form_validation->set_rules('customerAddress','Customer Address','max_length[1024]|xss_clean');
+        $this->form_validation->set_rules('customerName','Customer Name','trim|required|max_length[50]');
+        $this->form_validation->set_rules('customerEmail','Customer Email','trim|valid_email|max_length[128]');
+        $this->form_validation->set_rules('customerAddress','Customer Address','max_length[1024]');
         $this->form_validation->set_rules('customerPhone','Customer Phone','trim|max_length[15]|numeric');
         
         if($this->form_validation->run() == FALSE)
@@ -78,9 +78,9 @@ class Customer extends BaseController
         }
         else
         {
-            $customerName = ucwords(strtolower($this->input->post('customerName')));
-            $customerEmail = $this->input->post('customerEmail');
-            $customerAddress = $this->input->post('customerAddress');
+            $customerName = ucwords(strtolower($this->security->xss_clean($this->input->post('customerName'))));
+            $customerEmail = $this->security->xss_clean($this->input->post('customerEmail'));
+            $customerAddress = $this->security->xss_clean($this->input->post('customerAddress'));
             $customerPhone = $this->input->post('customerPhone');
             
             $customerInfo = array('customerName'=>$customerName, 'customerEmail'=>$customerEmail, 'customerAddress'=>$customerAddress,
@@ -130,9 +130,9 @@ class Customer extends BaseController
             
         $customerId = $this->input->post('customerId');
         
-        $this->form_validation->set_rules('customerName','Customer Name','trim|required|max_length[50]|xss_clean');
-        $this->form_validation->set_rules('customerEmail','Customer Email','trim|valid_email|xss_clean|max_length[128]');
-        $this->form_validation->set_rules('customerAddress','Customer Address','max_length[1024]|xss_clean');
+        $this->form_validation->set_rules('customerName','Customer Name','trim|required|max_length[50]');
+        $this->form_validation->set_rules('customerEmail','Customer Email','trim|valid_email|max_length[128]');
+        $this->form_validation->set_rules('customerAddress','Customer Address','max_length[1024]');
         $this->form_validation->set_rules('customerPhone','Customer Phone','trim|max_length[15]|numeric');
         
         if($this->form_validation->run() == FALSE)
@@ -141,9 +141,9 @@ class Customer extends BaseController
         }
         else
         {
-            $customerName = ucwords(strtolower($this->input->post('customerName')));
-            $customerEmail = $this->input->post('customerEmail');
-            $customerAddress = $this->input->post('customerAddress');
+            $customerName = ucwords(strtolower($this->security->xss_clean($this->input->post('customerName'))));
+            $customerEmail = $this->security->xss_clean($this->input->post('customerEmail'));
+            $customerAddress = $this->security->xss_clean($this->input->post('customerAddress'));
             $customerPhone = $this->input->post('customerPhone');
             
             $customerInfo = array('customerName'=>$customerName, 'customerEmail'=>$customerEmail, 'customerAddress'=>$customerAddress,

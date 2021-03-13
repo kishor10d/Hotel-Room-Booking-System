@@ -88,8 +88,8 @@ class RoomSizes extends BaseController
         {
             $this->load->library('form_validation');
             
-            $this->form_validation->set_rules('sizeTitle','Room Size Title','trim|required|max_length[256]|xss_clean');
-            $this->form_validation->set_rules('sizeDescription','Room Size Description','trim|required|xss_clean');
+            $this->form_validation->set_rules('sizeTitle','Room Size Title','trim|required|max_length[256]');
+            $this->form_validation->set_rules('sizeDescription','Room Size Description','trim|required');
             
             if($this->form_validation->run() == FALSE)
             {
@@ -97,8 +97,8 @@ class RoomSizes extends BaseController
             }
             else
             {
-                $roomSizeTitle = $this->input->post('sizeTitle');
-                $roomSizeDescription = $this->input->post('sizeDescription');
+                $roomSizeTitle = $this->security->xss_clean($this->input->post('sizeTitle'));
+                $roomSizeDescription = $this->security->xss_clean($this->input->post('sizeDescription'));
                 
                 $roomSizeInfo = array('sizeTitle'=>$roomSizeTitle, 'sizeDescription'=>$roomSizeDescription,
                 	'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));
@@ -161,8 +161,8 @@ class RoomSizes extends BaseController
             
             $roomSizeId = $this->input->post('sizeId');
 
-            $this->form_validation->set_rules('sizeTitle','Room Size Title','trim|required|max_length[256]|xss_clean');
-            $this->form_validation->set_rules('sizeDescription','Room Size Description','trim|required|xss_clean');
+            $this->form_validation->set_rules('sizeTitle','Room Size Title','trim|required|max_length[256]');
+            $this->form_validation->set_rules('sizeDescription','Room Size Description','trim|required');
             
             
             if($this->form_validation->run() == FALSE)
@@ -171,10 +171,8 @@ class RoomSizes extends BaseController
             }
             else
             {
-                $roomSizeTitle = $this->input->post('sizeTitle');
-                $roomSizeDescription = $this->input->post('sizeDescription');
-                
-                $roomSizeInfo = array();
+                $roomSizeTitle = $this->security->xss_clean($this->input->post('sizeTitle'));
+                $roomSizeDescription = $this->security->xss_clean($this->input->post('sizeDescription'));
 
                 $roomSizeInfo = array('sizeTitle'=>$roomSizeTitle, 'sizeDescription'=>$roomSizeDescription,
                 	'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:sa'));

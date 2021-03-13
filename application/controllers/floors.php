@@ -88,9 +88,9 @@ class Floors extends BaseController
         {
             $this->load->library('form_validation');
             
-            $this->form_validation->set_rules('floorName','Floor Name','trim|required|max_length[50]|xss_clean');
-            $this->form_validation->set_rules('floorCode','Floor Code','trim|required|xss_clean|max_length[10]');
-            $this->form_validation->set_rules('floorDescription','Floor Description','required|xss_clean');
+            $this->form_validation->set_rules('floorName','Floor Name','trim|required|max_length[50]');
+            $this->form_validation->set_rules('floorCode','Floor Code','trim|required|max_length[10]');
+            $this->form_validation->set_rules('floorDescription','Floor Description','required');
             
             if($this->form_validation->run() == FALSE)
             {
@@ -98,9 +98,9 @@ class Floors extends BaseController
             }
             else
             {
-                $floorName = ucwords(strtolower($this->input->post('floorName')));
-                $floorCode = strtoupper($this->input->post('floorCode'));
-                $floorDescription = $this->input->post('floorDescription');
+                $floorName = ucwords(strtolower($this->security->xss_clean($this->input->post('floorName'))));
+                $floorCode = strtoupper($this->security->xss_clean($this->input->post('floorCode')));
+                $floorDescription = $this->security->xss_clean($this->input->post('floorDescription'));
                 
                 $floorInfo = array('floorName'=>$floorName, 'floorCode'=>$floorCode, 'floorDescription'=>$floorDescription,
                 	'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));
@@ -163,9 +163,9 @@ class Floors extends BaseController
             
             $floorId = $this->input->post('floorId');
             
-            $this->form_validation->set_rules('floorName','Floor Name','trim|required|max_length[50]|xss_clean');
-            $this->form_validation->set_rules('floorCode','Floor Code','trim|required|xss_clean|max_length[10]');
-            $this->form_validation->set_rules('floorDescription','Floor Description','required|xss_clean');
+            $this->form_validation->set_rules('floorName','Floor Name','trim|required|max_length[50]');
+            $this->form_validation->set_rules('floorCode','Floor Code','trim|required|max_length[10]');
+            $this->form_validation->set_rules('floorDescription','Floor Description','required');
             
             if($this->form_validation->run() == FALSE)
             {
@@ -173,11 +173,9 @@ class Floors extends BaseController
             }
             else
             {
-                $floorName = ucwords(strtolower($this->input->post('floorName')));
-                $floorCode = strtoupper($this->input->post('floorCode'));
-                $floorDescription = $this->input->post('floorDescription');
-                
-                $floorInfo = array();
+                $floorName = ucwords(strtolower($this->security->xss_clean($this->input->post('floorName'))));
+                $floorCode = strtoupper($this->security->xss_clean($this->input->post('floorCode')));
+                $floorDescription = $this->security->xss_clean($this->input->post('floorDescription'));
                 
                 $floorInfo = array('floorName'=>$floorName, 'floorCode'=>$floorCode, 'floorDescription'=>$floorDescription,
                 	'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:sa'));

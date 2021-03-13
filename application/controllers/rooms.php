@@ -97,9 +97,9 @@ class Rooms extends BaseController
         {
             $this->load->library('form_validation');
             
-            $this->form_validation->set_rules('floorId','Floor','required|xss_clean');
-            $this->form_validation->set_rules('sizeId','Room Size','required|xss_clean');
-            $this->form_validation->set_rules('roomNumber','Room Number','trim|required|xss_clean');
+            $this->form_validation->set_rules('floorId','Floor','required');
+            $this->form_validation->set_rules('sizeId','Room Size','required');
+            $this->form_validation->set_rules('roomNumber','Room Number','trim|required');
 
             if($this->form_validation->run() == FALSE)
             {
@@ -107,9 +107,9 @@ class Rooms extends BaseController
             }
             else
             {
-                $floorId = $this->input->post('floorId');
-                $sizeId = $this->input->post('sizeId');
-                $roomNumber = $this->input->post('roomNumber');
+                $floorId = $this->security->xss_clean($this->input->post('floorId'));
+                $sizeId = $this->security->xss_clean($this->input->post('sizeId'));
+                $roomNumber = $this->security->xss_clean($this->input->post('roomNumber'));
                 
                 $roomInfo = array('floorId'=>$floorId, 'roomSizeId'=>$sizeId, 'roomNumber'=>$roomNumber,
                 	'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));
@@ -173,9 +173,9 @@ class Rooms extends BaseController
             
             $roomId = $this->input->post('roomId');
 
-            $this->form_validation->set_rules('floorId','Floor','required|xss_clean');
-            $this->form_validation->set_rules('sizeId','Room Size','required|xss_clean');
-            $this->form_validation->set_rules('roomNumber','Room Number','trim|required|xss_clean');
+            $this->form_validation->set_rules('floorId','Floor','required');
+            $this->form_validation->set_rules('sizeId','Room Size','required');
+            $this->form_validation->set_rules('roomNumber','Room Number','trim|required');
 
             if($this->form_validation->run() == FALSE)
             {
@@ -183,9 +183,9 @@ class Rooms extends BaseController
             }
             else
             {                
-                $sizeId = $this->input->post('sizeId');
-                $floorId = $this->input->post('floorId');
-                $roomNumber = $this->input->post('roomNumber');
+                $floorId = $this->security->xss_clean($this->input->post('floorId'));
+                $sizeId = $this->security->xss_clean($this->input->post('sizeId'));
+                $roomNumber = $this->security->xss_clean($this->input->post('roomNumber'));
                 
                 $roomInfo = array('floorId'=>$floorId, 'roomSizeId'=>$sizeId, 'roomNumber'=>$roomNumber,
                     'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));

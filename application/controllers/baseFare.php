@@ -95,10 +95,10 @@ class BaseFare extends BaseController
             $this->load->library('form_validation');
             
             $this->form_validation->set_rules('sizeId','Room Size Id','trim|required');
-            $this->form_validation->set_rules('baseFareHour','Hourly Base Fare','trim|required|numeric|xss_clean');
-            $this->form_validation->set_rules('baseFareDay','Daily Base Fare','trim|required|numeric|xss_clean');
-            $this->form_validation->set_rules('serviceTax','Service Tax','trim|required|numeric|xss_clean');
-            $this->form_validation->set_rules('serviceCharge','Service Charge','trim|required|numeric|xss_clean');
+            $this->form_validation->set_rules('baseFareHour','Hourly Base Fare','trim|required|numeric');
+            $this->form_validation->set_rules('baseFareDay','Daily Base Fare','trim|required|numeric');
+            $this->form_validation->set_rules('serviceTax','Service Tax','trim|required|numeric');
+            $this->form_validation->set_rules('serviceCharge','Service Charge','trim|required|numeric');
             
             if($this->form_validation->run() == FALSE)
             {
@@ -107,10 +107,10 @@ class BaseFare extends BaseController
             else
             {
                 $roomSizeId = $this->input->post('sizeId');
-                $baseFareHour = $this->input->post('baseFareHour');
-                $baseFareDay = $this->input->post('baseFareDay');
-                $serviceTax = $this->input->post('serviceTax');
-                $serviceCharge = $this->input->post('serviceCharge');
+                $baseFareHour = $this->security->xss_clean($this->input->post('baseFareHour'));
+                $baseFareDay = $this->security->xss_clean($this->input->post('baseFareDay'));
+                $serviceTax = $this->security->xss_clean($this->input->post('serviceTax'));
+                $serviceCharge = $this->security->xss_clean($this->input->post('serviceCharge'));
 
                 $serviceTaxCalc = ($baseFareDay * $serviceTax)/100;
                 $serviceChargeCalc = ($baseFareDay * $serviceCharge)/100;
@@ -181,10 +181,10 @@ class BaseFare extends BaseController
             $bfId = $this->input->post('bfId');
             
             $this->form_validation->set_rules('sizeId','Room Size Id','trim|required');
-            $this->form_validation->set_rules('baseFareHour','Hourly Base Fare','trim|required|numeric|xss_clean');
-            $this->form_validation->set_rules('baseFareDay','Daily Base Fare','trim|required|numeric|xss_clean');
-            $this->form_validation->set_rules('serviceTax','Service Tax','trim|required|numeric|xss_clean');
-            $this->form_validation->set_rules('serviceCharge','Service Charge','trim|required|numeric|xss_clean');
+            $this->form_validation->set_rules('baseFareHour','Hourly Base Fare','trim|required|numeric');
+            $this->form_validation->set_rules('baseFareDay','Daily Base Fare','trim|required|numeric');
+            $this->form_validation->set_rules('serviceTax','Service Tax','trim|required|numeric');
+            $this->form_validation->set_rules('serviceCharge','Service Charge','trim|required|numeric');
             
             if($this->form_validation->run() == FALSE)
             {
@@ -193,10 +193,10 @@ class BaseFare extends BaseController
             else
             {                
                 $roomSizeId = $this->input->post('sizeId');
-                $baseFareHour = $this->input->post('baseFareHour');
-                $baseFareDay = $this->input->post('baseFareDay');
-                $serviceTax = $this->input->post('serviceTax');
-                $serviceCharge = $this->input->post('serviceCharge');
+                $baseFareHour = $this->security->xss_clean($this->input->post('baseFareHour'));
+                $baseFareDay = $this->security->xss_clean($this->input->post('baseFareDay'));
+                $serviceTax = $this->security->xss_clean($this->input->post('serviceTax'));
+                $serviceCharge = $this->security->xss_clean($this->input->post('serviceCharge'));
 
                 $serviceTaxCalc = ($baseFareDay * $serviceTax)/100;
                 $serviceChargeCalc = ($baseFareDay * $serviceCharge)/100;
