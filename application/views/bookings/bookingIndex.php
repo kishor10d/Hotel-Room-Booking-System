@@ -7,17 +7,15 @@ $selected = "selected='selected'";
       <h1>
         <i class="fa fa-book" aria-hidden="true"></i> Bookings
         <small>Add, Edit, Delete</small>
+        <span class='pull-right'>
+        <a class="btn btn-primary btn-lg" href="<?= base_url(); ?>addNewBooking"><i class="fa fa-plus" aria-hidden="true"></i> Add New Booking</a>
+        </span>
       </h1>
     </section>
+    <br>
     <section class="content">
-        <!-- <div class="row">
-            <div class="col-xs-12 text-right">
-                <div class="form-group">
-                    <a class="btn btn-primary" href="<?= base_url(); ?>addNewBooking"><i class="fa fa-plus" aria-hidden="true"></i> New Booking</a>
-                </div>
-            </div>
-        </div> -->
-        <form action="<?php echo base_url() ?>book" method="POST" id="searchList">
+        
+        <form action="<?php echo base_url() ?>bookings" method="POST" id="searchList">
             <div class="row form-group">
             
                 <div class="col-md-2">
@@ -74,10 +72,11 @@ $selected = "selected='selected'";
                         ?>
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <input type="text" name="searchText" value="" class="form-control input-sm" placeholder="Search"/>
+                <div class="col-md-2">
+                    <input type="text" name="customerName" value="<?= $customerName; ?>" class="form-control input-sm" placeholder="Customer Name" autocomplete="off" />
                 </div>
                 <div class="col-md-2">
+                    <input type="text" name="mobileNumber" value="<?= $mobileNumber; ?>" class="form-control input-sm" placeholder="Mobile Number" autocomplete="off" />
                     <!-- <button class="btn btn-sm btn-block btn-default searchList"><i class="fa fa-search"></i></button> -->
                 </div>
                 <div class="col-md-1">
@@ -86,7 +85,7 @@ $selected = "selected='selected'";
             <div class="row">
                 <div class="col-md-2">
                     <div class="input-group">
-                        <input type="text" id="startDate" name="startDate" value="" class="form-control input-sm" placeholder="dd/mm/yyyy"/>
+                        <input type="text" id="startDate" name="startDate" value="" class="form-control input-sm" placeholder="yyyy-mm-dd" autocomplete="off" />
                         <div class="input-group-addon">
 	                    	<i class="fa fa-calendar"></i>
 						</div>
@@ -94,7 +93,7 @@ $selected = "selected='selected'";
                 </div>
                 <div class="col-md-2">
                     <div class="input-group">
-                    <input type="text" id="endDate" name="endDate" value="" class="form-control input-sm" placeholder="dd/mm/yyyy"/>
+                    <input type="text" id="endDate" name="endDate" value="" class="form-control input-sm" placeholder="yyyy-mm-dd" autocomplete="off" />
                         <div class="input-group-addon">
 	                    	<i class="fa fa-calendar"></i>
 						</div>
@@ -103,16 +102,17 @@ $selected = "selected='selected'";
                 <div class="col-md-2">
                     <button class="btn btn-sm btn-primary btn-block searchList"><i class="fa fa-search"></i></button>
                 </div>
+                <div class="col-md-2">                    
+                </div>
             </div>
         </form>
         <br>
         <div class="row">
             <div class="col-xs-12">
               <div class="box">
-                <div class="box-header">
+                <div class="box-header" style='padding-bottom: 15px'>
                     <h3 class="box-title">Booking List</h3>
                     <div class="box-tools">
-                        <a class="btn btn-primary" href="<?= base_url(); ?>addNewBooking"><i class="fa fa-plus" aria-hidden="true"></i> New Booking</a>
                     </div>
                 </div><!-- /.box-header -->
                 <div class="box-body table-responsive no-padding">
@@ -153,6 +153,7 @@ $selected = "selected='selected'";
                   
                 </div><!-- /.box-body -->
                 <div class="box-footer clearfix">
+                    <?php echo $this->pagination->create_links(); ?>
                 </div>
               </div><!-- /.box -->
             </div>
@@ -167,7 +168,7 @@ jQuery(document).ready(function(){
     jQuery('#startDate, #endDate').datepicker({
         autoclose: true,
         todayHighlight : true,
-        format: 'dd/mm/yyyy',
+        format: 'yyyy-mm-dd'
         // startDate : today
     });
     jQuery('ul.pagination li a').click(function (e) {

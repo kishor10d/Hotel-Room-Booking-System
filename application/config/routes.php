@@ -127,8 +127,8 @@ $route['editOldCustomer/(:num)'] = "customer/editOldCustomer/$1";
 $route['updateOldCustomer'] = "customer/updateOldCustomer";
 $route['deleteCustomer'] = "customer/deleteCustomer";
 
-$route['book'] = 'booking/bookings';
-$route['book/(:num)'] = 'booking/bookings/$1';
+$route['bookings'] = 'booking/bookings';
+$route['bookings/(:num)'] = 'booking/bookings/$1';
 $route['addNewBooking'] = 'booking/addNewBooking';
 $route['addedNewBooking'] = 'booking/addedNewBooking';
 // $route['editOldBookings'] = 'booking/editOldBookings';

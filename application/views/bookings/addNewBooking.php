@@ -116,7 +116,7 @@
                                     <div class="form-group">
                                         <label for="customerId">Customer (Click on <i class="fa fa-search"></i> for search)</label>
                                         <div class="input-group">
-                                            <input type="text" value="" class="form-control" id="customerName" name="customerName" placeholder="Type name and click on magnifier" />
+                                            <input type="text" value="" class="form-control" id="customerName" name="customerName" placeholder="Type name and click on magnifier" autocomplete="off" />
                                             <div class="input-group-addon">
                                                 <i class="fa fa-search" id="searchCustomer"></i>
                                             </div>
@@ -146,7 +146,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div id="validationDiv" style='display:none'><div class="box box-primary"><div class="box-body"><div class="row"><div class="col-md-12"><div class="callout callout-danger"><h4>Unable to check!</h4><p>Please select From Date and To Date</p></div></div></div></div></div></div>
+                <div id="validationDiv" style='display:none'><div class="box box-primary"><div class="box-body"><div class="row"><div class="col-md-12"><div class="callout callout-danger"><h4>Unable to check!</h4><p id='dateValidationMsg'></p></div></div></div></div></div></div>
                 <div id='availableRoomDiv'></div>
 
                 <?php

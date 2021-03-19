@@ -7,16 +7,17 @@ $selected = "selected='selected'";
       <h1>
         Base Fare Management
         <small>Add, Edit, Delete</small>
+        <span class='pull-right'><a class="btn btn-primary" href="<?php echo base_url(); ?>addNewBaseFare"><i class="fa fa-plus" aria-hidden="true"></i> Add New Base Fare</a></span>
       </h1>
     </section>
     <section class="content">
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-xs-12 text-right">
                 <div class="form-group">
                     <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewBaseFare"><i class="fa fa-plus" aria-hidden="true"></i> Add New Base Fare</a>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="row">
             <div class="col-xs-12">
               <div class="box">

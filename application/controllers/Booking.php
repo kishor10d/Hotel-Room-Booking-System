@@ -39,21 +39,25 @@ class Booking extends BaseController
         $searchFloorId = $this->input->post('floorId');
         $searchRoomSizeId = $this->input->post('sizeId');
         $searchRoomId = $this->input->post('roomId');
+        $customerName = $this->input->post('customerName');
+        $mobileNumber = $this->input->post('mobileNumber');
         $data['searchText'] = $searchText;
         $data['searchRoomId'] = $searchRoomId;
         $data['searchFloorId'] = $searchFloorId;
         $data['searchRoomSizeId'] = $searchRoomSizeId;
+        $data['customerName'] = $customerName;
+        $data['mobileNumber'] = $mobileNumber;
         $data['rooms'] = $this->rooms_model->getRooms();
         $data['roomSizes'] = $this->rooms_model->getRoomSizes();
         $data['floors'] = $this->rooms_model->getFloors();
 
         $this->load->library('pagination');
         
-        $count = $this->booking->bookingCount($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId);
+        $count = $this->booking->bookingCount($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $customerName, $mobileNumber);
 
-        $returns = $this->paginationCompress ( "book/", $count, 10);
+        $returns = $this->paginationCompress ( "bookings/", $count, 5);
         
-        $data['bookingRecords'] = $this->booking->bookingListing($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $returns["page"], $returns["segment"]);
+        $data['bookingRecords'] = $this->booking->bookingListing($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $customerName, $mobileNumber, $returns["page"], $returns["segment"]);
         
         $this->global['pageTitle'] = 'DigiLodge : Bookings';
         
@@ -167,8 +171,12 @@ class Booking extends BaseController
         
         $data['floors'] = $this->rooms_model->getFloors();
         $data['roomSizes'] = $this->rooms_model->getRoomSizes();
-        
-        $this->global['pageTitle'] = 'DigiLodge : Edit Booking';
+        $data['rooms'] = $this->rooms_model->getRooms();
+
+        $bookingDetails = $this->booking->getBookingDetails($bookingId);
+        $data['bookingDetails'] = $bookingDetails;
+
+        $this->global['pageTitle'] = 'DigiLodge : Edit Booking - '. $bookingDetails->customerName . ' (' . date('Y-m-d', strtotime($bookingDetails->bookStartDate)) . ' to '. date('Y-m-d', strtotime($bookingDetails->bookEndDate)) . ' )';
         
         $this->loadViews("bookings/editOldBooking", $this->global, $data, NULL);
     }
@@ -236,5 +244,55 @@ class Booking extends BaseController
         $html .= '</div></div>';
         
         return $html;
+    }
+
+    /**
+     * This function is used to udpate booking
+     */
+    function updateOldBooking()
+    {
+        $this->load->library('form_validation');
+        
+        $bookingId = $this->input->post('bookingId');
+
+        $this->form_validation->set_rules('startDate','Start Date','trim|required');
+        $this->form_validation->set_rules('endDate','End Date','trim|required');
+        $this->form_validation->set_rules('roomId','Room Number','trim|required|numeric');
+        $this->form_validation->set_rules('comments','Comments','trim');
+        $this->form_validation->set_rules('customerId','Customer','trim|required|numeric');
+        
+        if($this->form_validation->run() == FALSE)
+        {
+            $this->editOldBooking($bookingId);
+        }
+        else
+        {
+            $startDate = $this->security->xss_clean($this->input->post('startDate'));
+            $endDate = $this->security->xss_clean($this->input->post('endDate'));
+            $roomId = $this->input->post('roomId');
+            $floorId = $this->input->post('floorId');
+            $roomSizeId = $this->input->post('sizeId');
+            $comments = $this->security->xss_clean($this->input->post('comments'));
+            $customerId = $this->security->xss_clean($this->input->post('customerId'));
+            
+            $bookingInfo = array('bookStartDate'=>$startDate, 'bookEndDate'=>$endDate, 
+                                'roomId'=>$roomId, 'floorId'=>$floorId, 'roomSizeId'=>$roomSizeId,
+                                'customerId'=>$customerId,'bookingDtm'=>date('Y-m-d H:i:sa'),
+                                'bookingComments'=>$comments,
+                                'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));
+            
+            $result = $this->booking->updateOldBooking($bookingInfo, $bookingId);
+            
+            if($result > 0)
+            {
+                $this->session->set_flashdata('success', 'Booking updated successfully');
+            }
+            else
+            {
+                $this->session->set_flashdata('error', 'Booking update failed');
+            }
+            $url = 'booking/editOldBooking/'.$bookingId;
+            redirect($url);
+        }
     }
 }

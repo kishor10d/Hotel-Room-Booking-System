@@ -9,7 +9,7 @@
  */
 class Booking_model extends CI_Model
 {
-    function bookingCount($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId)
+    function bookingCount($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $customerName, $mobileNumber)
     {
         $this->db->select('BaseTbl.bookingId, BaseTbl.customerId, BaseTbl.bookingDtm, BaseTbl.roomId,
                             BaseTbl.bookStartDate, BaseTbl.bookEndDate,
@@ -31,12 +31,18 @@ class Booking_model extends CI_Model
         if(!empty($searchFloorId)){
             $this->db->where('R.floorId', $searchFloorId);
         }
+        if(!empty($customerName)){
+            $this->db->like('C.customerName', $customerName);
+        }
+        if(!empty($mobileNumber)){
+            $this->db->like('C.customerPhone', $mobileNumber);
+        }
         $query = $this->db->get();
         
         return count($query->result());
     }
 
-    function bookingListing($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $page, $segment)
+    function bookingListing($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $customerName, $mobileNumber, $page, $segment)
     {
         $this->db->select('BaseTbl.bookingId, BaseTbl.customerId, BaseTbl.bookingDtm, BaseTbl.roomId,
                             BaseTbl.bookStartDate, BaseTbl.bookEndDate, BaseTbl.bookingComments,
@@ -57,6 +63,12 @@ class Booking_model extends CI_Model
         }
         if(!empty($searchFloorId)){
             $this->db->where('R.floorId', $searchFloorId);
+        }
+        if(!empty($customerName)){
+            $this->db->like('C.customerName', $customerName);
+        }
+        if(!empty($mobileNumber)){
+            $this->db->like('C.customerPhone', $mobileNumber);
         }
         $this->db->order_by('BaseTbl.bookingId', "DESC");
         $this->db->limit($page, $segment);
@@ -164,5 +176,36 @@ class Booking_model extends CI_Model
         $query2 = $this->db->get();
 
         return $query2->result();
+    }
+
+    /**
+     * This method used to get single booking details
+     * @param {number} $bookingId: This is booking id
+     * @return {array} $row: Booking details
+     */
+    public function getBookingDetails($bookingId)
+    {
+        $this->db->select('LB.bookingId, LB.customerId, LC.customerName, LB.bookingDtm, LB.floorId, LB.roomSizeId, LB.roomId, LB.bookStartDate, LB.bookEndDate, LB.bookingComments');
+        $this->db->from('ldg_bookings AS LB');
+        $this->db->join('ldg_customer AS LC', 'LB.customerId = LC.customerId', 'left');
+        $this->db->where('LB.isDeleted', 0);
+        $this->db->where('LB.bookingId', $bookingId);
+
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
+    /**
+     * This function is used to update booking details
+     * @param {array} $bookingInfo : This is booking information
+     * @param {number} $bookingId: This is booking id
+     */
+    function updateOldBooking($bookingInfo, $bookingId)
+    {
+        $this->db->where('bookingId', $bookingId);
+        $this->db->update('ldg_bookings', $bookingInfo);
+        
+        return $this->db->affected_rows();
     }
 }

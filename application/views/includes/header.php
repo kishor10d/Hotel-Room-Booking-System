@@ -103,7 +103,7 @@
               </a>
             </li>
             <li class="treeview">
-              <a href="<?php echo base_url(); ?>book">
+              <a href="<?php echo base_url(); ?>bookings">
                 <i class="fa fa-book"></i>
                 <span>Bookings</span>
               </a>

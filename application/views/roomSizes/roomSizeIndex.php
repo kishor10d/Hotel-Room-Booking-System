@@ -4,16 +4,17 @@
       <h1>
         Room Size Management
         <small>Add, Edit, Delete</small>
+        <span class='pull-right'><a class="btn btn-primary" href="<?php echo base_url(); ?>addNewRoomSize"><i class="fa fa-plus" aria-hidden="true"></i> Add New Room Size</a></span>
       </h1>
     </section>
     <section class="content">
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-xs-12 text-right">
                 <div class="form-group">
                     <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewRoomSize"><i class="fa fa-plus" aria-hidden="true"></i> Add New Room Size</a>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="row">
             <div class="col-xs-12">
               <div class="box">
