@@ -17,7 +17,7 @@ class Booking extends BaseController
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Booking_model', "booking");
+        $this->load->model('booking_model', "booking");
         $this->load->model('rooms_model');
         $this->isLoggedIn();   
     }
@@ -69,6 +69,7 @@ class Booking extends BaseController
 
         $data['floors'] = $this->rooms_model->getFloors();
         $data['roomSizes'] = $this->rooms_model->getRoomSizes();
+        $data['rooms'] = $this->rooms_model->getRooms();
 
         $this->loadViews("bookings/addNewBooking", $this->global, $data, NULL);
     }
@@ -110,15 +111,18 @@ class Booking extends BaseController
             $startDate = $this->security->xss_clean($this->input->post('startDate'));
             $endDate = $this->security->xss_clean($this->input->post('endDate'));
             $roomId = $this->input->post('roomId');
+            $floorId = $this->input->post('floorId');
+            $roomSizeId = $this->input->post('sizeId');
             $comments = $this->security->xss_clean($this->input->post('comments'));
             $customerId = $this->security->xss_clean($this->input->post('customerId'));
 
-            $date = DateTime::createFromFormat('d/m/Y', $startDate);
-            $startDate = $date->format('Y-m-d');
-            $date = DateTime::createFromFormat('d/m/Y', $endDate);
-            $endDate = $date->format('Y-m-d');
+            // $date = DateTime::createFromFormat('d/m/Y', $startDate);
+            // $startDate = $date->format('Y-m-d');
+            // $date = DateTime::createFromFormat('d/m/Y', $endDate);
+            // $endDate = $date->format('Y-m-d');
             
-            $bookingInfo = array('bookStartDate'=>$startDate, 'bookEndDate'=>$endDate, 'roomId'=>$roomId,
+            $bookingInfo = array('bookStartDate'=>$startDate, 'bookEndDate'=>$endDate, 
+                                'roomId'=>$roomId, 'floorId'=>$floorId, 'roomSizeId'=>$roomSizeId,
                                 'customerId'=>$customerId,'bookingDtm'=>date('Y-m-d H:i:sa'),
                                 'bookingComments'=>$comments,
                                 'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));
@@ -158,7 +162,7 @@ class Booking extends BaseController
     {
         if($bookingId == null)
         {
-            redirect('customerListing');
+            redirect('book');
         }
         
         $data['floors'] = $this->rooms_model->getFloors();
@@ -169,13 +173,68 @@ class Booking extends BaseController
         $this->loadViews("bookings/editOldBooking", $this->global, $data, NULL);
     }
 
+    /**
+     * This method is used to get available rooms
+     * Ajax request
+     */
     function availableRooms()
     {
-        $startDate = '2020-09-18';
-        $endDate = '2020-09-26';
-        $floorId = 0;
-        $roomSizeId = 0;
-        $roomId = 0;
-        $this->booking->getRoomsWhichNotBooked($startDate, $endDate, $floorId, $roomSizeId, $roomId);
+        $startDate = $this->security->xss_clean($this->input->post('startDate'));
+        $endDate = $this->security->xss_clean($this->input->post('endDate'));
+        $roomId = $this->input->post('roomId');
+        $floorId = $this->input->post('floorId');
+        $roomSizeId = $this->input->post('roomSizeId');
+
+        if(!empty($startDate)) {
+            $startDate = date('Y-m-d', strtotime($startDate));
+        }
+        if(!empty($endDate)) {
+            $endDate = date('Y-m-d', strtotime($endDate));
+        }
+
+        $availableRooms = $this->booking->getAvailableRooms($startDate, $endDate, $floorId, $roomSizeId, $roomId);
+
+        if(!empty($availableRooms)) {
+            $html = $this->generateDropdownHTML($availableRooms);
+            echo(json_encode(array('status'=>true, 'message'=>'Rooms are available', 'data'=>$availableRooms, 'html'=>$html)));
+        } else {
+            $html = $this->notAvailableHTML();
+            echo(json_encode(array('status'=>false, 'message'=>'Rooms are not available', 'data'=>$availableRooms, 'html'=>$html)));
+        }
+    }
+
+    private function generateDropdownHTML($availableRooms)
+    {
+        $html = '<div class="box box-primary">';
+        $html .= '<div class="box-body">';
+        $html .= '<div class="row"><div class="col-md-12"><div class="callout callout-success"><h4>Rooms Are Available!</h4><p>Please select room from below dropdown</p></div></div></div>';
+        $html .= '<div class="row">';
+        $html .= '<div class="col-md-12">';
+        $html .= '<div class="form-group">';
+
+        $html .= '<select class="form-control" id="roomAvailableId" name="roomAvailableId">
+                    <option value="">Rooms are available</option>';
+        $roomDescription = '';
+        
+        foreach($availableRooms as $room) {
+            $html .= '<option value='.$room->roomId.' data-roomsizeid='.$room->roomSizeId.' data-floorid='.$room->floorId.' data-sizetitle="'.$room->sizeTitle.'" data-roomnumber="'.$room->roomNumber.'" data-sizedesc="'.htmlentities($room->sizeDescription).'" >'.$room->roomNumber.'</option>';
+            $roomDescription .= '<div id="rid_'.$room->roomId.'"><b>'.$room->sizeTitle . '('.$room->roomNumber.')'.'</b> <br> '.$room->sizeDescription.'</div>';
+        }
+        $html .= '</select>';
+        $html .= '</div></div></div>';
+        $html .= '<div class="row"><div class="col-md-12" id="roomDescriptionDiv"></div></div>';
+        $html .= '</div></div><br>';
+
+        return $html;
+    }
+
+    private function notAvailableHTML()
+    {
+        $html = '<div class="box box-primary">';
+        $html .= '<div class="box-body">';
+        $html .= '<div class="row"><div class="col-md-12"><div class="callout callout-warning"><h4>Rooms Not Available!</h4><p>Please change the criteria for availability</p></div></div></div>';
+        $html .= '</div></div>';
+        
+        return $html;
     }
 }

@@ -26,7 +26,7 @@
                                     <div class="form-group">
                                         <label for="startDate">From Date</label>
                                         <div class="input-group">
-                                            <input type="text" id="startDate" name="startDate" value="" class="form-control" placeholder="dd/mm/yyyy" autocomplete="off"/>
+                                            <input type="text" id="startDate" name="startDate" value="" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off"/>
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
@@ -37,7 +37,7 @@
                                     <div class="form-group">
                                         <label for="endDate">To Date</label>
                                         <div class="input-group">
-                                            <input type="text" id="endDate" name="endDate" value="" class="form-control" placeholder="dd/mm/yyyy" autocomplete="off"/>
+                                            <input type="text" id="endDate" name="endDate" value="" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off"/>
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
@@ -86,11 +86,29 @@
                                 </div>
                             </div>
                             <div class="row">
+							    <div class="col-md-12 text-right">                                
+                                    <button type="button" class="btn btn-primary btn-md" id='checkAvailableBtn'>Check Availability</button>
+                                    <!-- <button type="button" class="btn btn-default  btn-md">Reset</button> -->
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
 							    <div class="col-md-6">                                
                                     <div class="form-group">
                                         <label for="roomId">Room Number</label>
-                                        <select class="form-control" id="roomId" name="roomId">
+                                        <select class="form-control" id="roomId" name="roomId" readonly style='pointer-events:none'>
                                             <option value="">Select Room</option>
+                                            <?php
+                                            if(!empty($rooms))
+                                            {
+                                                foreach ($rooms as $rm)
+                                                {
+                                                    ?>
+                                                    <option value="<?php echo $rm->roomId ?>"><?php echo $rm->roomNumber ?></option>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
                                         </select>                                      
                                     </div>
                                 </div>
@@ -128,6 +146,9 @@
                 </div>
             </div>
             <div class="col-md-4">
+                <div id="validationDiv" style='display:none'><div class="box box-primary"><div class="box-body"><div class="row"><div class="col-md-12"><div class="callout callout-danger"><h4>Unable to check!</h4><p>Please select From Date and To Date</p></div></div></div></div></div></div>
+                <div id='availableRoomDiv'></div>
+
                 <?php
                     $this->load->helper('form');
                     $error = $this->session->flashdata('error');
