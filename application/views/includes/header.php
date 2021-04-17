@@ -54,6 +54,11 @@
           </a>
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
+              <li class="dropdown user user-menu">
+                <a href="<?php echo base_url(); ?>addNewBooking">
+                  <span class=""><i class="fa fa-plus"></i><b> Add New Booking</b></span>
+                </a>
+              <li>
               <!-- User Account: style can be found in dropdown.less -->
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -106,12 +111,6 @@
               <a href="<?php echo base_url(); ?>bookings">
                 <i class="fa fa-book"></i>
                 <span>Bookings</span>
-              </a>
-            </li>
-            <li class="treeview">
-              <a href="<?= base_url(); ?>addNewBooking">
-                <i class="fa fa-book"></i>
-                <span>New Booking</span>
               </a>
             </li>
             <?php

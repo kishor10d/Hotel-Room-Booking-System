@@ -142,8 +142,9 @@ $selected = "selected='selected'";
                         <td><?= $record->bookingComments ?></td>
                         <td><?= $record->bookingDtm ?></td>
                         <td class="text-center">
-                          <a href="<?php echo base_url().'booking/editOldBooking/'.$record->bookingId; ?>" class="btn btn-sm btn-info"><i class="fa fa-pencil"></i></a>
-                          <a href="#" data-bookid="<?php echo $record->bookingId; ?>" class="deleteBooking btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                          <a href="<?php echo base_url().'booking/editOldBooking/'.$record->bookingId; ?>" class="btn btn-sm btn-warning" title="Information"><i class="fa fa-info-circle"></i></a>
+                          <a href="<?php echo base_url().'booking/editOldBooking/'.$record->bookingId; ?>" class="btn btn-sm btn-info" title="Edit"><i class="fa fa-pencil"></i></a>
+                          <a href="#" data-bookid="<?php echo $record->bookingId; ?>" class="deleteBooking btn btn-sm btn-danger" title="Delete"><i class="fa fa-trash"></i></a>
                       </td>
                     </tr>
                     <?php
