@@ -85,7 +85,7 @@ $selected = "selected='selected'";
                       <th>Room Size</th>
                       <th>Room Description</th>
                       <th>Room Floor</th>
-                      <th class="text-center">Actions</th>
+                      <th width="10%" class="text-center">Actions</th>
                     </tr>
                     <?php
                     if(!empty($roomRecords))

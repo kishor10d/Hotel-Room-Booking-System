@@ -49,7 +49,7 @@
                       <td><?php echo $record->sizeId ?></td>
                       <td><?php echo $record->sizeTitle ?></td>
                       <td><?php echo $record->sizeDescription ?></td>
-                      <td class="text-center">
+                      <td width="10%" class="text-center">
                           <a href="<?php echo base_url().'editOldRoomSize/'.$record->sizeId; ?>" class="btn btn-info btn-sm"><i class="fa fa-pencil"></i></a>
                           <a href="" data-roomsizeid="<?php echo $record->sizeId; ?>" class="deleteRoomSize btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
                       </td>

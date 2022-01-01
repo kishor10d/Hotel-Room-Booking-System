@@ -38,7 +38,7 @@
                       <th>Floor Code</th>
                       <th>Floor Name</th>
                       <th>Description</th>                      
-                      <th class="text-center">Actions</th>
+                      <th width="10%" class="text-center">Actions</th>
                     </tr>
                     <?php
                     if(!empty($floorsRecords))

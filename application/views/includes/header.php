@@ -55,8 +55,8 @@
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
               <li class="dropdown user user-menu">
-                <a href="<?php echo base_url(); ?>addNewBooking">
-                  <span class=""><i class="fa fa-plus"></i><b> Add New Booking</b></span>
+                <a href="<?php echo base_url(); ?>addNewBooking" class="bg-primary">
+                  <span><i class="fa fa-plus"></i><b> Add New Booking</b></span>
                 </a>
               <li>
               <!-- User Account: style can be found in dropdown.less -->

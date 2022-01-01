@@ -8,7 +8,7 @@ $selected = "selected='selected'";
         <i class="fa fa-book" aria-hidden="true"></i> Bookings
         <small>Add, Edit, Delete</small>
         <span class='pull-right'>
-        <a class="btn btn-primary btn-lg" href="<?= base_url(); ?>addNewBooking"><i class="fa fa-plus" aria-hidden="true"></i> Add New Booking</a>
+        <a class="btn btn-primary btn-lg hidden-xs" href="<?= base_url(); ?>addNewBooking"><i class="fa fa-plus" aria-hidden="true"></i> Add New Booking</a>
         </span>
       </h1>
     </section>
@@ -141,7 +141,7 @@ $selected = "selected='selected'";
                         <td><?= $record->customerName ?><br><?= !empty($record->customerPhone)? $record->customerPhone."<br>" : ''; ?><?= $record->customerEmail ?></td>
                         <td><?= $record->bookingComments ?></td>
                         <td><?= $record->bookingDtm ?></td>
-                        <td class="text-center">
+                        <td width="15%" class="text-center">
                           <a href="<?php echo base_url().'booking/editOldBooking/'.$record->bookingId; ?>" class="btn btn-sm btn-warning" title="Information"><i class="fa fa-info-circle"></i></a>
                           <a href="<?php echo base_url().'booking/editOldBooking/'.$record->bookingId; ?>" class="btn btn-sm btn-info" title="Edit"><i class="fa fa-pencil"></i></a>
                           <a href="#" data-bookid="<?php echo $record->bookingId; ?>" class="deleteBooking btn btn-sm btn-danger" title="Delete"><i class="fa fa-trash"></i></a>

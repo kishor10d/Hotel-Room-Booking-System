@@ -39,7 +39,7 @@
                       <th>Email</th>
                       <th>Mobile</th>
                       <th>Role</th>
-                      <th class="text-center">Actions</th>
+                      <th width="10%" class="text-center">Actions</th>
                     </tr>
                     <?php
                     if(!empty($userRecords))

@@ -68,7 +68,7 @@ $selected = "selected='selected'";
                       <th>Service Tax</th>
                       <th>Service Charge</th>
                       <th>Total</th>
-                      <th class="text-center">Actions</th>
+                      <th width="10%" class="text-center">Actions</th>
                     </tr>
                     <?php
                     if(!empty($baseFareRecords))

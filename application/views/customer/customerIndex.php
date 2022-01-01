@@ -53,7 +53,7 @@
                       <td><?php echo $record->customerPhone ?></td>
                       <td><?php echo $record->customerAddress ?></td>
                       <td><?php echo $record->customerEmail ?></td>
-                      <td class="text-center">
+                      <td width="10%" class="text-center">
                           <a href="<?php echo base_url().'editOldCustomer/'.$record->customerId; ?>" class="btn btn-sm btn-info"><i class="fa fa-pencil"></i></a>
                           <a href="" data-customerid="<?= $record->customerId ?>" class="deleteCustomer btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                       </td>

@@ -42,7 +42,7 @@ class Customer extends BaseController
         
         $count = $this->customer->customerListingCount($searchText);
 
-        $returns = $this->paginationCompress ( "customerListing/", $count, 5 );
+        $returns = $this->paginationCompress ( "customerListing/", $count, 10 );
         
         $data['customerRecords'] = $this->customer->customerListing($searchText, $returns["page"], $returns["segment"]);
         
