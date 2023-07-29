@@ -44,7 +44,7 @@ class Customer extends BaseController
 
         $returns = $this->paginationCompress ( "customerListing/", $count, 10 );
         
-        $data['customerRecords'] = $this->customer->customerListing($searchText, $returns["page"], $returns["segment"]);
+        $data['customerRecords'] = $this->customer->customerListing($returns["page"], $returns["segment"], $searchText);
         
         $this->global['pageTitle'] = 'DigiLodge : Customer Listing';
         

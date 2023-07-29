@@ -38,7 +38,7 @@ class Customer_model extends CI_Model
      * @param number $segment : This is pagination limit
      * @return array $result : This is result
      */
-    function customerListing($searchText = '', $page, $segment)
+    function customerListing($page, $segment, $searchText = '')
     {
         $this->db->select('BaseTbl.customerId, BaseTbl.customerName, BaseTbl.customerAddress, BaseTbl.customerPhone, BaseTbl.customerEmail');
         $this->db->from('ldg_customer as BaseTbl');
