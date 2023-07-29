@@ -53,7 +53,7 @@ class User extends BaseController
 
 			$returns = $this->paginationCompress ( "userListing/", $count, 5 );
             
-            $data['userRecords'] = $this->user_model->userListing($searchText, $returns["page"], $returns["segment"]);
+            $data['userRecords'] = $this->user_model->userListing($returns["page"], $returns["segment"], $searchText);
             
             $this->global['pageTitle'] = 'DigiLodge : User Listing';
             

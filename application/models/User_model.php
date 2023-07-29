@@ -39,7 +39,7 @@ class User_model extends CI_Model
      * @param number $segment : This is pagination limit
      * @return array $result : This is result
      */
-    function userListing($searchText = '', $page, $segment)
+    function userListing($page, $segment, $searchText = '')
     {
         $this->db->select('BaseTbl.userId, BaseTbl.userEmail, BaseTbl.userName, BaseTbl.userPhone, Role.role');
         $this->db->from('ldg_users as BaseTbl');
