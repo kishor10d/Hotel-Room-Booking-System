@@ -49,7 +49,7 @@ class Floors extends BaseController
 
 			$returns = $this->paginationCompress ( "floorsListing/", $count, 5 );
             
-            $data['floorsRecords'] = $this->floors_model->floorsListing($searchText, $returns["page"], $returns["segment"]);
+            $data['floorsRecords'] = $this->floors_model->floorsListing($returns["page"], $returns["segment"], $searchText);
             
             $this->global['pageTitle'] = 'DigiLodge : Floors Listing';
             

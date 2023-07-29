@@ -37,7 +37,7 @@ class Floors_model extends CI_Model
      * @param number $segment : This is pagination limit
      * @return array $result : This is result
      */
-    function floorsListing($searchText = '', $page, $segment)
+    function floorsListing($page, $segment, $searchText = '')
     {
         $this->db->select('BaseTbl.floorId, BaseTbl.floorCode, BaseTbl.floorDescription, BaseTbl.floorName');
         $this->db->from('ldg_floor as BaseTbl');
