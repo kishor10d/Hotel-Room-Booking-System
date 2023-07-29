@@ -40,7 +40,7 @@ class Rooms extends BaseController
         }
         else
         {
-            $searchText = $this->input->post('searchText');
+            $searchText = trim($this->input->post('searchText') ?? '');
             $searchFloorId = $this->input->post('floorId');
             $searchRoomSizeId = $this->input->post('sizeId');
             $data['searchText'] = $searchText;

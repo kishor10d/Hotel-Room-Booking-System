@@ -34,7 +34,7 @@ class Customer extends BaseController
      */
     function customerListing()
     {
-        $searchText = $this->input->post('searchText');
+        $searchText = trim($this->input->post('searchText') ?? '');
 
         $data['searchText'] = $searchText;
         

@@ -40,7 +40,7 @@ class RoomSizes extends BaseController
         }
         else
         {
-            $searchText = $this->input->post('searchText');
+            $searchText = trim($this->input->post('searchText') ?? '');
             $data['searchText'] = $searchText;
             
             $this->load->library('pagination');

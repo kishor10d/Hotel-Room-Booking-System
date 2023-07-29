@@ -40,7 +40,7 @@ class BaseFare extends BaseController
         }
         else
         {
-            $searchText = $this->input->post('searchText');
+            $searchText = trim($this->input->post('searchText') ?? '');
             $searchRoomSizeId = $this->input->post('searchRoomSizeId');
             $data['searchText'] = $searchText;
             $data['searchRoomSizeId'] = $searchRoomSizeId;            
