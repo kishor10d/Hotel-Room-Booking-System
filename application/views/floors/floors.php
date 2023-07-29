@@ -26,6 +26,7 @@
                               <input type="text" name="searchText" value="<?php echo $searchText; ?>" class="form-control input-sm pull-right" style="width: 150px;" placeholder="Search"/>
                               <div class="input-group-btn">
                                 <button class="btn btn-sm btn-default searchList"><i class="fa fa-search"></i></button>
+                                <button class="btn btn-sm btn-default resetFilters"><i class="fa fa-refresh"></i></button>
                               </div>
                             </div>
                         </form>
@@ -80,6 +81,9 @@
             var value = link.substring(link.lastIndexOf('/') + 1);
             jQuery("#searchList").attr("action", baseURL + "floorsListing/" + value);
             jQuery("#searchList").submit();
+        });
+        jQuery('.resetFilters').click(function(){
+          $(this).closest('form').find("input[type=text]").val("");
         });
     });
 </script>
