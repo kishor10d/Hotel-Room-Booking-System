@@ -49,7 +49,7 @@ class RoomSizes extends BaseController
 
 			$returns = $this->paginationCompress ( "roomSizeListing/", $count, 5 );
             
-            $data['roomSizesRecords'] = $this->roomSizes_model->roomSizeListing($searchText, $returns["page"], $returns["segment"]);
+            $data['roomSizesRecords'] = $this->roomSizes_model->roomSizeListing($returns["page"], $returns["segment"], $searchText);
             
             $this->global['pageTitle'] = 'DigiLodge : Room Size Listing';
             

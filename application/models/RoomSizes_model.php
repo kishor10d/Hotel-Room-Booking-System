@@ -36,7 +36,7 @@ class RoomSizes_model extends CI_Model
      * @param number $segment : This is pagination limit
      * @return array $result : This is result
      */
-    function roomSizeListing($searchText = '', $page, $segment)
+    function roomSizeListing($page, $segment, $searchText = '')
     {
         $this->db->select('BaseTbl.sizeId, BaseTbl.sizeTitle, BaseTbl.sizeDescription');
         $this->db->from('ldg_room_sizes as BaseTbl');
