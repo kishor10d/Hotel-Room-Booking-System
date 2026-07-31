@@ -142,6 +142,36 @@ class CI_Loader {
 		log_message('info', 'Loader Class Initialized');
 	}
 
+	/**
+	 * Property getter
+	 *
+	 * Allows views to access loaded CI components through $this without
+	 * dynamically creating properties on the loader instance.
+	 *
+	 * @param	string	$key	Property name
+	 * @return	mixed
+	 */
+	public function __get($key)
+	{
+		$_ci_CI =& get_instance();
+		return $_ci_CI->$key;
+	}
+
+	/**
+	 * Property isset checker
+	 *
+	 * Keeps isset($this->foo) behavior in views while avoiding dynamic
+	 * properties on CI_Loader.
+	 *
+	 * @param	string	$key	Property name
+	 * @return	bool
+	 */
+	public function __isset($key)
+	{
+		$_ci_CI =& get_instance();
+		return isset($_ci_CI->$key);
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -922,16 +952,9 @@ class CI_Loader {
 			show_error('Unable to load the requested file: '.$_ci_file);
 		}
 
-		// This allows anything loaded using $this->load (views, files, etc.)
-		// to become accessible from within the Controller and Model functions.
+		// This reference is used below for output appending and magic accessors
+		// expose loaded CI components in views without dynamic Loader properties.
 		$_ci_CI =& get_instance();
-		foreach (get_object_vars($_ci_CI) as $_ci_key => $_ci_var)
-		{
-			if ( ! isset($this->$_ci_key))
-			{
-				$this->$_ci_key =& $_ci_CI->$_ci_key;
-			}
-		}
 
 		/*
 		 * Extract and cache variables

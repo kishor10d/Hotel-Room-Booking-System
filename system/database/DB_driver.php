@@ -139,6 +139,13 @@ abstract class CI_DB_driver {
 	public $swap_pre		= '';
 
 	/**
+	 * Failover configurations
+	 *
+	 * @var	array
+	 */
+	public $failover		= array();
+
+	/**
 	 * Database port
 	 *
 	 * @var	int

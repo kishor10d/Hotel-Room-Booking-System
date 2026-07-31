@@ -38,6 +38,12 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+if (PHP_VERSION_ID >= 80200 && ! class_exists('AllowDynamicProperties', FALSE))
+{
+	#[Attribute(Attribute::TARGET_CLASS)]
+	final class AllowDynamicProperties {}
+}
+
 /**
  * Application Controller Class
  *
@@ -50,6 +56,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		https://codeigniter.com/userguide3/general/controllers.html
  */
+#[AllowDynamicProperties]
 class CI_Controller {
 
 	/**

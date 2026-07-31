@@ -419,11 +419,23 @@ class CI_Session {
 		{
 			$bits_per_character = (int) ini_get('session.sid_bits_per_character');
 			$sid_length         = (int) ini_get('session.sid_length');
+			if ($bits_per_character < 4 || $bits_per_character > 6)
+			{
+				$bits_per_character = 5;
+			}
+
 			if (($bits = $sid_length * $bits_per_character) < 160)
 			{
 				// Add as many more characters as necessary to reach at least 160 bits
-				$sid_length += (int) ceil((160 % $bits) / $bits_per_character);
-				ini_set('session.sid_length', $sid_length);
+				if (PHP_VERSION_ID < 80400 && $bits > 0)
+				{
+					$sid_length += (int) ceil((160 - $bits) / $bits_per_character);
+					ini_set('session.sid_length', $sid_length);
+				}
+				elseif ($sid_length < 1)
+				{
+					$sid_length = 32;
+				}
 			}
 		}
 
