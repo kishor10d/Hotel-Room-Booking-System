@@ -73,6 +73,9 @@ $selected = "selected='selected'";
                     </select>
                 </div>
                 <div class="col-md-2">
+                    <input type="text" name="searchText" value="<?php echo isset($searchText) ? $searchText : ''; ?>" class="form-control input-sm" placeholder="Search" autocomplete="off" />
+                </div>
+                <div class="col-md-2">
                     <input type="text" name="customerName" value="<?= $customerName; ?>" class="form-control input-sm" placeholder="Customer Name" autocomplete="off" />
                 </div>
                 <div class="col-md-2">
@@ -124,7 +127,7 @@ $selected = "selected='selected'";
                         <th>Name</th>
                         <th>Details</th>
                         <th>Booking Date</th>
-                        
+                        <th>Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
                     
@@ -133,6 +136,12 @@ $selected = "selected='selected'";
                     {
                         foreach($bookingRecords as $record)
                         {
+                            $badge = 'label-default';
+                            $label = ucwords(str_replace('_', ' ', $record->bookingStatus));
+                            if($record->bookingStatus == 'confirmed') { $badge = 'label-primary'; }
+                            else if($record->bookingStatus == 'checked_in') { $badge = 'label-success'; }
+                            else if($record->bookingStatus == 'checked_out') { $badge = 'label-warning'; }
+                            else if($record->bookingStatus == 'cancelled') { $badge = 'label-danger'; }
                     ?>
                     <tr>
                         <td><?= $record->roomNumber ?><br><?= $record->floorName ?> (<?= $record->floorCode ?>)<br><?= $record->sizeTitle ?></td>
@@ -141,8 +150,9 @@ $selected = "selected='selected'";
                         <td><?= $record->customerName ?><br><?= !empty($record->customerPhone)? $record->customerPhone."<br>" : ''; ?><?= $record->customerEmail ?></td>
                         <td><?= $record->bookingComments ?></td>
                         <td><?= $record->bookingDtm ?></td>
-                        <td width="15%" class="text-center">
-                          <a href="<?php echo base_url().'booking/editOldBooking/'.$record->bookingId; ?>" class="btn btn-sm btn-warning" title="Information"><i class="fa fa-info-circle"></i></a>
+                        <td><span class="label <?= $badge ?>"><?= $label ?></span></td>
+                        <td width="18%" class="text-center">
+                          <a href="<?php echo base_url().'booking/bookingInfo/'.$record->bookingId; ?>" class="btn btn-sm btn-primary" title="Information"><i class="fa fa-info-circle"></i></a>
                           <a href="<?php echo base_url().'booking/editOldBooking/'.$record->bookingId; ?>" class="btn btn-sm btn-info" title="Edit"><i class="fa fa-pencil"></i></a>
                           <a href="#" data-bookid="<?php echo $record->bookingId; ?>" class="deleteBooking btn btn-sm btn-danger" title="Delete"><i class="fa fa-trash"></i></a>
                       </td>

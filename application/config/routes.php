@@ -131,10 +131,16 @@ $route['bookings'] = 'booking/bookings';
 $route['bookings/(:num)'] = 'booking/bookings/$1';
 $route['addNewBooking'] = 'booking/addNewBooking';
 $route['addedNewBooking'] = 'booking/addedNewBooking';
-// $route['editOldBookings'] = 'booking/editOldBookings';
+$route['bookingInfo/(:num)'] = 'booking/bookingInfo/$1';
+$route['deleteBooking'] = 'booking/deleteBooking';
+$route['updateBookingStatus'] = 'booking/updateBookingStatus';
 
 $route['getRoomsByFT'] = 'booking/getRoomsByFT';
 $route['getCustomersByName'] = 'booking/getCustomersByName';
+
+/*********** Booking Reports Routes ***********/
+$route['bookingReport'] = 'reports/bookingReport';
+$route['bookingReport/(:num)'] = 'reports/bookingReport/$1';
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

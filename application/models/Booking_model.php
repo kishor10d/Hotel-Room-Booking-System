@@ -22,6 +22,9 @@ class Booking_model extends CI_Model
         $this->db->join('ldg_room_sizes AS RS', 'RS.sizeId = R.roomSizeId', 'left');
         $this->db->join('ldg_floor AS F', 'F.floorId = R.floorId', 'left');
         $this->db->where('BaseTbl.isDeleted', 0);
+        if(!empty($searchText)){
+            $this->db->like('C.customerName', $searchText);
+        }
         if(!empty($searchRoomId)){
             $this->db->where('R.roomId', $searchRoomId);
         }
@@ -46,6 +49,7 @@ class Booking_model extends CI_Model
     {
         $this->db->select('BaseTbl.bookingId, BaseTbl.customerId, BaseTbl.bookingDtm, BaseTbl.roomId,
                             BaseTbl.bookStartDate, BaseTbl.bookEndDate, BaseTbl.bookingComments,
+                            BaseTbl.bookingStatus, BaseTbl.checkInDtm, BaseTbl.checkOutDtm,
                             C.customerName, C.customerPhone, C.customerEmail,
                             R.roomNumber, R.roomSizeId, R.floorId, RS.sizeTitle, RS.sizeDescription,
                             F.floorName, F.floorCode');
@@ -55,6 +59,9 @@ class Booking_model extends CI_Model
         $this->db->join('ldg_room_sizes AS RS', 'RS.sizeId = R.roomSizeId', 'left');
         $this->db->join('ldg_floor AS F', 'F.floorId = R.floorId', 'left');
         $this->db->where('BaseTbl.isDeleted', 0);
+        if(!empty($searchText)){
+            $this->db->like('C.customerName', $searchText);
+        }
         if(!empty($searchRoomId)){
             $this->db->where('R.roomId', $searchRoomId);
         }
@@ -116,6 +123,7 @@ class Booking_model extends CI_Model
         $this->db->select('LB.roomId');
         $this->db->from('ldg_bookings AS LB');
         $this->db->where('LB.isDeleted', 0);
+        $this->db->where('LB.bookingStatus !=', 'cancelled');
         $this->db->group_start()
 				->group_start()
 					->where('LB.bookStartDate >=', $startDate)
@@ -185,9 +193,17 @@ class Booking_model extends CI_Model
      */
     public function getBookingDetails($bookingId)
     {
-        $this->db->select('LB.bookingId, LB.customerId, LC.customerName, LB.bookingDtm, LB.floorId, LB.roomSizeId, LB.roomId, LB.bookStartDate, LB.bookEndDate, LB.bookingComments');
+        $this->db->select('LB.bookingId, LB.customerId, LC.customerName, LC.customerPhone, LC.customerEmail,
+                            LB.bookingDtm, LB.floorId, LB.roomSizeId, LB.roomId, LB.bookStartDate,
+                            LB.bookEndDate, LB.bookingComments, LB.bookingStatus, LB.checkInDtm, LB.checkOutDtm,
+                            LR.roomNumber, LRS.sizeTitle, LRS.sizeDescription, LF.floorName, LF.floorCode,
+                            BF.baseFareHour, BF.baseFareDay, BF.serviceTax, BF.serviceCharge, BF.fareTotal');
         $this->db->from('ldg_bookings AS LB');
         $this->db->join('ldg_customer AS LC', 'LB.customerId = LC.customerId', 'left');
+        $this->db->join('ldg_rooms AS LR', 'LB.roomId = LR.roomId', 'left');
+        $this->db->join('ldg_room_sizes AS LRS', 'LRS.sizeId = LR.roomSizeId', 'left');
+        $this->db->join('ldg_floor AS LF', 'LF.floorId = LR.floorId', 'left');
+        $this->db->join('ldg_room_base_fare AS BF', 'BF.sizeId = LR.roomSizeId AND BF.isDeleted = 0', 'left');
         $this->db->where('LB.isDeleted', 0);
         $this->db->where('LB.bookingId', $bookingId);
 
@@ -207,5 +223,222 @@ class Booking_model extends CI_Model
         $this->db->update('ldg_bookings', $bookingInfo);
         
         return $this->db->affected_rows();
+    }
+
+    /**
+     * This function is used to soft delete the booking
+     * @param {number} $bookingId : This is booking id
+     * @param {array} $bookingInfo : This is booking update info
+     */
+    function deleteBooking($bookingId, $bookingInfo)
+    {
+        $this->db->where('bookingId', $bookingId);
+        $this->db->update('ldg_bookings', $bookingInfo);
+
+        return $this->db->affected_rows();
+    }
+
+    /**
+     * This function is used to update the booking status and checkin/checkout timestamps
+     * @param {array} $bookingInfo : This is booking update info
+     * @param {number} $bookingId : This is booking id
+     */
+    function updateBookingStatus($bookingInfo, $bookingId)
+    {
+        $this->db->where('bookingId', $bookingId);
+        $this->db->update('ldg_bookings', $bookingInfo);
+
+        return $this->db->affected_rows();
+    }
+
+    /**
+     * This method is used to get the dashboard statistics
+     * @return {array} $result : This is array of stat values
+     */
+    function getDashboardStats()
+    {
+        $stats = array();
+
+        $this->db->select('COUNT(*) AS cnt');
+        $this->db->from('ldg_bookings');
+        $this->db->where('isDeleted', 0);
+        $stats['totalBookings'] = (int) $this->db->get()->row()->cnt;
+
+        $this->db->select('COUNT(*) AS cnt');
+        $this->db->from('ldg_bookings');
+        $this->db->where('isDeleted', 0);
+        $this->db->where('bookingStatus', 'confirmed');
+        $stats['confirmedBookings'] = (int) $this->db->get()->row()->cnt;
+
+        $this->db->select('COUNT(*) AS cnt');
+        $this->db->from('ldg_bookings');
+        $this->db->where('isDeleted', 0);
+        $this->db->where('bookingStatus', 'checked_in');
+        $stats['checkedInBookings'] = (int) $this->db->get()->row()->cnt;
+
+        $this->db->select('COUNT(*) AS cnt');
+        $this->db->from('ldg_bookings');
+        $this->db->where('isDeleted', 0);
+        $this->db->where('bookingStatus', 'cancelled');
+        $stats['cancelledBookings'] = (int) $this->db->get()->row()->cnt;
+
+        $this->db->select('COUNT(*) AS cnt');
+        $this->db->from('ldg_bookings');
+        $this->db->where('isDeleted', 0);
+        $this->db->where('bookingStatus !=', 'cancelled');
+        $this->db->where('bookStartDate <=', date('Y-m-d 23:59:59'));
+        $this->db->where('bookEndDate >=', date('Y-m-d 00:00:00'));
+        $stats['activeBookings'] = (int) $this->db->get()->row()->cnt;
+
+        $this->db->select('COUNT(*) AS cnt');
+        $this->db->from('ldg_bookings');
+        $this->db->where('isDeleted', 0);
+        $this->db->where('bookingStatus !=', 'cancelled');
+        $this->db->where('bookStartDate >=', date('Y-m-d 00:00:00'));
+        $this->db->where('bookStartDate <=', date('Y-m-d 23:59:59'));
+        $stats['todayArrivals'] = (int) $this->db->get()->row()->cnt;
+
+        $this->db->select('COUNT(*) AS cnt');
+        $this->db->from('ldg_customer');
+        $this->db->where('isDeleted', 0);
+        $stats['totalCustomers'] = (int) $this->db->get()->row()->cnt;
+
+        $this->db->select('COUNT(*) AS cnt');
+        $this->db->from('ldg_rooms');
+        $this->db->where('isDeleted', 0);
+        $stats['totalRooms'] = (int) $this->db->get()->row()->cnt;
+
+        $this->db->select('COUNT(*) AS cnt');
+        $this->db->from('ldg_floor');
+        $this->db->where('isDeleted', 0);
+        $stats['totalFloors'] = (int) $this->db->get()->row()->cnt;
+
+        $this->db->select('COUNT(*) AS cnt');
+        $this->db->from('ldg_users');
+        $this->db->where('isDeleted', 0);
+        $this->db->where('roleId !=', 1);
+        $stats['totalUsers'] = (int) $this->db->get()->row()->cnt;
+
+        return $stats;
+    }
+
+    /**
+     * This method is used to get the recent bookings for dashboard
+     * @param {number} $limit : This is number of records
+     * @return {array} $result : This is list of recent bookings
+     */
+    function getRecentBookings($limit = 8)
+    {
+        $this->db->select('BaseTbl.bookingId, BaseTbl.bookStartDate, BaseTbl.bookEndDate, BaseTbl.bookingStatus,
+                            C.customerName, R.roomNumber, RS.sizeTitle, F.floorName');
+        $this->db->from('ldg_bookings AS BaseTbl');
+        $this->db->join('ldg_customer AS C', 'BaseTbl.customerId = C.customerId', 'left');
+        $this->db->join('ldg_rooms AS R', 'BaseTbl.roomId = R.roomId', 'left');
+        $this->db->join('ldg_room_sizes AS RS', 'RS.sizeId = R.roomSizeId', 'left');
+        $this->db->join('ldg_floor AS F', 'F.floorId = R.floorId', 'left');
+        $this->db->where('BaseTbl.isDeleted', 0);
+        $this->db->order_by('BaseTbl.bookingId', 'DESC');
+        $this->db->limit($limit);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    /**
+     * This method is used to get booking report listing by date range
+     * @param {string} $fromDate : This is report start date
+     * @param {string} $toDate : This is report end date
+     * @param {string} $status : This is optional booking status filter
+     * @param {number} $page : This is pagination offset
+     * @param {number} $segment : This is pagination limit
+     * @return {array} $result : This is report listing
+     */
+    function bookingReportListing($fromDate, $toDate, $status, $page, $segment)
+    {
+        $this->db->select('BaseTbl.bookingId, BaseTbl.customerId, BaseTbl.bookingDtm, BaseTbl.roomId,
+                            BaseTbl.bookStartDate, BaseTbl.bookEndDate, BaseTbl.bookingComments,
+                            BaseTbl.bookingStatus, BaseTbl.checkInDtm, BaseTbl.checkOutDtm,
+                            C.customerName, C.customerPhone, C.customerEmail,
+                            R.roomNumber, RS.sizeTitle, F.floorName,
+                            BF.baseFareDay, BF.serviceTax, BF.serviceCharge, BF.fareTotal');
+        $this->db->from('ldg_bookings AS BaseTbl');
+        $this->db->join('ldg_customer AS C', 'BaseTbl.customerId = C.customerId', 'left');
+        $this->db->join('ldg_rooms AS R', 'BaseTbl.roomId = R.roomId', 'left');
+        $this->db->join('ldg_room_sizes AS RS', 'RS.sizeId = R.roomSizeId', 'left');
+        $this->db->join('ldg_floor AS F', 'F.floorId = R.floorId', 'left');
+        $this->db->join('ldg_room_base_fare AS BF', 'BF.sizeId = R.roomSizeId AND BF.isDeleted = 0', 'left');
+        $this->db->where('BaseTbl.isDeleted', 0);
+        if(!empty($fromDate) && !empty($toDate)) {
+            $this->db->group_start();
+            $this->db->where('BaseTbl.bookStartDate >=', $fromDate . ' 00:00:00');
+            $this->db->where('BaseTbl.bookStartDate <=', $toDate . ' 23:59:59');
+            $this->db->group_end();
+        }
+        if(!empty($status)) {
+            $this->db->where('BaseTbl.bookingStatus', $status);
+        }
+        $this->db->order_by('BaseTbl.bookStartDate', 'ASC');
+        $this->db->limit($page, $segment);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    /**
+     * This method is used to get booking report count by date range
+     * @param {string} $fromDate : This is report start date
+     * @param {string} $toDate : This is report end date
+     * @param {string} $status : This is optional booking status filter
+     * @return {number} $count : This is row count
+     */
+    function bookingReportCount($fromDate, $toDate, $status)
+    {
+        $this->db->select('BaseTbl.bookingId');
+        $this->db->from('ldg_bookings AS BaseTbl');
+        $this->db->where('BaseTbl.isDeleted', 0);
+        if(!empty($fromDate) && !empty($toDate)) {
+            $this->db->group_start();
+            $this->db->where('BaseTbl.bookStartDate >=', $fromDate . ' 00:00:00');
+            $this->db->where('BaseTbl.bookStartDate <=', $toDate . ' 23:59:59');
+            $this->db->group_end();
+        }
+        if(!empty($status)) {
+            $this->db->where('BaseTbl.bookingStatus', $status);
+        }
+        $query = $this->db->get();
+
+        return count($query->result());
+    }
+
+    /**
+     * This method is used to get booking report summary (totals) by date range
+     * @param {string} $fromDate : This is report start date
+     * @param {string} $toDate : This is report end date
+     * @param {string} $status : This is optional booking status filter
+     * @return {object} $row : This is report summary
+     */
+    function bookingReportSummary($fromDate, $toDate, $status)
+    {
+        $this->db->select('COUNT(*) AS totalBookings,
+                            SUM(CASE WHEN BaseTbl.bookingStatus = "checked_in" THEN 1 ELSE 0 END) AS checkedInCount,
+                            SUM(CASE WHEN BaseTbl.bookingStatus = "checked_out" THEN 1 ELSE 0 END) AS checkedOutCount,
+                            SUM(CASE WHEN BaseTbl.bookingStatus = "cancelled" THEN 1 ELSE 0 END) AS cancelledCount,
+                            SUM(CASE WHEN BaseTbl.bookingStatus != "cancelled" THEN BF.fareTotal ELSE 0 END) AS expectedRevenue');
+        $this->db->from('ldg_bookings AS BaseTbl');
+        $this->db->join('ldg_rooms AS R', 'BaseTbl.roomId = R.roomId', 'left');
+        $this->db->join('ldg_room_base_fare AS BF', 'BF.sizeId = R.roomSizeId AND BF.isDeleted = 0', 'left');
+        $this->db->where('BaseTbl.isDeleted', 0);
+        if(!empty($fromDate) && !empty($toDate)) {
+            $this->db->group_start();
+            $this->db->where('BaseTbl.bookStartDate >=', $fromDate . ' 00:00:00');
+            $this->db->where('BaseTbl.bookStartDate <=', $toDate . ' 23:59:59');
+            $this->db->group_end();
+        }
+        if(!empty($status)) {
+            $this->db->where('BaseTbl.bookingStatus', $status);
+        }
+        $query = $this->db->get();
+
+        return $query->row();
     }
 }

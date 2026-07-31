@@ -179,7 +179,7 @@ class Rooms extends BaseController
 
             if($this->form_validation->run() == FALSE)
             {
-                $this->editOldRoomSize($roomSizeId);
+                $this->editOldRoom($roomId);
             }
             else
             {                

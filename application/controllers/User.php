@@ -28,7 +28,12 @@ class User extends BaseController
     {
         $this->global['pageTitle'] = 'DigiLodge : Dashboard';
         
-        $this->loadViews("dashboard", $this->global, NULL , NULL);
+        $this->load->model('booking_model', 'booking');
+        
+        $data['stats'] = $this->booking->getDashboardStats();
+        $data['recentBookings'] = $this->booking->getRecentBookings(8);
+        
+        $this->loadViews("dashboard", $this->global, $data , NULL);
     }
     
     /**

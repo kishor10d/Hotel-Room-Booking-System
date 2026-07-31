@@ -27,7 +27,7 @@ class Booking extends BaseController
      */
     public function index()
     {
-        redirect("book");
+        redirect("bookings");
     }
 
     /**
@@ -120,16 +120,17 @@ class Booking extends BaseController
             $comments = $this->security->xss_clean($this->input->post('comments'));
             $customerId = $this->security->xss_clean($this->input->post('customerId'));
 
-            // $date = DateTime::createFromFormat('d/m/Y', $startDate);
-            // $startDate = $date->format('Y-m-d');
-            // $date = DateTime::createFromFormat('d/m/Y', $endDate);
-            // $endDate = $date->format('Y-m-d');
-            
+            if(!$this->validateBookingDates($startDate, $endDate))
+            {
+                $this->session->set_flashdata('error', 'Invalid dates selected, please check the From and To dates');
+                redirect('addNewBooking');
+            }
+
             $bookingInfo = array('bookStartDate'=>$startDate, 'bookEndDate'=>$endDate, 
                                 'roomId'=>$roomId, 'floorId'=>$floorId, 'roomSizeId'=>$roomSizeId,
-                                'customerId'=>$customerId,'bookingDtm'=>date('Y-m-d H:i:sa'),
-                                'bookingComments'=>$comments,
-                                'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));
+                                'customerId'=>$customerId,'bookingDtm'=>date('Y-m-d H:i:s'),
+                                'bookingComments'=>$comments, 'bookingStatus'=>'confirmed',
+                                'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:s'));
             
             $result = $this->booking->addedNewBooking($bookingInfo);
             
@@ -166,7 +167,7 @@ class Booking extends BaseController
     {
         if($bookingId == null)
         {
-            redirect('book');
+            redirect('bookings');
         }
         
         $data['floors'] = $this->rooms_model->getFloors();
@@ -274,12 +275,19 @@ class Booking extends BaseController
             $roomSizeId = $this->input->post('sizeId');
             $comments = $this->security->xss_clean($this->input->post('comments'));
             $customerId = $this->security->xss_clean($this->input->post('customerId'));
+
+            if(!$this->validateBookingDates($startDate, $endDate))
+            {
+                $this->session->set_flashdata('error', 'Invalid dates selected, please check the From and To dates');
+                $url = 'booking/editOldBooking/'.$bookingId;
+                redirect($url);
+            }
             
             $bookingInfo = array('bookStartDate'=>$startDate, 'bookEndDate'=>$endDate, 
                                 'roomId'=>$roomId, 'floorId'=>$floorId, 'roomSizeId'=>$roomSizeId,
-                                'customerId'=>$customerId,'bookingDtm'=>date('Y-m-d H:i:sa'),
+                                'customerId'=>$customerId,'bookingDtm'=>date('Y-m-d H:i:s'),
                                 'bookingComments'=>$comments,
-                                'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));
+                                'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:s'));
             
             $result = $this->booking->updateOldBooking($bookingInfo, $bookingId);
             
@@ -294,5 +302,105 @@ class Booking extends BaseController
             $url = 'booking/editOldBooking/'.$bookingId;
             redirect($url);
         }
+    }
+
+    /**
+     * This function is used to load the booking detail/information screen
+     * @param number $bookingId : This is booking id
+     */
+    function bookingInfo($bookingId = NULL)
+    {
+        if($bookingId == null)
+        {
+            redirect('bookings');
+        }
+
+        $data['floors'] = $this->rooms_model->getFloors();
+        $data['roomSizes'] = $this->rooms_model->getRoomSizes();
+        $data['rooms'] = $this->rooms_model->getRooms();
+
+        $bookingDetails = $this->booking->getBookingDetails($bookingId);
+        if(empty($bookingDetails))
+        {
+            redirect('bookings');
+        }
+        $data['bookingDetails'] = $bookingDetails;
+
+        $this->global['pageTitle'] = 'DigiLodge : Booking #' . $bookingDetails->bookingId . ' - ' . $bookingDetails->customerName;
+
+        $this->loadViews("bookings/bookingInfo", $this->global, $data, NULL);
+    }
+
+    /**
+     * This function is used to soft delete the booking
+     */
+    function deleteBooking()
+    {
+        $bookingId = $this->input->post('bookingId');
+        $bookingInfo = array('isDeleted'=>1,'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:s'));
+
+        $result = $this->booking->deleteBooking($bookingId, $bookingInfo);
+
+        if ($result > 0) { echo(json_encode(array('status'=>TRUE))); }
+        else { echo(json_encode(array('status'=>FALSE))); }
+    }
+
+    /**
+     * This function is used to update the booking status
+     */
+    function updateBookingStatus()
+    {
+        $bookingId = $this->input->post('bookingId');
+        $status = $this->input->post('status');
+
+        $allowedStatus = array('confirmed', 'checked_in', 'checked_out', 'cancelled');
+        if(empty($bookingId) || !in_array($status, $allowedStatus))
+        {
+            echo(json_encode(array('status'=>FALSE, 'message'=>'Invalid request')));
+            return;
+        }
+
+        $bookingInfo = array('bookingStatus'=>$status, 'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:s'));
+        if($status == 'checked_in') {
+            $bookingInfo['checkInDtm'] = date('Y-m-d H:i:s');
+        }
+        if($status == 'checked_out') {
+            $bookingInfo['checkOutDtm'] = date('Y-m-d H:i:s');
+        }
+
+        $result = $this->booking->updateBookingStatus($bookingInfo, $bookingId);
+
+        if ($result > 0) { echo(json_encode(array('status'=>TRUE, 'message'=>'Booking status updated'))); }
+        else { echo(json_encode(array('status'=>FALSE, 'message'=>'Booking status update failed'))); }
+    }
+
+    /**
+     * This function is used to validate booking dates
+     * @param {string} $startDate : This is booking start date
+     * @param {string} $endDate : This is booking end date
+     * @return {boolean} $result : TRUE/FALSE
+     */
+    private function validateBookingDates($startDate, $endDate)
+    {
+        $start = DateTime::createFromFormat('Y-m-d', date('Y-m-d', strtotime($startDate)));
+        $end = DateTime::createFromFormat('Y-m-d', date('Y-m-d', strtotime($endDate)));
+        $today = new DateTime(date('Y-m-d'));
+
+        if($start === FALSE || $end === FALSE)
+        {
+            return false;
+        }
+
+        if($start < $today || $end < $today)
+        {
+            return false;
+        }
+
+        if($start > $end)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

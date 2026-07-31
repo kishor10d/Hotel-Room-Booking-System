@@ -151,7 +151,7 @@ class User_model extends CI_Model
         $user = $query->result();
 
         if(!empty($user)){
-            if(verifyHashedPassword($oldPassword, $user[0]->password)){
+            if(verifyHashedPassword($oldPassword, $user[0]->userPassword)){
                 return $user;
             } else {
                 return array();

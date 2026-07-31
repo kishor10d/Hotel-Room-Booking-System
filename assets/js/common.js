@@ -138,10 +138,54 @@ jQuery(document).ready(function(){
 			}).done(function(data){
 				currentRow.parents('tr').remove();
 				if(data.status == true) { alert("Customer successfully deleted"); }
-				else if(data.status = false) { alert("Customer deletion failed"); }
+				else if(data.status == false) { alert("Customer deletion failed"); }
 				else { alert("Access denied..!"); }
 			});
 		}
+	});
+
+	jQuery(document).on("click", ".deleteBooking", function(){
+		var bookingId = $(this).data("bookid"),
+			hitURL = baseURL + "deleteBooking",
+			currentRow = $(this);
+
+		var confirmation = confirm("Are you sure to delete this booking ?");
+
+		if(confirmation)
+		{
+			jQuery.ajax({
+				type : "POST",
+				dataType : "json",
+				url : hitURL,
+				data : { bookingId : bookingId }
+			}).done(function(data){
+				currentRow.parents('tr').remove();
+				if(data.status == true) { alert("Booking successfully deleted"); }
+				else if(data.status == false) { alert("Booking deletion failed"); }
+				else { alert("Access denied..!"); }
+			});
+		}
+	});
+
+	jQuery(document).on("click", ".updateBookingStatus", function(){
+		var bookingId = $(this).data("bookid"),
+			status = $(this).data("status"),
+			hitURL = baseURL + "booking/updateBookingStatus",
+			currentBtn = $(this);
+
+		jQuery.ajax({
+			type : "POST",
+			dataType : "json",
+			url : hitURL,
+			data : { bookingId : bookingId, status : status }
+		}).done(function(data){
+			if(data.status == true) {
+				alert("Booking status updated successfully");
+				window.location.reload();
+			} else {
+				alert(data.message || "Booking status update failed");
+			}
+		});
 	});
 
 });
