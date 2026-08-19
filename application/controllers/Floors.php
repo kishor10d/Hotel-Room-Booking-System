@@ -1,6 +1,6 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
-require APPPATH . '/libraries/BaseController.php';
+use App\Libraries\BaseController;
 
 /**
  * Class : Floors (FloorsController)
