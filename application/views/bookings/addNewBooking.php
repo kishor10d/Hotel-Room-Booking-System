@@ -1,3 +1,9 @@
+<?php
+    $old = !empty($oldInput) ? $oldInput : [];
+    $val = function($key, $default = '') use ($old) {
+        return html_escape($old[$key] ?? $default);
+    };
+?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -6,19 +12,19 @@
         <small>Create / Edit Booking</small>
       </h1>
     </section>
-    
+
     <section class="content">
 	<div class="row">
             <!-- left column -->
             <div class="col-md-8">
               <!-- general form elements -->
-                
+
                 <div class="box box-primary">
                     <div class="box-header">
                         <h3 class="box-title">Enter Booking Details</h3>
                     </div><!-- /.box-header -->
                     <!-- form start -->
-                    
+
                     <form role="form" id="" action="<?php echo base_url() ?>addedNewBooking" method="post" role="form">
                         <div class="box-body">
                             <div class="row">
@@ -26,7 +32,7 @@
                                     <div class="form-group">
                                         <label for="startDate">From Date</label>
                                         <div class="input-group">
-                                            <input type="text" id="startDate" name="startDate" value="" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off"/>
+                                            <input type="text" id="startDate" name="startDate" value="<?php echo $val('startDate'); ?>" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off"/>
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
@@ -37,7 +43,7 @@
                                     <div class="form-group">
                                         <label for="endDate">To Date</label>
                                         <div class="input-group">
-                                            <input type="text" id="endDate" name="endDate" value="" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off"/>
+                                            <input type="text" id="endDate" name="endDate" value="<?php echo $val('endDate'); ?>" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off"/>
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
@@ -46,7 +52,7 @@
                                 </div>
                             </div>
                             <div class="row">
-								<div class="col-md-6">                                
+								<div class="col-md-6">
                                     <div class="form-group">
                                         <label for="floorId">Floor</label>
                                         <select class="form-control" id="floorId" name="floorId">
@@ -56,13 +62,14 @@
                                             {
                                                 foreach ($floors as $frs)
                                                 {
+                                                    $selected = ($frs->floorId == ($old['floorId'] ?? '')) ? 'selected' : '';
                                                     ?>
-                                                    <option value="<?php echo $frs->floorId ?>"><?php echo $frs->floorCode." - ".$frs->floorName ?></option>
+                                                    <option value="<?php echo $frs->floorId ?>" <?= $selected ?>><?php echo $frs->floorCode." - ".$frs->floorName ?></option>
                                                     <?php
                                                 }
                                             }
                                             ?>
-                                        </select>                                      
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -75,8 +82,9 @@
                                             {
                                                 foreach ($roomSizes as $rs)
                                                 {
+                                                    $selected = ($rs->sizeId == ($old['sizeId'] ?? '')) ? 'selected' : '';
                                                     ?>
-                                                    <option value="<?php echo $rs->sizeId ?>"><?php echo $rs->sizeTitle ?></option>
+                                                    <option value="<?php echo $rs->sizeId ?>" <?= $selected ?>><?php echo $rs->sizeTitle ?></option>
                                                     <?php
                                                 }
                                             }
@@ -86,37 +94,27 @@
                                 </div>
                             </div>
                             <div class="row">
-							    <div class="col-md-12 text-right">                                
+							    <div class="col-md-12 text-right">
                                     <button type="button" class="btn btn-primary btn-md" id='checkAvailableBtn'>Check Availability</button>
                                     <!-- <button type="button" class="btn btn-default  btn-md">Reset</button> -->
                                 </div>
                             </div>
                             <hr>
                             <div class="row">
-							    <div class="col-md-6">                                
+							    <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="roomId">Room Number</label>
-                                        <select class="form-control" id="roomId" name="roomId" readonly style='pointer-events:none'>
-                                            <option value="">Select Room</option>
-                                            <?php
-                                            if(!empty($rooms))
-                                            {
-                                                foreach ($rooms as $rm)
-                                                {
-                                                    ?>
-                                                    <option value="<?php echo $rm->roomId ?>"><?php echo $rm->roomNumber ?></option>
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
-                                        </select>                                      
+                                        <select class="form-control" id="roomId" name="roomId" data-selected="<?php echo $val('roomId'); ?>" disabled>
+                                            <option value="">Select dates to see available rooms</option>
+                                        </select>
+                                        <div id="roomDescriptionDiv"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="customerId">Customer (Click on <i class="fa fa-search"></i> for search)</label>
                                         <div class="input-group">
-                                            <input type="text" value="" class="form-control" id="customerName" name="customerName" placeholder="Type name and click on magnifier" autocomplete="off" />
+                                            <input type="text" value="<?php echo $val('customerName'); ?>" class="form-control" id="customerName" name="customerName" placeholder="Type name and click on magnifier" autocomplete="off" />
                                             <div class="input-group-addon">
                                                 <i class="fa fa-search" id="searchCustomer"></i>
                                             </div>
@@ -131,13 +129,13 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="comments">Comments</label>
-                                        <textarea name='comments' id="comments"></textarea>
+                                        <textarea name='comments' id="comments"><?php echo $val('comments'); ?></textarea>
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </div><!-- /.box-body -->
-    
+
                         <div class="box-footer">
                             <input type="submit" class="btn btn-lg btn-primary" value="Save" />
                             <input type="reset" class="btn btn-default pull-right" value="Reset" />
@@ -147,7 +145,7 @@
             </div>
             <div class="col-md-4">
                 <div id="validationDiv" style='display:none'><div class="box box-primary"><div class="box-body"><div class="row"><div class="col-md-12"><div class="callout callout-danger"><h4>Unable to check!</h4><p id='dateValidationMsg'></p></div></div></div></div></div></div>
-                <div id='availableRoomDiv'></div>
+                <div id='availabilityMsgDiv'></div>
 
                 <?php
                     $this->load->helper('form');

@@ -111,38 +111,75 @@ class Booking_model extends CI_Model
     function addedNewBooking($bookingInfo)
     {
         $this->db->trans_start();
+
+        $available = $this->isRoomAvailable($bookingInfo['roomId'], $bookingInfo['bookStartDate'], $bookingInfo['bookEndDate']);
+
+        if(!$available) {
+            $this->db->trans_complete();
+            return 'conflict';
+        }
+
         $this->db->insert('ldg_bookings', $bookingInfo);
         $insert_id = $this->db->insert_id();
         $this->db->trans_complete();
-        
+
         return $insert_id;
     }
 
-    function getAvailableRooms($startDate, $endDate, $floorId = '', $roomSizeId = '', $roomId = '')
+    /**
+     * This function checks (and locks, within the caller's transaction) whether a
+     * room is free for a date range, so it can be safely re-verified immediately
+     * before an insert/update rather than trusting an earlier, separate check.
+     * @param {number} $roomId : This is room id
+     * @param {string} $startDate : This is the requested start date (Y-m-d)
+     * @param {string} $endDate : This is the requested end date (Y-m-d)
+     * @param {number} $excludeBookingId : Optional, ignore this booking (used when editing a booking so it doesn't conflict with itself)
+     * @return {boolean} TRUE if the room is free for that range
+     */
+    function isRoomAvailable($roomId, $startDate, $endDate, $excludeBookingId = null)
+    {
+        $sql = "SELECT bookingId FROM ldg_bookings
+                WHERE roomId = ?
+                  AND isDeleted = 0
+                  AND bookingStatus != 'cancelled'
+                  AND bookStartDate < ?
+                  AND bookEndDate > ?";
+        $params = [$roomId, $endDate, $startDate];
+
+        if(!empty($excludeBookingId)) {
+            $sql .= " AND bookingId != ?";
+            $params[] = $excludeBookingId;
+        }
+
+        $sql .= " FOR UPDATE";
+
+        $query = $this->db->query($sql, $params);
+
+        return $query->num_rows() === 0;
+    }
+
+    /**
+     * This function is used to list rooms available for a date range, optionally
+     * narrowed by floor/room size, and excluding a specific booking (used when
+     * editing a booking so its own current room isn't shown as unavailable).
+     * @param {string} $startDate : This is the requested start date (Y-m-d)
+     * @param {string} $endDate : This is the requested end date (Y-m-d)
+     * @param {number} $floorId : Optional floor filter
+     * @param {number} $roomSizeId : Optional room size filter
+     * @param {number} $roomId : Optional single room filter
+     * @param {number} $excludeBookingId : Optional, ignore this booking when checking conflicts
+     */
+    function getAvailableRooms($startDate, $endDate, $floorId = '', $roomSizeId = '', $roomId = '', $excludeBookingId = '')
     {
         $this->db->select('LB.roomId');
         $this->db->from('ldg_bookings AS LB');
         $this->db->where('LB.isDeleted', 0);
         $this->db->where('LB.bookingStatus !=', 'cancelled');
-        $this->db->group_start()
-				->group_start()
-					->where('LB.bookStartDate >=', $startDate)
-					->where('LB.bookEndDate <=', $endDate)
-				->group_end()
-                ->or_group_start()
-                        ->where('LB.bookStartDate <=', $startDate)
-                        ->where('LB.bookEndDate >=', $endDate)
-                ->group_end()
-				->or_group_start()
-                        ->where('LB.bookStartDate <', $endDate)
-                        ->where('LB.bookEndDate >=', $endDate)
-                ->group_end()
-        ->group_end();
+        // Two ranges [bookStartDate, bookEndDate) and [startDate, endDate) overlap
+        // iff each one starts before the other ends.
+        $this->db->where('LB.bookStartDate <', $endDate);
+        $this->db->where('LB.bookEndDate >', $startDate);
 
-        // pre('floor : '.$floorId);
-        // pre('roomsize: '.$roomSizeId);
-        // pre('room: '.$roomId);
-        
         if($floorId != '' && $floorId != NULL) {
             $this->db->where('LB.floorId', $floorId);
         }
@@ -152,10 +189,11 @@ class Booking_model extends CI_Model
         if($roomId != '' && $roomId != NULL) {
             $this->db->where('LB.roomId', $roomId);
         }
+        if($excludeBookingId != '' && $excludeBookingId != NULL) {
+            $this->db->where('LB.bookingId !=', $excludeBookingId);
+        }
         $query = $this->db->get();
         $bookedRooms = [];
-
-        // pre($this->db->last_query()); die;
 
         foreach ($query->result() as $row)
         {
@@ -219,10 +257,21 @@ class Booking_model extends CI_Model
      */
     function updateOldBooking($bookingInfo, $bookingId)
     {
+        $this->db->trans_start();
+
+        $available = $this->isRoomAvailable($bookingInfo['roomId'], $bookingInfo['bookStartDate'], $bookingInfo['bookEndDate'], $bookingId);
+
+        if(!$available) {
+            $this->db->trans_complete();
+            return 'conflict';
+        }
+
         $this->db->where('bookingId', $bookingId);
         $this->db->update('ldg_bookings', $bookingInfo);
-        
-        return $this->db->affected_rows();
+        $affected = $this->db->affected_rows();
+        $this->db->trans_complete();
+
+        return $affected;
     }
 
     /**

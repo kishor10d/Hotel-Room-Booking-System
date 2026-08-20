@@ -87,31 +87,10 @@ class Booking extends BaseController
 
             $data['floors'] = $this->rooms_model->getFloors();
             $data['roomSizes'] = $this->rooms_model->getRoomSizes();
-            $data['rooms'] = $this->rooms_model->getRooms();
+            $data['oldInput'] = $this->session->flashdata('old_input');
 
             $this->loadViews("bookings/addNewBooking", $this->global, $data, NULL);
         }
-    }
-
-    /**
-     * Get room list by floor and size
-     * @param {number} $floorId : This is floor id
-     * @param {number} $sizeId : This is size id
-     */
-    function getRoomsByFT()
-    {
-        if(!$this->hasCreateAccess())
-        {
-            echo(json_encode(array('rooms'=>[])));
-            return;
-        }
-
-        $sizeId = $this->input->post('sizeId') == '' ? 0 : $this->input->post('sizeId') ;
-        $floorId = $this->input->post('floorId') == '' ? 0 : $this->input->post('floorId');
-
-        $result = $this->rooms_model->getRoomsByFT($floorId, $sizeId);
-
-        echo(json_encode(array('rooms'=>$result)));
     }
 
     /**
@@ -150,6 +129,7 @@ class Booking extends BaseController
                 if(!$this->validateBookingDates($startDate, $endDate))
                 {
                     $this->session->set_flashdata('error', 'Invalid dates selected, please check the From and To dates');
+                    $this->session->set_flashdata('old_input', $this->input->post());
                     redirect('addNewBooking');
                 }
 
@@ -161,13 +141,19 @@ class Booking extends BaseController
 
                 $result = $this->booking->addedNewBooking($bookingInfo);
 
-                if($result > 0)
+                if($result === 'conflict')
+                {
+                    $this->session->set_flashdata('error', 'Sorry, this room was just booked by someone else for those dates. Please pick another room.');
+                    $this->session->set_flashdata('old_input', $this->input->post());
+                }
+                else if($result > 0)
                 {
                     $this->session->set_flashdata('success', 'New booking created successfully');
                 }
                 else
                 {
                     $this->session->set_flashdata('error', 'Booking creation failed');
+                    $this->session->set_flashdata('old_input', $this->input->post());
                 }
 
                 redirect('addNewBooking');
@@ -212,10 +198,12 @@ class Booking extends BaseController
 
         $data['floors'] = $this->rooms_model->getFloors();
         $data['roomSizes'] = $this->rooms_model->getRoomSizes();
-        $data['rooms'] = $this->rooms_model->getRooms();
 
         $bookingDetails = $this->booking->getBookingDetails($bookingId);
         $data['bookingDetails'] = $bookingDetails;
+
+        $oldInput = $this->session->flashdata('old_input');
+        $data['oldInput'] = (!empty($oldInput) && $oldInput['bookingId'] == $bookingId) ? $oldInput : NULL;
 
         $this->global['pageTitle'] = 'DigiLodge : Edit Booking - '. $bookingDetails->customerName . ' (' . date('Y-m-d', strtotime($bookingDetails->bookStartDate)) . ' to '. date('Y-m-d', strtotime($bookingDetails->bookEndDate)) . ' )';
 
@@ -230,15 +218,15 @@ class Booking extends BaseController
     {
         if(!$this->hasCreateAccess() && !$this->hasUpdateAccess())
         {
-            echo(json_encode(array('status'=>false, 'message'=>'Access denied', 'data'=>[], 'html'=>'')));
+            echo(json_encode(array('status'=>false, 'message'=>'Access denied', 'rooms'=>[])));
             return;
         }
 
         $startDate = $this->security->xss_clean($this->input->post('startDate'));
         $endDate = $this->security->xss_clean($this->input->post('endDate'));
-        $roomId = $this->input->post('roomId');
         $floorId = $this->input->post('floorId');
         $roomSizeId = $this->input->post('roomSizeId');
+        $excludeBookingId = $this->input->post('bookingId');
 
         if(!empty($startDate)) {
             $startDate = date('Y-m-d', strtotime($startDate));
@@ -247,50 +235,13 @@ class Booking extends BaseController
             $endDate = date('Y-m-d', strtotime($endDate));
         }
 
-        $availableRooms = $this->booking->getAvailableRooms($startDate, $endDate, $floorId, $roomSizeId, $roomId);
+        $availableRooms = $this->booking->getAvailableRooms($startDate, $endDate, $floorId, $roomSizeId, '', $excludeBookingId);
 
         if(!empty($availableRooms)) {
-            $html = $this->generateDropdownHTML($availableRooms);
-            echo(json_encode(array('status'=>true, 'message'=>'Rooms are available', 'data'=>$availableRooms, 'html'=>$html)));
+            echo(json_encode(array('status'=>true, 'message'=>'Rooms are available', 'rooms'=>$availableRooms)));
         } else {
-            $html = $this->notAvailableHTML();
-            echo(json_encode(array('status'=>false, 'message'=>'Rooms are not available', 'data'=>$availableRooms, 'html'=>$html)));
+            echo(json_encode(array('status'=>false, 'message'=>'No rooms are available for the selected criteria', 'rooms'=>[])));
         }
-    }
-
-    private function generateDropdownHTML($availableRooms)
-    {
-        $html = '<div class="box box-primary">';
-        $html .= '<div class="box-body">';
-        $html .= '<div class="row"><div class="col-md-12"><div class="callout callout-success"><h4>Rooms Are Available!</h4><p>Please select room from below dropdown</p></div></div></div>';
-        $html .= '<div class="row">';
-        $html .= '<div class="col-md-12">';
-        $html .= '<div class="form-group">';
-
-        $html .= '<select class="form-control" id="roomAvailableId" name="roomAvailableId">
-                    <option value="">Rooms are available</option>';
-        $roomDescription = '';
-        
-        foreach($availableRooms as $room) {
-            $html .= '<option value='.$room->roomId.' data-roomsizeid='.$room->roomSizeId.' data-floorid='.$room->floorId.' data-sizetitle="'.$room->sizeTitle.'" data-roomnumber="'.$room->roomNumber.'" data-sizedesc="'.htmlentities($room->sizeDescription).'" >'.$room->roomNumber.'</option>';
-            $roomDescription .= '<div id="rid_'.$room->roomId.'"><b>'.$room->sizeTitle . '('.$room->roomNumber.')'.'</b> <br> '.$room->sizeDescription.'</div>';
-        }
-        $html .= '</select>';
-        $html .= '</div></div></div>';
-        $html .= '<div class="row"><div class="col-md-12" id="roomDescriptionDiv"></div></div>';
-        $html .= '</div></div><br>';
-
-        return $html;
-    }
-
-    private function notAvailableHTML()
-    {
-        $html = '<div class="box box-primary">';
-        $html .= '<div class="box-body">';
-        $html .= '<div class="row"><div class="col-md-12"><div class="callout callout-warning"><h4>Rooms Not Available!</h4><p>Please change the criteria for availability</p></div></div></div>';
-        $html .= '</div></div>';
-        
-        return $html;
     }
 
     /**
@@ -331,25 +282,32 @@ class Booking extends BaseController
             if(!$this->validateBookingDates($startDate, $endDate))
             {
                 $this->session->set_flashdata('error', 'Invalid dates selected, please check the From and To dates');
+                $this->session->set_flashdata('old_input', $this->input->post());
                 $url = 'booking/editOldBooking/'.$bookingId;
                 redirect($url);
             }
-            
-            $bookingInfo = array('bookStartDate'=>$startDate, 'bookEndDate'=>$endDate, 
+
+            $bookingInfo = array('bookStartDate'=>$startDate, 'bookEndDate'=>$endDate,
                                 'roomId'=>$roomId, 'floorId'=>$floorId, 'roomSizeId'=>$roomSizeId,
                                 'customerId'=>$customerId,'bookingDtm'=>date('Y-m-d H:i:s'),
                                 'bookingComments'=>$comments,
                                 'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:s'));
-            
+
             $result = $this->booking->updateOldBooking($bookingInfo, $bookingId);
-            
-            if($result > 0)
+
+            if($result === 'conflict')
+            {
+                $this->session->set_flashdata('error', 'Sorry, this room was just booked by someone else for those dates. Please pick another room.');
+                $this->session->set_flashdata('old_input', $this->input->post());
+            }
+            else if($result > 0)
             {
                 $this->session->set_flashdata('success', 'Booking updated successfully');
             }
             else
             {
                 $this->session->set_flashdata('error', 'Booking update failed');
+                $this->session->set_flashdata('old_input', $this->input->post());
             }
             $url = 'booking/editOldBooking/'.$bookingId;
             redirect($url);

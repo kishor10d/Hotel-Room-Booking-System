@@ -1,3 +1,14 @@
+<?php
+    // If the last submit was rejected (e.g. a room conflict), prefer the resubmitted
+    // values over the booking's saved values so the user doesn't lose their edits.
+    $old = !empty($oldInput) ? $oldInput : [];
+    $currentStartDate = $old['startDate'] ?? date('Y-m-d', strtotime($bookingDetails->bookStartDate));
+    $currentEndDate = $old['endDate'] ?? date('Y-m-d', strtotime($bookingDetails->bookEndDate));
+    $currentFloorId = $old['floorId'] ?? $bookingDetails->floorId;
+    $currentSizeId = $old['sizeId'] ?? $bookingDetails->roomSizeId;
+    $currentRoomId = $old['roomId'] ?? $bookingDetails->roomId;
+    $currentComments = $old['comments'] ?? $bookingDetails->bookingComments;
+?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -6,19 +17,19 @@
         <small>Create / Edit Booking</small>
       </h1>
     </section>
-    
+
     <section class="content">
 	<div class="row">
             <!-- left column -->
             <div class="col-md-8">
               <!-- general form elements -->
-                
+
                 <div class="box box-primary">
                     <div class="box-header">
                         <h3 class="box-title">Enter Booking Details : <b><?= $bookingDetails->customerName ?></b> (<?= date('Y-m-d', strtotime($bookingDetails->bookStartDate)) ?> to <?= date('Y-m-d', strtotime($bookingDetails->bookEndDate)) ?>)</h3>
                     </div><!-- /.box-header -->
                     <!-- form start -->
-                    
+
                     <form role="form" id="editOldBooking" action="<?php echo base_url() ?>booking/updateOldBooking" method="post" role="form">
                         <div class="box-body">
                             <div class="row">
@@ -26,7 +37,7 @@
                                     <div class="form-group">
                                         <label for="startDate">From Date</label>
                                         <div class="input-group">
-                                            <input type="text" id="startDate" name="startDate" value="<?= date('Y-m-d', strtotime($bookingDetails->bookStartDate)); ?>" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off" />
+                                            <input type="text" id="startDate" name="startDate" value="<?= html_escape($currentStartDate); ?>" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off" />
                                             <input type="hidden" name='bookingId' id='bookingId' value='<?= $bookingDetails->bookingId ?>' />
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
@@ -38,7 +49,7 @@
                                     <div class="form-group">
                                         <label for="endDate">To Date</label>
                                         <div class="input-group">
-                                            <input type="text" id="endDate" name="endDate" value="<?= date('Y-m-d', strtotime($bookingDetails->bookEndDate)); ?>" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off" />
+                                            <input type="text" id="endDate" name="endDate" value="<?= html_escape($currentEndDate); ?>" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off" />
                                             <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                             </div>
@@ -47,7 +58,7 @@
                                 </div>
                             </div>
                             <div class="row">
-								<div class="col-md-6">                                
+								<div class="col-md-6">
                                     <div class="form-group">
                                         <label for="floorId">Floor</label>
                                         <select class="form-control" id="floorId" name="floorId">
@@ -57,14 +68,14 @@
                                             {
                                                 foreach ($floors as $frs)
                                                 {
-                                                    $selected = ($frs->floorId == $bookingDetails->floorId) ? 'selected' : '';
+                                                    $selected = ($frs->floorId == $currentFloorId) ? 'selected' : '';
                                                     ?>
                                                     <option value="<?= $frs->floorId ?>" <?= $selected ?> ><?= $frs->floorCode." - ".$frs->floorName ?></option>
                                                     <?php
                                                 }
                                             }
                                             ?>
-                                        </select>                                      
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -77,7 +88,7 @@
                                             {
                                                 foreach ($roomSizes as $rs)
                                                 {
-                                                    $selected2 = ($rs->sizeId == $bookingDetails->roomSizeId) ? 'selected' : '';
+                                                    $selected2 = ($rs->sizeId == $currentSizeId) ? 'selected' : '';
                                                     ?>
                                                     <option value="<?= $rs->sizeId ?>" <?= $selected2 ?>><?= $rs->sizeTitle ?></option>
                                                     <?php
@@ -89,31 +100,20 @@
                                 </div>
                             </div>
                             <div class="row">
-							    <div class="col-md-12 text-right">                                
+							    <div class="col-md-12 text-right">
                                     <button type="button" class="btn btn-primary btn-md" id='checkAvailableBtn'>Check Availability</button>
                                     <!-- <button type="button" class="btn btn-default  btn-md">Reset</button> -->
                                 </div>
                             </div>
                             <hr>
                             <div class="row">
-							    <div class="col-md-6">                                
+							    <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="roomId">Room Number</label>
-                                        <select class="form-control" id="roomId" name="roomId" readonly style='pointer-events:none'>
-                                            <option value="">Select Room</option>
-                                            <?php
-                                            if(!empty($rooms))
-                                            {
-                                                foreach ($rooms as $rm)
-                                                {
-                                                    $selected3 = ($rm->roomId == $bookingDetails->roomId) ? 'selected' : '';
-                                                    ?>
-                                                    <option value="<?= $rm->roomId ?>" <?= $selected3 ?>><?= $rm->roomNumber ?></option>
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
-                                        </select>                                      
+                                        <select class="form-control" id="roomId" name="roomId" data-selected="<?= $currentRoomId; ?>" disabled>
+                                            <option value="">Select dates to see available rooms</option>
+                                        </select>
+                                        <div id="roomDescriptionDiv"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -136,13 +136,13 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="comments">Comments </label>
-                                        <textarea name='comments' id="comments"><?php echo $bookingDetails->bookingComments; ?></textarea>
+                                        <textarea name='comments' id="comments"><?php echo html_escape($currentComments); ?></textarea>
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </div><!-- /.box-body -->
-    
+
                         <div class="box-footer">
                             <input type="submit" class="btn btn-primary" value="Submit" />
                             <input type="reset" class="btn btn-default" value="Reset" />
@@ -152,7 +152,7 @@
             </div>
             <div class="col-md-4">
                 <div id="validationDiv" style='display:none'><div class="box box-primary"><div class="box-body"><div class="row"><div class="col-md-12"><div class="callout callout-danger"><h4>Unable to check!</h4><p id='dateValidationMsg'></p></div></div></div></div></div></div>
-                <div id='availableRoomDiv'></div>
+                <div id='availabilityMsgDiv'></div>
 
                 <?php
                     $this->load->helper('form');

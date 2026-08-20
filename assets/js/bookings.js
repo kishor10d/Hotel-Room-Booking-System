@@ -11,7 +11,7 @@ var dates = {
         //   a date object: returned without modification
         //  an array      : Interpreted as [year,month,day]. NOTE: month is 0-11.
         //   a number     : Interpreted as number of milliseconds
-        //                  since 1 Jan 1970 (a timestamp) 
+        //                  since 1 Jan 1970 (a timestamp)
         //   a string     : Any format supported by the javascript engine, like
         //                  "YYYY/MM/DD", "MM/DD/YYYY", "Jan 31 2009" etc.
         //  an object     : Interpreted as an object with year, month and date
@@ -59,39 +59,8 @@ var dates = {
 
 $(document).ready(function(){
 
-    var getRooms = function(e){
-
-        var floorId = $("#floorId").val();
-        var sizeId = $("#sizeId").val();
-        $("#roomId").val('');
-
-        $(document).find('#availableRoomDiv').html('');
-
-        $.ajax({
-            url : baseURL + 'getRoomsByFT',
-            type : "POST",
-            data : { 'floorId' : floorId, 'sizeId' : sizeId },
-            dataType : 'json',
-        }).done(function(res){
-            var rooms = res.rooms;
-            var html = '<option value="">Select Room</option>';
-            rooms.forEach ( function(value){
-                html = html + "<option value="+value.roomId+">"+value.roomNumber+"</option>";
-            });
-            $("#roomId").html(html);
-        });
-    };
-
-    $("#sizeId").on("change", getRooms);
-    $("#floorId").on("change", getRooms);
-
     var nowDate = new Date();
     var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
-    // jQuery('#startDate, #endDate').datepicker({
-    //     autoclose: true,
-    //     todayHighlight : true,
-    //     format: 'yyyy-mm-dd'
-    // });
 
     $("#startDate").datepicker({
         todayBtn:  1,
@@ -101,6 +70,7 @@ $(document).ready(function(){
     }).on('changeDate', function (selected) {
         var minDate = new Date(selected.date.valueOf());
         $('#endDate').datepicker('setStartDate', minDate);
+        refreshAvailableRooms();
     });
 
     $("#endDate").datepicker({
@@ -108,6 +78,8 @@ $(document).ready(function(){
         autoclose: true,
         todayHighlight : true,
         format: 'yyyy-mm-dd'
+    }).on('changeDate', function () {
+        refreshAvailableRooms();
     });
 
     var getCustomersByName = function(e){
@@ -133,89 +105,104 @@ $(document).ready(function(){
     $("#customerName").on("change", getCustomersByName);
 
     var checkDates = function() {
-        $('#availableRoomDiv').html('');
         var startDate = $("#startDate").val();
         var endDate = $("#endDate").val();
+
+        if(startDate == '' || endDate == '') {
+            return false;
+        }
 
         var startJSDate = new Date(startDate); startJSDate.setHours(0, 0, 0, 0);
         var endJSDate = new Date(endDate); endJSDate.setHours(0, 0, 0, 0);
         var todayDate = new Date(); todayDate.setHours(0, 0, 0, 0);
 
-        if(startDate == '' || endDate == '') {
-            $('#dateValidationMsg').html('Please select From Date and To Date');
+        if(dates.compare(todayDate, startJSDate) == 1) {
+            $('#dateValidationMsg').html('From Date must be greater than or equal to Today\'s Date');
             $('#validationDiv').show();
             return false;
-        } else {
-            var startJSDate = new Date(startDate); startJSDate.setHours(0, 0, 0, 0);
-            var endJSDate = new Date(endDate); endJSDate.setHours(0, 0, 0, 0);
-            var todayDate = new Date(); todayDate.setHours(0, 0, 0, 0);
-            
-            if(dates.compare(todayDate, startJSDate) == 1) {
-                $('#dateValidationMsg').html('From Date must be greater than or equal to Today\'s Date');
-                $('#validationDiv').show();
-                return false;
-            }
-            else if(dates.compare(todayDate, endJSDate) == 1) {
-                $('#dateValidationMsg').html('To Date must be greater than or equal to Today\'s Date');
-                $('#validationDiv').show();
-                return false;
-            }
-            else if(dates.compare(startJSDate, endJSDate) == 1) {
-                $('#dateValidationMsg').html('From Date must be less than or equal to To Date');
-                $('#validationDiv').show();
-                return false;
-            }
+        }
+        else if(dates.compare(todayDate, endJSDate) == 1) {
+            $('#dateValidationMsg').html('To Date must be greater than or equal to Today\'s Date');
+            $('#validationDiv').show();
+            return false;
+        }
+        else if(dates.compare(startJSDate, endJSDate) == 1) {
+            $('#dateValidationMsg').html('From Date must be less than or equal to To Date');
+            $('#validationDiv').show();
+            return false;
         }
         return true;
     }
 
+    // Single source of truth for the room dropdown: it always reflects rooms
+    // actually available for the currently selected dates/floor/size, and stays
+    // disabled until a valid date range is chosen. This replaces the old pattern
+    // of one dropdown listing every room and a separate "available rooms" widget
+    // that the real submit didn't actually enforce.
+    var refreshAvailableRooms = function() {
+        var $roomId = $("#roomId");
+        var previouslySelected = $roomId.val() || $roomId.data('selected') || '';
 
-    var checkAvailability = function(e) {
+        $('#availabilityMsgDiv').html('');
 
-        if(!checkDates()) { return false; }
+        if(!checkDates()) {
+            $roomId.prop('disabled', true).html('<option value="">Select dates to see available rooms</option>');
+            $('#roomDescriptionDiv').html('');
+            return;
+        }
         $('#validationDiv').hide();
 
         var floorId = $("#floorId").val();
         var sizeId = $("#sizeId").val();
         var startDate = $("#startDate").val();
         var endDate = $("#endDate").val();
-        
+        var bookingId = $("#bookingId").val() || '';
+
         $.ajax({
             url : baseURL + 'booking/availableRooms',
             type : "POST",
-            data : { 'floorId' : floorId, 'roomSizeId' : sizeId, 'startDate' : startDate, 'endDate' : endDate },
+            data : { 'floorId' : floorId, 'roomSizeId' : sizeId, 'startDate' : startDate, 'endDate' : endDate, 'bookingId' : bookingId },
             dataType : 'json',
         }).done(function(res){
-            console.log(res);
+            var rooms = res.rooms || [];
+            var html = '<option value="">Select Room</option>';
 
-            if(res.status == true) {
-                $('#availableRoomDiv').html(res.html);
-            } else {
-                $('#availableRoomDiv').html(res.html);
+            rooms.forEach(function(room){
+                html += '<option value="'+room.roomId+'"'
+                    + ' data-roomsizeid="'+room.roomSizeId+'"'
+                    + ' data-floorid="'+room.floorId+'"'
+                    + ' data-sizetitle="'+room.sizeTitle+'"'
+                    + ' data-sizedesc="'+$('<div>').text(room.sizeDescription).html()+'"'
+                    + (String(room.roomId) === String(previouslySelected) ? ' selected' : '')
+                    + '>'+room.roomNumber+'</option>';
+            });
+
+            $roomId.prop('disabled', false).html(html);
+            $roomId.trigger('change');
+
+            if(!res.status) {
+                $('#availabilityMsgDiv').html('<div class="box box-primary"><div class="box-body"><div class="callout callout-warning"><h4>No Rooms Available</h4><p>'+res.message+'</p></div></div></div>');
             }
         });
     };
 
-    $("#checkAvailableBtn").on("click", checkAvailability);
+    $("#floorId, #sizeId").on("change", refreshAvailableRooms);
+    $("#checkAvailableBtn").on("click", refreshAvailableRooms);
 
-    var chooseRoom = function(e) {
-
-        var roomId = $(document).find('#roomAvailableId :selected').val();
+    $(document).on('change', '#roomId', function(){
+        var $selected = $(this).find(':selected');
+        var roomId = $selected.val();
         var createdHtml = '';
-        if(roomId){
-            var roomSizeTitle = $(document).find('#roomAvailableId :selected').data('sizetitle');
-            var roomNumber = $(document).find('#roomAvailableId :selected').data('roomnumber');
-            var sizeDesc = $(document).find('#roomAvailableId :selected').data('sizedesc');
-
-            $('#sizeId').val($(document).find('#roomAvailableId :selected').data('roomsizeid'));
-            $('#floorId').val($(document).find('#roomAvailableId :selected').data('floorid'));
-            $('#roomId').val(roomId);
-
-            
-            createdHtml += '<b>'+ roomSizeTitle + '(' +roomNumber+ ')' +'</b><br>'+sizeDesc;
+        if(roomId) {
+            createdHtml = '<b>' + $selected.data('sizetitle') + ' (' + $selected.text() + ')</b><br>' + $selected.data('sizedesc');
         }
-        $(document).find('#roomDescriptionDiv').html(createdHtml);
-    };
+        $('#roomDescriptionDiv').html(createdHtml);
+    });
 
-    $(document).on('change', '#roomAvailableId', chooseRoom);
+    // On load, dates may already be filled in (editing an existing booking, or
+    // redisplaying the form after a room-conflict rejection) — run the check
+    // immediately so the room list reflects them without an extra click.
+    if($("#startDate").val() && $("#endDate").val()) {
+        refreshAvailableRooms();
+    }
 });

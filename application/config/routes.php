@@ -135,7 +135,6 @@ $route['bookingInfo/(:num)'] = 'booking/bookingInfo/$1';
 $route['deleteBooking'] = 'booking/deleteBooking';
 $route['updateBookingStatus'] = 'booking/updateBookingStatus';
 
-$route['getRoomsByFT'] = 'booking/getRoomsByFT';
 $route['getCustomersByName'] = 'booking/getCustomersByName';
 
 /*********** Booking Reports Routes ***********/
