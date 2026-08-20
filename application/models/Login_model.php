@@ -2,7 +2,23 @@
 
 class Login_model extends CI_Model
 {
-    
+
+    /**
+     * This function used to get a role's access matrix at login time.
+     * Returns NULL if none exists yet (e.g. System Administrator never needs one).
+     * @param number $roleId : This is role id
+     */
+    function getRoleAccessMatrix($roleId)
+    {
+        $this->db->select('roleId, access');
+        $this->db->from('ldg_access_matrix');
+        $this->db->where('roleId', $roleId);
+        $this->db->where('isDeleted', 0);
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
     /**
      * This function used to check the login credentials of the user
      * @param string $email : This is email of the user
@@ -10,7 +26,7 @@ class Login_model extends CI_Model
      */
     function loginMe($email, $password)
     {
-        $this->db->select('BaseTbl.userId, BaseTbl.userEmail, BaseTbl.userPassword, BaseTbl.userName, BaseTbl.roleId, Roles.role');
+        $this->db->select('BaseTbl.userId, BaseTbl.userEmail, BaseTbl.userPassword, BaseTbl.userName, BaseTbl.roleId, Roles.role, Roles.status as roleStatus, Roles.isDeleted as isRoleDeleted');
         $this->db->from('ldg_users as BaseTbl');
         $this->db->join('ldg_roles as Roles','Roles.roleId = BaseTbl.roleId');
         $this->db->where('BaseTbl.userEmail', $email);

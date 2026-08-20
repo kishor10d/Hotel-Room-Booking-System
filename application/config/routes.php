@@ -142,5 +142,16 @@ $route['getCustomersByName'] = 'booking/getCustomersByName';
 $route['bookingReport'] = 'reports/bookingReport';
 $route['bookingReport/(:num)'] = 'reports/bookingReport/$1';
 
+/*********** Roles / Access Matrix Routes ***********/
+$route['roleListing'] = 'roles/roleListing';
+$route['roleListing/(:num)'] = 'roles/roleListing/$1';
+$route['roleListing/add'] = 'roles/add';
+$route['roleListing/edit/(:num)'] = 'roles/edit/$1';
+$route['addNewRole'] = 'roles/addNewRole';
+$route['editRole'] = 'roles/editRole';
+$route['deleteRole'] = 'roles/deleteRole';
+$route['checkRoleExists'] = 'roles/checkRoleExists';
+$route['storeAccessMatrix'] = 'roles/storeAccessMatrix';
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

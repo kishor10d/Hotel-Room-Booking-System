@@ -24,6 +24,31 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ldg_access_matrix`
+--
+
+CREATE TABLE `ldg_access_matrix` (
+  `id` int(11) NOT NULL,
+  `access` text,
+  `roleId` int(11) NOT NULL,
+  `isDeleted` tinyint(4) NOT NULL DEFAULT '0',
+  `createdBy` int(11) NOT NULL,
+  `createdDtm` datetime NOT NULL,
+  `updatedBy` int(11) DEFAULT NULL,
+  `updatedDtm` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `ldg_access_matrix`
+--
+
+INSERT INTO `ldg_access_matrix` (`id`, `access`, `roleId`, `isDeleted`, `createdBy`, `createdDtm`, `updatedBy`, `updatedDtm`) VALUES
+(1, '[{"module":"Floors","total_access":0,"list":0,"create_records":0,"edit_records":0,"delete_records":0},{"module":"Rooms","total_access":0,"list":0,"create_records":0,"edit_records":0,"delete_records":0},{"module":"RoomSizes","total_access":0,"list":0,"create_records":0,"edit_records":0,"delete_records":0},{"module":"BaseFare","total_access":0,"list":0,"create_records":0,"edit_records":0,"delete_records":0},{"module":"Reports","total_access":0,"list":0,"create_records":0,"edit_records":0,"delete_records":0},{"module":"Customer","total_access":1,"list":1,"create_records":1,"edit_records":1,"delete_records":1},{"module":"Booking","total_access":1,"list":1,"create_records":1,"edit_records":1,"delete_records":1}]', 2, 0, 1, '2026-07-31 00:00:00', NULL, NULL),
+(2, '[{"module":"Floors","total_access":0,"list":0,"create_records":0,"edit_records":0,"delete_records":0},{"module":"Rooms","total_access":0,"list":0,"create_records":0,"edit_records":0,"delete_records":0},{"module":"RoomSizes","total_access":0,"list":0,"create_records":0,"edit_records":0,"delete_records":0},{"module":"BaseFare","total_access":0,"list":0,"create_records":0,"edit_records":0,"delete_records":0},{"module":"Reports","total_access":0,"list":0,"create_records":0,"edit_records":0,"delete_records":0},{"module":"Customer","total_access":1,"list":1,"create_records":1,"edit_records":1,"delete_records":1},{"module":"Booking","total_access":1,"list":1,"create_records":1,"edit_records":1,"delete_records":1}]', 3, 0, 1, '2026-07-31 00:00:00', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `ldg_bookings`
 --
 
@@ -205,17 +230,23 @@ INSERT INTO `ldg_reset_password` (`id`, `email`, `activation_id`, `agent`, `clie
 
 CREATE TABLE `ldg_roles` (
   `roleId` tinyint(4) NOT NULL,
-  `role` varchar(50) NOT NULL
+  `role` varchar(50) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  `isDeleted` tinyint(4) NOT NULL DEFAULT '0',
+  `createdBy` int(11) NOT NULL,
+  `createdDtm` datetime NOT NULL,
+  `updatedBy` int(11) DEFAULT NULL,
+  `updatedDtm` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Information of roles';
 
 --
 -- Dumping data for table `ldg_roles`
 --
 
-INSERT INTO `ldg_roles` (`roleId`, `role`) VALUES
-(1, 'System Administrator'),
-(2, 'Lodge Manager'),
-(3, 'Booker');
+INSERT INTO `ldg_roles` (`roleId`, `role`, `status`, `isDeleted`, `createdBy`, `createdDtm`, `updatedBy`, `updatedDtm`) VALUES
+(1, 'System Administrator', 1, 0, 1, '2017-01-01 00:00:00', NULL, NULL),
+(2, 'Lodge Manager', 1, 0, 1, '2017-01-01 00:00:00', NULL, NULL),
+(3, 'Booker', 1, 0, 1, '2017-01-01 00:00:00', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -349,6 +380,12 @@ INSERT INTO `ldg_users` (`userId`, `userEmail`, `userPassword`, `userName`, `use
 --
 
 --
+-- Indexes for table `ldg_access_matrix`
+--
+ALTER TABLE `ldg_access_matrix`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `ldg_bookings`
 --
 ALTER TABLE `ldg_bookings`
@@ -418,6 +455,12 @@ ALTER TABLE `ldg_users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `ldg_access_matrix`
+--
+ALTER TABLE `ldg_access_matrix`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `ldg_bookings`

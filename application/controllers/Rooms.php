@@ -18,7 +18,8 @@ class Rooms extends BaseController
     {
         parent::__construct();
         $this->load->model('rooms_model');
-        $this->isLoggedIn();   
+        $this->isLoggedIn();
+        $this->module = 'Rooms';
     }
 
     /**
@@ -34,7 +35,7 @@ class Rooms extends BaseController
      */
     function roomListing()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasListAccess())
         {
             $this->loadThis();
         }
@@ -68,7 +69,7 @@ class Rooms extends BaseController
      */
     function addNewRoom()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasCreateAccess())
         {
             $this->loadThis();
         }
@@ -89,7 +90,7 @@ class Rooms extends BaseController
      */
     function addedNewRoom()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasCreateAccess())
         {
             $this->loadThis();
         }
@@ -136,7 +137,7 @@ class Rooms extends BaseController
      */
     function editOldRoom($roomId = NULL)
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasUpdateAccess())
         {
             $this->loadThis();
         }
@@ -163,7 +164,7 @@ class Rooms extends BaseController
      */
     function updateOldRoom()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasUpdateAccess())
         {
             $this->loadThis();
         }
@@ -212,7 +213,7 @@ class Rooms extends BaseController
      */
     function deleteRoom()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasDeleteAccess())
         {
             echo(json_encode(array('status'=>'access')));
         }

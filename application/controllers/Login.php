@@ -69,15 +69,24 @@ class Login extends CI_Controller
             {
                 foreach ($result as $res)
                 {
-                    $sessionArray = array('userId'=>$res->userId,                    
+                    if($res->roleId != ROLE_ADMIN && ($res->roleStatus == INACTIVE || $res->isRoleDeleted == 1))
+                    {
+                        $this->session->set_flashdata('error', 'The user doesn\'t have any role or the role is deactivated');
+                        redirect('login');
+                    }
+
+                    $accessInfo = $this->accessInfo($res->roleId);
+
+                    $sessionArray = array('userId'=>$res->userId,
                                             'role'=>$res->roleId,
                                             'roleText'=>$res->role,
                                             'name'=>$res->userName,
+                                            'accessInfo'=>$accessInfo,
                                             'isLoggedIn' => TRUE
                                     );
-                                    
+
                     $this->session->set_userdata($sessionArray);
-                    
+
                     redirect('/dashboard');
                 }
             }
@@ -236,6 +245,27 @@ class Login extends CI_Controller
 
             redirect("/login");
         }
+    }
+
+    /**
+     * This method builds the access-matrix info for a role from JSON into an
+     * array keyed by module name, for storage in the session.
+     * @param number $roleId : This is role id
+     * @return array $finalMatrixArray : This is converted array
+     */
+    private function accessInfo($roleId)
+    {
+        $finalMatrixArray = [];
+        $matrix = $this->login_model->getRoleAccessMatrix($roleId);
+
+        if(!empty($matrix)) {
+            $accessMatrix = json_decode($matrix->access);
+            foreach($accessMatrix as $moduleMatrix) {
+                $finalMatrixArray[$moduleMatrix->module] = (array) $moduleMatrix;
+            }
+        }
+
+        return $finalMatrixArray;
     }
 }
 

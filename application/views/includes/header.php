@@ -101,20 +101,31 @@
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span></i>
               </a>
             </li>
+            <?php
+            $hasModuleAccess = function($moduleName) use ($role, $access_info) {
+                return $role == ROLE_ADMIN ||
+                    (array_key_exists($moduleName, $access_info)
+                    && ($access_info[$moduleName]['list'] == 1 || $access_info[$moduleName]['total_access'] == 1));
+            };
+            ?>
+            <?php if($hasModuleAccess('Customer')) { ?>
             <li class="treeview">
               <a href="<?php echo base_url(); ?>customer">
                 <i class="fa fa-users"></i>
                 <span>Customers</span>
               </a>
             </li>
+            <?php } ?>
+            <?php if($hasModuleAccess('Booking')) { ?>
             <li class="treeview">
               <a href="<?php echo base_url(); ?>bookings">
                 <i class="fa fa-book"></i>
                 <span>Bookings</span>
               </a>
             </li>
+            <?php } ?>
             <?php
-            if($role == ROLE_ADMIN || $role == ROLE_MANAGER)
+            if($hasModuleAccess('Floors') || $hasModuleAccess('RoomSizes') || $hasModuleAccess('Rooms') || $hasModuleAccess('BaseFare'))
             {
             ?>
             <li class="treeview">
@@ -122,35 +133,49 @@
                 <i class="fa fa-plane"></i>
                 <span>Management</span>
                 <i class="fa fa-angle-left pull-right"></i>
-              </a>              
+              </a>
               <ul class="treeview-menu menu-open">
+                <?php if($hasModuleAccess('Floors')) { ?>
                 <li>
                   <a href="<?php echo base_url(); ?>floorsListing" >
                     <i class="fa fa-circle-o"></i> Floors
                   </a>
                 </li>
+                <?php } ?>
+                <?php if($hasModuleAccess('RoomSizes')) { ?>
                 <li>
                   <a href="<?php echo base_url(); ?>roomSizesListing" >
                     <i class="fa fa-circle-o"></i> Room Sizes
                   </a>
                 </li>
-                
+                <?php } ?>
+                <?php if($hasModuleAccess('Rooms')) { ?>
                 <li>
                   <a href="<?php echo base_url(); ?>roomListing" >
-                    <i class="fa fa-circle-o"></i> Rooms 
+                    <i class="fa fa-circle-o"></i> Rooms
                   </a>
                 </li>
+                <?php } ?>
+                <?php if($hasModuleAccess('BaseFare')) { ?>
                 <li>
                   <a href="<?php echo base_url(); ?>baseFareListing" >
-                    <i class="fa fa-circle-o"></i> Base Fare 
+                    <i class="fa fa-circle-o"></i> Base Fare
                   </a>
                 </li>
-                
+                <?php } ?>
               </ul>
             </li>
             <?php
             }
             ?>
+            <?php if($hasModuleAccess('Reports')) { ?>
+            <li class="treeview">
+              <a href="<?php echo base_url(); ?>bookingReport" >
+                <i class="fa fa-files-o"></i>
+                <span>Reports</span>
+              </a>
+            </li>
+            <?php } ?>
             <?php
             if($role == ROLE_ADMIN)
             {
@@ -162,9 +187,9 @@
               </a>
             </li>
             <li class="treeview">
-              <a href="<?php echo base_url(); ?>bookingReport" >
-                <i class="fa fa-files-o"></i>
-                <span>Reports</span>
+              <a href="<?php echo base_url(); ?>roleListing">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span>Roles</span>
               </a>
             </li>
             <?php

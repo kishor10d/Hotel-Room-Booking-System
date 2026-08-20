@@ -19,6 +19,7 @@ class Reports extends BaseController
         parent::__construct();
         $this->load->model('booking_model', 'booking');
         $this->isLoggedIn();
+        $this->module = 'Reports';
     }
 
     /**
@@ -34,7 +35,7 @@ class Reports extends BaseController
      */
     function bookingReport()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasListAccess())
         {
             $this->loadThis();
         }

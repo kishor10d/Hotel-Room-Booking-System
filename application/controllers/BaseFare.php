@@ -18,7 +18,8 @@ class BaseFare extends BaseController
     {
         parent::__construct();
         $this->load->model('BaseFare_model', "basefare");
-        $this->isLoggedIn();   
+        $this->isLoggedIn();
+        $this->module = 'BaseFare';
     }
 
     /**
@@ -34,7 +35,7 @@ class BaseFare extends BaseController
      */
     function baseFareListing()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasListAccess())
         {
             $this->loadThis();
         }
@@ -67,7 +68,7 @@ class BaseFare extends BaseController
      */
     function addNewBaseFare()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasCreateAccess())
         {
             $this->loadThis();
         }
@@ -86,7 +87,7 @@ class BaseFare extends BaseController
      */
     function addedNewBaseFare()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasCreateAccess())
         {
             $this->loadThis();
         }
@@ -144,7 +145,7 @@ class BaseFare extends BaseController
      */
     function editOldBaseFare($bfId = NULL)
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasUpdateAccess())
         {
             $this->loadThis();
         }
@@ -171,7 +172,7 @@ class BaseFare extends BaseController
      */
     function updateOldBaseFare()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasUpdateAccess())
         {
             $this->loadThis();
         }
@@ -229,7 +230,7 @@ class BaseFare extends BaseController
      */
     function deleteBaseFare()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasDeleteAccess())
         {
             echo(json_encode(array('status'=>'access')));
         }

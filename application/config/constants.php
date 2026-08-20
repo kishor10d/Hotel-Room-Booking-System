@@ -91,6 +91,9 @@ define('ROLE_EMPLOYEE',                         '3');
 
 define('SEGMENT',								2);
 
+define('ACTIVE',								1); // STATUS Active
+define('INACTIVE',								2); // STATUS InActive
+
 /************************** EMAIL CONSTANTS *****************************/
 define('EMAIL_FROM',                            'Your from email');		// e.g. email@example.com
 define('EMAIL_BCC',                            	'Your bcc email');		// e.g. email@example.com

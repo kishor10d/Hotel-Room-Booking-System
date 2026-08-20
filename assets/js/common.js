@@ -167,6 +167,31 @@ jQuery(document).ready(function(){
 		}
 	});
 
+	jQuery(document).on("click", ".deleteRole", function(){
+		var roleId = $(this).data("roleid"),
+			hitURL = baseURL + "deleteRole",
+			currentRow = $(this);
+
+		var confirmation = confirm("Are you sure to delete this role ?");
+
+		if(confirmation)
+		{
+			jQuery.ajax({
+				type : "POST",
+				dataType : "json",
+				url : hitURL,
+				data : { roleId : roleId }
+			}).done(function(data){
+				if(data.status == true) {
+					currentRow.parents('tr').remove();
+					alert(data.message || "Role successfully deleted");
+				}
+				else if(data.status == false) { alert(data.message || "Role deletion failed"); }
+				else { alert("Access denied..!"); }
+			});
+		}
+	});
+
 	jQuery(document).on("click", ".updateBookingStatus", function(){
 		var bookingId = $(this).data("bookid"),
 			status = $(this).data("status"),

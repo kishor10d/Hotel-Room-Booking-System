@@ -18,7 +18,8 @@ class Customer extends BaseController
     {
         parent::__construct();
         $this->load->model('customer_model', 'customer');
-        $this->isLoggedIn();   
+        $this->isLoggedIn();
+        $this->module = 'Customer';
     }
     
     /**
@@ -34,21 +35,28 @@ class Customer extends BaseController
      */
     function customerListing()
     {
-        $searchText = trim($this->input->post('searchText') ?? '');
+        if(!$this->hasListAccess())
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            $searchText = trim($this->input->post('searchText') ?? '');
 
-        $data['searchText'] = $searchText;
-        
-        $this->load->library('pagination');
-        
-        $count = $this->customer->customerListingCount($searchText);
+            $data['searchText'] = $searchText;
 
-        $returns = $this->paginationCompress ( "customerListing/", $count, 10 );
-        
-        $data['customerRecords'] = $this->customer->customerListing($returns["page"], $returns["segment"], $searchText);
-        
-        $this->global['pageTitle'] = 'DigiLodge : Customer Listing';
-        
-        $this->loadViews("customer/customerIndex", $this->global, $data, NULL);
+            $this->load->library('pagination');
+
+            $count = $this->customer->customerListingCount($searchText);
+
+            $returns = $this->paginationCompress ( "customerListing/", $count, 10 );
+
+            $data['customerRecords'] = $this->customer->customerListing($returns["page"], $returns["segment"], $searchText);
+
+            $this->global['pageTitle'] = 'DigiLodge : Customer Listing';
+
+            $this->loadViews("customer/customerIndex", $this->global, $data, NULL);
+        }
     }
 
     /**
@@ -56,8 +64,15 @@ class Customer extends BaseController
      */
     function addNewCustomer()
     {
-        $this->global['pageTitle'] = 'DigiLodge : Add New Customer';
-        $this->loadViews("customer/addNewCustomer", $this->global, NULL, NULL);
+        if(!$this->hasCreateAccess())
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            $this->global['pageTitle'] = 'DigiLodge : Add New Customer';
+            $this->loadViews("customer/addNewCustomer", $this->global, NULL, NULL);
+        }
     }
     
     /**
@@ -65,39 +80,46 @@ class Customer extends BaseController
      */
     function addedNewCustomer()
     {
-        $this->load->library('form_validation');
-            
-        $this->form_validation->set_rules('customerName','Customer Name','trim|required|max_length[50]');
-        $this->form_validation->set_rules('customerEmail','Customer Email','trim|valid_email|max_length[128]');
-        $this->form_validation->set_rules('customerAddress','Customer Address','max_length[1024]');
-        $this->form_validation->set_rules('customerPhone','Customer Phone','trim|max_length[15]|numeric');
-        
-        if($this->form_validation->run() == FALSE)
+        if(!$this->hasCreateAccess())
         {
-            $this->addNewCustomer();
+            $this->loadThis();
         }
         else
         {
-            $customerName = ucwords(strtolower($this->security->xss_clean($this->input->post('customerName'))));
-            $customerEmail = $this->security->xss_clean($this->input->post('customerEmail'));
-            $customerAddress = $this->security->xss_clean($this->input->post('customerAddress'));
-            $customerPhone = $this->input->post('customerPhone');
-            
-            $customerInfo = array('customerName'=>$customerName, 'customerEmail'=>$customerEmail, 'customerAddress'=>$customerAddress,
-                                'customerPhone'=>$customerPhone, 'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));
-            
-            $result = $this->customer->addNewCustomer($customerInfo);
-            
-            if($result > 0)
+            $this->load->library('form_validation');
+
+            $this->form_validation->set_rules('customerName','Customer Name','trim|required|max_length[50]');
+            $this->form_validation->set_rules('customerEmail','Customer Email','trim|valid_email|max_length[128]');
+            $this->form_validation->set_rules('customerAddress','Customer Address','max_length[1024]');
+            $this->form_validation->set_rules('customerPhone','Customer Phone','trim|max_length[15]|numeric');
+
+            if($this->form_validation->run() == FALSE)
             {
-                $this->session->set_flashdata('success', 'New customer created successfully');
+                $this->addNewCustomer();
             }
             else
             {
-                $this->session->set_flashdata('error', 'Customer creation failed');
+                $customerName = ucwords(strtolower($this->security->xss_clean($this->input->post('customerName'))));
+                $customerEmail = $this->security->xss_clean($this->input->post('customerEmail'));
+                $customerAddress = $this->security->xss_clean($this->input->post('customerAddress'));
+                $customerPhone = $this->input->post('customerPhone');
+
+                $customerInfo = array('customerName'=>$customerName, 'customerEmail'=>$customerEmail, 'customerAddress'=>$customerAddress,
+                                    'customerPhone'=>$customerPhone, 'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:sa'));
+
+                $result = $this->customer->addNewCustomer($customerInfo);
+
+                if($result > 0)
+                {
+                    $this->session->set_flashdata('success', 'New customer created successfully');
+                }
+                else
+                {
+                    $this->session->set_flashdata('error', 'Customer creation failed');
+                }
+
+                redirect('addNewCustomer');
             }
-            
-            redirect('addNewCustomer');
         }
     }
 
@@ -108,16 +130,23 @@ class Customer extends BaseController
      */
     function editOldCustomer($customerId = NULL)
     {
-        if($customerId == null)
+        if(!$this->hasUpdateAccess())
         {
-            redirect('customerListing');
+            $this->loadThis();
         }
-        
-        $data['customerInfo'] = $this->customer->getCustomerInfo($customerId);
-        
-        $this->global['pageTitle'] = 'DigiLodge : Edit Customer';
-        
-        $this->loadViews("customer/editOldCustomer", $this->global, $data, NULL);
+        else
+        {
+            if($customerId == null)
+            {
+                redirect('customerListing');
+            }
+
+            $data['customerInfo'] = $this->customer->getCustomerInfo($customerId);
+
+            $this->global['pageTitle'] = 'DigiLodge : Edit Customer';
+
+            $this->loadViews("customer/editOldCustomer", $this->global, $data, NULL);
+        }
     }
     
     
@@ -126,41 +155,48 @@ class Customer extends BaseController
      */
     function updateOldCustomer()
     {
-        $this->load->library('form_validation');
-            
-        $customerId = $this->input->post('customerId');
-        
-        $this->form_validation->set_rules('customerName','Customer Name','trim|required|max_length[50]');
-        $this->form_validation->set_rules('customerEmail','Customer Email','trim|valid_email|max_length[128]');
-        $this->form_validation->set_rules('customerAddress','Customer Address','max_length[1024]');
-        $this->form_validation->set_rules('customerPhone','Customer Phone','trim|max_length[15]|numeric');
-        
-        if($this->form_validation->run() == FALSE)
+        if(!$this->hasUpdateAccess())
         {
-            $this->editOldCustomer($customerId);
+            $this->loadThis();
         }
         else
         {
-            $customerName = ucwords(strtolower($this->security->xss_clean($this->input->post('customerName'))));
-            $customerEmail = $this->security->xss_clean($this->input->post('customerEmail'));
-            $customerAddress = $this->security->xss_clean($this->input->post('customerAddress'));
-            $customerPhone = $this->input->post('customerPhone');
-            
-            $customerInfo = array('customerName'=>$customerName, 'customerEmail'=>$customerEmail, 'customerAddress'=>$customerAddress,
-                                'customerPhone'=>$customerPhone, 'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:sa'));
-            
-            $result = $this->customer->updateOldCustomer($customerInfo, $customerId);
-            
-            if($result == true)
+            $this->load->library('form_validation');
+
+            $customerId = $this->input->post('customerId');
+
+            $this->form_validation->set_rules('customerName','Customer Name','trim|required|max_length[50]');
+            $this->form_validation->set_rules('customerEmail','Customer Email','trim|valid_email|max_length[128]');
+            $this->form_validation->set_rules('customerAddress','Customer Address','max_length[1024]');
+            $this->form_validation->set_rules('customerPhone','Customer Phone','trim|max_length[15]|numeric');
+
+            if($this->form_validation->run() == FALSE)
             {
-                $this->session->set_flashdata('success', 'Customer updated successfully');
+                $this->editOldCustomer($customerId);
             }
             else
             {
-                $this->session->set_flashdata('error', 'Customer updation failed');
+                $customerName = ucwords(strtolower($this->security->xss_clean($this->input->post('customerName'))));
+                $customerEmail = $this->security->xss_clean($this->input->post('customerEmail'));
+                $customerAddress = $this->security->xss_clean($this->input->post('customerAddress'));
+                $customerPhone = $this->input->post('customerPhone');
+
+                $customerInfo = array('customerName'=>$customerName, 'customerEmail'=>$customerEmail, 'customerAddress'=>$customerAddress,
+                                    'customerPhone'=>$customerPhone, 'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:sa'));
+
+                $result = $this->customer->updateOldCustomer($customerInfo, $customerId);
+
+                if($result == true)
+                {
+                    $this->session->set_flashdata('success', 'Customer updated successfully');
+                }
+                else
+                {
+                    $this->session->set_flashdata('error', 'Customer updation failed');
+                }
+
+                redirect('customer');
             }
-            
-            redirect('customer');
         }
     }
 
@@ -171,13 +207,20 @@ class Customer extends BaseController
      */
     function deleteCustomer()
     {
-        $customerId = $this->input->post('customerId');
-        $customerInfo = array('isDeleted'=>1,'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:sa'));
-        
-        $result = $this->customer->deleteCustomer($customerId, $customerInfo);
-        
-        if ($result > 0) { echo(json_encode(array('status'=>TRUE))); }
-        else { echo(json_encode(array('status'=>FALSE))); }
+        if(!$this->hasDeleteAccess())
+        {
+            echo(json_encode(array('status'=>'access')));
+        }
+        else
+        {
+            $customerId = $this->input->post('customerId');
+            $customerInfo = array('isDeleted'=>1,'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:sa'));
+
+            $result = $this->customer->deleteCustomer($customerId, $customerInfo);
+
+            if ($result > 0) { echo(json_encode(array('status'=>TRUE))); }
+            else { echo(json_encode(array('status'=>FALSE))); }
+        }
     }
 }
 

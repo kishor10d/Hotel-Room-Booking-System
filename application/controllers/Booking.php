@@ -19,7 +19,8 @@ class Booking extends BaseController
         parent::__construct();
         $this->load->model('booking_model', "booking");
         $this->load->model('rooms_model');
-        $this->isLoggedIn();   
+        $this->isLoggedIn();
+        $this->module = 'Booking';
     }
 
     /**
@@ -35,33 +36,40 @@ class Booking extends BaseController
      */
     function bookings()
     {
-        $searchText = $this->input->post('searchText');
-        $searchFloorId = $this->input->post('floorId');
-        $searchRoomSizeId = $this->input->post('sizeId');
-        $searchRoomId = $this->input->post('roomId');
-        $customerName = $this->input->post('customerName');
-        $mobileNumber = $this->input->post('mobileNumber');
-        $data['searchText'] = $searchText;
-        $data['searchRoomId'] = $searchRoomId;
-        $data['searchFloorId'] = $searchFloorId;
-        $data['searchRoomSizeId'] = $searchRoomSizeId;
-        $data['customerName'] = $customerName;
-        $data['mobileNumber'] = $mobileNumber;
-        $data['rooms'] = $this->rooms_model->getRooms();
-        $data['roomSizes'] = $this->rooms_model->getRoomSizes();
-        $data['floors'] = $this->rooms_model->getFloors();
+        if(!$this->hasListAccess())
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            $searchText = $this->input->post('searchText');
+            $searchFloorId = $this->input->post('floorId');
+            $searchRoomSizeId = $this->input->post('sizeId');
+            $searchRoomId = $this->input->post('roomId');
+            $customerName = $this->input->post('customerName');
+            $mobileNumber = $this->input->post('mobileNumber');
+            $data['searchText'] = $searchText;
+            $data['searchRoomId'] = $searchRoomId;
+            $data['searchFloorId'] = $searchFloorId;
+            $data['searchRoomSizeId'] = $searchRoomSizeId;
+            $data['customerName'] = $customerName;
+            $data['mobileNumber'] = $mobileNumber;
+            $data['rooms'] = $this->rooms_model->getRooms();
+            $data['roomSizes'] = $this->rooms_model->getRoomSizes();
+            $data['floors'] = $this->rooms_model->getFloors();
 
-        $this->load->library('pagination');
-        
-        $count = $this->booking->bookingCount($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $customerName, $mobileNumber);
+            $this->load->library('pagination');
 
-        $returns = $this->paginationCompress ( "bookings/", $count, 5);
-        
-        $data['bookingRecords'] = $this->booking->bookingListing($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $customerName, $mobileNumber, $returns["page"], $returns["segment"]);
-        
-        $this->global['pageTitle'] = 'DigiLodge : Bookings';
-        
-        $this->loadViews("bookings/bookingIndex", $this->global, $data, NULL);
+            $count = $this->booking->bookingCount($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $customerName, $mobileNumber);
+
+            $returns = $this->paginationCompress ( "bookings/", $count, 5);
+
+            $data['bookingRecords'] = $this->booking->bookingListing($searchText, $searchRoomId, $searchFloorId, $searchRoomSizeId, $customerName, $mobileNumber, $returns["page"], $returns["segment"]);
+
+            $this->global['pageTitle'] = 'DigiLodge : Bookings';
+
+            $this->loadViews("bookings/bookingIndex", $this->global, $data, NULL);
+        }
     }
 
     /**
@@ -69,13 +77,20 @@ class Booking extends BaseController
      */
     function addNewBooking()
     {
-        $this->global['pageTitle'] = 'DigiLodge : Book the room';
+        if(!$this->hasCreateAccess())
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            $this->global['pageTitle'] = 'DigiLodge : Book the room';
 
-        $data['floors'] = $this->rooms_model->getFloors();
-        $data['roomSizes'] = $this->rooms_model->getRoomSizes();
-        $data['rooms'] = $this->rooms_model->getRooms();
+            $data['floors'] = $this->rooms_model->getFloors();
+            $data['roomSizes'] = $this->rooms_model->getRoomSizes();
+            $data['rooms'] = $this->rooms_model->getRooms();
 
-        $this->loadViews("bookings/addNewBooking", $this->global, $data, NULL);
+            $this->loadViews("bookings/addNewBooking", $this->global, $data, NULL);
+        }
     }
 
     /**
@@ -85,6 +100,12 @@ class Booking extends BaseController
      */
     function getRoomsByFT()
     {
+        if(!$this->hasCreateAccess())
+        {
+            echo(json_encode(array('rooms'=>[])));
+            return;
+        }
+
         $sizeId = $this->input->post('sizeId') == '' ? 0 : $this->input->post('sizeId') ;
         $floorId = $this->input->post('floorId') == '' ? 0 : $this->input->post('floorId');
 
@@ -98,52 +119,59 @@ class Booking extends BaseController
      */
     function addedNewBooking()
     {
-        $this->load->library('form_validation');
-        
-        $this->form_validation->set_rules('startDate','Start Date','trim|required');
-        $this->form_validation->set_rules('endDate','End Date','trim|required');
-        $this->form_validation->set_rules('roomId','Room Number','trim|required|numeric');
-        $this->form_validation->set_rules('comments','Comments','trim');
-        $this->form_validation->set_rules('customerId','Customer','trim|required|numeric');
-        
-        if($this->form_validation->run() == FALSE)
+        if(!$this->hasCreateAccess())
         {
-            $this->addNewBooking();
+            $this->loadThis();
         }
         else
         {
-            $startDate = $this->security->xss_clean($this->input->post('startDate'));
-            $endDate = $this->security->xss_clean($this->input->post('endDate'));
-            $roomId = $this->input->post('roomId');
-            $floorId = $this->input->post('floorId');
-            $roomSizeId = $this->input->post('sizeId');
-            $comments = $this->security->xss_clean($this->input->post('comments'));
-            $customerId = $this->security->xss_clean($this->input->post('customerId'));
+            $this->load->library('form_validation');
 
-            if(!$this->validateBookingDates($startDate, $endDate))
-            {
-                $this->session->set_flashdata('error', 'Invalid dates selected, please check the From and To dates');
-                redirect('addNewBooking');
-            }
+            $this->form_validation->set_rules('startDate','Start Date','trim|required');
+            $this->form_validation->set_rules('endDate','End Date','trim|required');
+            $this->form_validation->set_rules('roomId','Room Number','trim|required|numeric');
+            $this->form_validation->set_rules('comments','Comments','trim');
+            $this->form_validation->set_rules('customerId','Customer','trim|required|numeric');
 
-            $bookingInfo = array('bookStartDate'=>$startDate, 'bookEndDate'=>$endDate, 
-                                'roomId'=>$roomId, 'floorId'=>$floorId, 'roomSizeId'=>$roomSizeId,
-                                'customerId'=>$customerId,'bookingDtm'=>date('Y-m-d H:i:s'),
-                                'bookingComments'=>$comments, 'bookingStatus'=>'confirmed',
-                                'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:s'));
-            
-            $result = $this->booking->addedNewBooking($bookingInfo);
-            
-            if($result > 0)
+            if($this->form_validation->run() == FALSE)
             {
-                $this->session->set_flashdata('success', 'New booking created successfully');
+                $this->addNewBooking();
             }
             else
             {
-                $this->session->set_flashdata('error', 'Booking creation failed');
+                $startDate = $this->security->xss_clean($this->input->post('startDate'));
+                $endDate = $this->security->xss_clean($this->input->post('endDate'));
+                $roomId = $this->input->post('roomId');
+                $floorId = $this->input->post('floorId');
+                $roomSizeId = $this->input->post('sizeId');
+                $comments = $this->security->xss_clean($this->input->post('comments'));
+                $customerId = $this->security->xss_clean($this->input->post('customerId'));
+
+                if(!$this->validateBookingDates($startDate, $endDate))
+                {
+                    $this->session->set_flashdata('error', 'Invalid dates selected, please check the From and To dates');
+                    redirect('addNewBooking');
+                }
+
+                $bookingInfo = array('bookStartDate'=>$startDate, 'bookEndDate'=>$endDate,
+                                    'roomId'=>$roomId, 'floorId'=>$floorId, 'roomSizeId'=>$roomSizeId,
+                                    'customerId'=>$customerId,'bookingDtm'=>date('Y-m-d H:i:s'),
+                                    'bookingComments'=>$comments, 'bookingStatus'=>'confirmed',
+                                    'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:s'));
+
+                $result = $this->booking->addedNewBooking($bookingInfo);
+
+                if($result > 0)
+                {
+                    $this->session->set_flashdata('success', 'New booking created successfully');
+                }
+                else
+                {
+                    $this->session->set_flashdata('error', 'Booking creation failed');
+                }
+
+                redirect('addNewBooking');
             }
-            
-            redirect('addNewBooking');
         }
     }
 
@@ -152,6 +180,12 @@ class Booking extends BaseController
      */
     function getCustomersByName()
     {
+        if(!$this->hasCreateAccess())
+        {
+            echo(json_encode(array('customers'=>[])));
+            return;
+        }
+
         $customerName = $this->input->post('customerName') == '' ? 0 : $this->input->post('customerName');
 
         $result = $this->booking->getCustomersByName($customerName);
@@ -165,11 +199,17 @@ class Booking extends BaseController
      */
     function editOldBooking($bookingId = NULL)
     {
+        if(!$this->hasUpdateAccess())
+        {
+            $this->loadThis();
+            return;
+        }
+
         if($bookingId == null)
         {
             redirect('bookings');
         }
-        
+
         $data['floors'] = $this->rooms_model->getFloors();
         $data['roomSizes'] = $this->rooms_model->getRoomSizes();
         $data['rooms'] = $this->rooms_model->getRooms();
@@ -178,7 +218,7 @@ class Booking extends BaseController
         $data['bookingDetails'] = $bookingDetails;
 
         $this->global['pageTitle'] = 'DigiLodge : Edit Booking - '. $bookingDetails->customerName . ' (' . date('Y-m-d', strtotime($bookingDetails->bookStartDate)) . ' to '. date('Y-m-d', strtotime($bookingDetails->bookEndDate)) . ' )';
-        
+
         $this->loadViews("bookings/editOldBooking", $this->global, $data, NULL);
     }
 
@@ -188,6 +228,12 @@ class Booking extends BaseController
      */
     function availableRooms()
     {
+        if(!$this->hasCreateAccess() && !$this->hasUpdateAccess())
+        {
+            echo(json_encode(array('status'=>false, 'message'=>'Access denied', 'data'=>[], 'html'=>'')));
+            return;
+        }
+
         $startDate = $this->security->xss_clean($this->input->post('startDate'));
         $endDate = $this->security->xss_clean($this->input->post('endDate'));
         $roomId = $this->input->post('roomId');
@@ -252,8 +298,14 @@ class Booking extends BaseController
      */
     function updateOldBooking()
     {
+        if(!$this->hasUpdateAccess())
+        {
+            $this->loadThis();
+            return;
+        }
+
         $this->load->library('form_validation');
-        
+
         $bookingId = $this->input->post('bookingId');
 
         $this->form_validation->set_rules('startDate','Start Date','trim|required');
@@ -310,6 +362,12 @@ class Booking extends BaseController
      */
     function bookingInfo($bookingId = NULL)
     {
+        if(!$this->hasListAccess())
+        {
+            $this->loadThis();
+            return;
+        }
+
         if($bookingId == null)
         {
             redirect('bookings');
@@ -336,6 +394,12 @@ class Booking extends BaseController
      */
     function deleteBooking()
     {
+        if(!$this->hasDeleteAccess())
+        {
+            echo(json_encode(array('status'=>'access')));
+            return;
+        }
+
         $bookingId = $this->input->post('bookingId');
         $bookingInfo = array('isDeleted'=>1,'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:s'));
 
@@ -350,6 +414,12 @@ class Booking extends BaseController
      */
     function updateBookingStatus()
     {
+        if(!$this->hasUpdateAccess())
+        {
+            echo(json_encode(array('status'=>FALSE, 'message'=>'Access denied')));
+            return;
+        }
+
         $bookingId = $this->input->post('bookingId');
         $status = $this->input->post('status');
 

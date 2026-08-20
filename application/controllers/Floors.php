@@ -18,7 +18,8 @@ class Floors extends BaseController
     {
         parent::__construct();
         $this->load->model('floors_model');
-        $this->isLoggedIn();   
+        $this->isLoggedIn();
+        $this->module = 'Floors';
     }
 
     /**
@@ -34,7 +35,7 @@ class Floors extends BaseController
      */
     function floorsListing()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasListAccess())
         {
             $this->loadThis();
         }
@@ -63,7 +64,7 @@ class Floors extends BaseController
      */
     function addNewFloor()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasCreateAccess())
         {
             $this->loadThis();
         }
@@ -80,7 +81,7 @@ class Floors extends BaseController
      */
     function addedNewFloor()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasCreateAccess())
         {
             $this->loadThis();
         }
@@ -128,7 +129,7 @@ class Floors extends BaseController
      */
     function editOldFloor($floorId = NULL)
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasUpdateAccess())
         {
             $this->loadThis();
         }
@@ -153,7 +154,7 @@ class Floors extends BaseController
      */
     function updateOldFloor()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasUpdateAccess())
         {
             $this->loadThis();
         }
@@ -202,7 +203,7 @@ class Floors extends BaseController
      */
     function deleteFloors()
     {
-        if($this->isAdmin() == TRUE)
+        if(!$this->hasDeleteAccess())
         {
             echo(json_encode(array('status'=>'access')));
         }
